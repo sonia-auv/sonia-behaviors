@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="TestAlex2">
+
+	<executable package_path="sonia_flexbe_behaviors.testalex2_sm" class="TestAlex2SM" />
+	<tagstring></tagstring>
+	<author>AlexD</author>
+	<date>Sat Oct 30 2021</date>
+	<description>
+		TestAlex2
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

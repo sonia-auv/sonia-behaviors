@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Test Behavior">
+
+	<executable package_path="sonia_flexbe_behaviors.test_behavior_sm" class="TestBehaviorSM" />
+	<tagstring>demo</tagstring>
+	<author>Alex D.</author>
+	<date>Mon Sep 20 2021</date>
+	<description>
+		This is a test.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
