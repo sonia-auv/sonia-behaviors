@@ -7,6 +7,7 @@ import rospy
 from Queue import deque
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget
+from geometry_msgs.msg import Point, Vector3
 
 class get_vision_target(EventState):
 
@@ -14,28 +15,25 @@ class get_vision_target(EventState):
 
     '''
 
-    def __init__(self, bouding_box_width_pixel, bouding_box_height_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average):
+    def __init__(   self, bouding_box_pixel, target_width_meter, target_height_meter,\
+                    ratio_victory, number_of_average, camera, max_mouvement):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'move', 'failed'],
                                                 input_keys = ['filterchain'],
                                                 output_keys = ['pose'])
         
-        self.param_bbwp = bouding_box_width_pixel
-        self.param_bbhp = bouding_box_height_pixel
+        self.param_bbp = bouding_box_pixel
         self.param_twm = target_width_meter
         self.param_thm = target_height_meter
         self.param_rv = ratio_victory
         self.param_noa = number_of_average
+        self.param_cam = camera
+        self.param_mm = max_mouvement
 
-        self.position_reached = False
-        self.alignement_reached = False
-        self.number_of_sample = 0
-
-    def vision_cb(self, vision_data):
-        self.vision_x_pixel.append(vision_data.x)
-        self.vision_y_pixel.append(vision_data.y)
-        self.vision_width_pixel.append(vision_data.width)
-        self.vision_height_pixel.append(vision_data.height)
+        # if camera == 2:
+        #     self.focal_distance = 0.25
+        # else:
+        #     self.focal_distance =  0.1651
 
         if  len(self.vision_x_pixel) == self.param_noa and \
             len(self.vision_y_pixel) == self.param_noa and \
@@ -45,26 +43,68 @@ class get_vision_target(EventState):
             self.number_of_sample += 1
 
     def parse_vision_data(self):
-        self.average_x_pixel = mean(self.vision_x_pixel)
-        self.average_y_pixel = mean(self.vision_y_pixel)
-        self.average_width_pixel = mean(self.vision_width_pixel)
-        self.average_height_pixel = mean(self.vision_height_pixel)
+        average_x_pixel = mean(self.vision_x_pixel)
+        average_y_pixel = mean(self.vision_y_pixel)
+        average_width_pixel = mean(self.vision_width_pixel)
+        average_height_pixel = mean(self.vision_height_pixel)
+
+        pixel_to_meter = self.param_twm / average_width_pixel
+
+        if average_width_pixel * average_height_pixel > self.param_twm * self.param_thm * self.param_rv :
+            self.position_reached = True
+        else:
+            self.position_reached = False
+            self.width = average_width_pixel * pixel_to_meter
+            self.height = average_height_pixel * pixel_to_meter
+
+        if abs(average_x_pixel) <= self.param_bbp and abs(average_y_pixel) <= self.param_bbp :
+            self.alignement_reached = True
+        else:
+            self.alignement_reached = False
+            self.x = average_x_pixel * pixel_to_meter
+            self.y = average_y_pixel * pixel_to_meter
 
     def align_with_vision(self):
-        self.new_pose = 0
+        
+        #To test to see if working
+        mouvement_x = self.x
+        mouvement_y = self.y
 
-        #TO DO add script to align to the centroid
-
+        if mouvement_x > 1 :
+            mouvement_x = 1
+        if mouvement_y > 1 :
+            mouvement_y = 1
+        if self.param_cam == 2 :
+            self.new_pose = []
+        
     def position_with_vision(self):
-        self.new_pose = 0
 
-        #TO DO add script to get closer to the target
+        # To test to see if working
+        surface_image = self.width * self.height
+        surface_target = self.param_thm * self.param_thm
+
+        mouvement = surface_target / surface_image
+
+        if mouvement > 1 :
+            mouvement = 1
+        
+        if self.param_cam == 2 :
+            self.new_pose = [0,0,mouvement,0,0,0,1]
+        else :
+            self.new_pose = [mouvement, 0,0,0,0,0,1]
 
     def on_enter(self, userdata):
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
         self.vision_y_pixel = deque([], maxlen=self.param_noa)
         self.vision_width_pixel = deque([], maxlen=self.param_noa)
-        self.vision_height_pixel = deque([], maxlen=self.param_noa)
+        self.alignement_reached = False
+        self.x = 0
+        self.y = 0
+        self.width = 0
+        self.height = 0
+        self.number_of_sample = 0
+
+        self.new_pose = []
         
         self.param_filterchain = userdata.filterchain
         self.get_vision_data = rospy.Subscriber(self.param_filter_chain, VisionTarget, self.vison_cb)   
