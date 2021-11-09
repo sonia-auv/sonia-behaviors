@@ -28,7 +28,7 @@ class set_initial_position(EventState):
     def __init__(self, positionX, positionY, positionZ, quaternionX, quaternionY, quaternionZ, quaternionW):
         
         super(set_initial_position, self).__init__(outcomes=['continue', 'failed'])
-
+        #TO DO
         self.param_positionX 
         self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
 

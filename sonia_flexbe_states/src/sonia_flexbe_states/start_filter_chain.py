@@ -8,7 +8,8 @@ from sonia_common.srv import ExecuteCmd
 
 class start_filter_chain(EventState):
     '''
-        Start the filterchain entered [...]
+        Start the filterchain entered
+        [...]
 
         -- param_node_name      string Detection task
         -- camera_no uint8      Enter 1:Front 2:Bottom

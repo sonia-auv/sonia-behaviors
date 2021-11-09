@@ -16,7 +16,6 @@ class move(EventState):
 
     '''
         Move the submarine by defining every parameter.
-        [...]ntationY, orientationZ, frame, 
         
         -- positionX        uint8       The function that performs [...]
         -- positionY        uint8       The function that performs [...]
