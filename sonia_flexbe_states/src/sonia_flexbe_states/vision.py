@@ -7,7 +7,7 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from rospy.core import logerr
-from sonia_common.msg import AddPose
+from sonia_common.msg import 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Point, Vector3
 from nav_msgs.msg import Odometry
@@ -40,7 +40,7 @@ class move(EventState):
 
         '''
 
-    def __init__(self, positionX, positionY, positionZ, orientationX, orientationY, orientationZ, frame, time=5, precision=0, rotation=True):
+    def __init__(self, topic):
         
         super(move, self).__init__(outcomes=['continue', 'failed'])
 
@@ -88,7 +88,6 @@ class move(EventState):
 
         if speedz > 1 or speedy > 1 or speedx > 1: 
             self.param_time = max(self.param_distance_x,self.param_distance_y,self.param_distance_z) / 0.8
-            Logger.log('Changing time for %s' %self.param_time,Logger.REPORT_HINT)
 
     def on_enter(self, userdata):
 
@@ -113,7 +112,7 @@ class move(EventState):
     def execute(self, userdata):
         Logger.log('starting',Logger.REPORT_HINT)
         time_dif = time() - self.time_launch
-        if time_dif > self.param_time:
+        if time_dif > self.param_time + 5:
             Logger.log('ending',Logger.REPORT_HINT)
             if self.target_reached == True:
                 return 'continue'
