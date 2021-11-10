@@ -16,26 +16,9 @@ class move_to_target(EventState):
 
     '''
         Move the submarine by defining every parameter.
-        
-        -- positionX        uint8       The function that performs [...]
-        -- positionY        uint8       The function that performs [...]
-        -- positionZ        uint8       The function that performs [...]
-        -- orientationX     uint8       The function that performs [...]
-        -- orientationY     uint8       The function that performs [...]
-        -- orientationZ     uint8       The function that performs [...]
-        -- frame            uint8       0 : Absolute position and absolute angle
-                                            1 : Relative position and relative angle
-                                            2 : Relative position and absolute angle
-                                            3 : Absolute position and relative angle 
-        -- time             uint8       The function that performs [...]
-        -- precision        float64     The function that performs [...]
-        -- path             bool        The function that performs [...]
 
-        ># positionX        uint8       Input to the calculation function.
-
-        #> output_value     object      The result of the calculation.
-
-        <= done                         Indicates completion of the calculation.
+        <= continue                         Indicates that the sub has moved to the target.
+        <= failed                           Couldn't move to the desired pose
 
         '''
 
@@ -54,7 +37,6 @@ class move_to_target(EventState):
 
     def target_reach_cb(self, data):
         self.target_reached = data.data
-        #Logger.log('Target reached : %s' %str(self.target_reached), Logger.REPORT_HINT)
 
     def check_frame(self):
         if self.param_frame > 3:

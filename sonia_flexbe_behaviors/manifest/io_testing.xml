@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="io_testing">
+
+	<executable package_path="sonia_flexbe_behaviors.io_testing_sm" class="io_testingSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Wed Nov 10 2021</date>
+	<description>
+		Test the state for the io activation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
