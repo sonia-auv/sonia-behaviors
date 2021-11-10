@@ -35,6 +35,12 @@ class get_vision_target(EventState):
         # else:
         #     self.focal_distance =  0.1651
 
+    def vision_cb(self, vision_data):
+        self.vision_x_pixel.append(vision_data.x)
+        self.vision_y_pixel.append(vision_data.y)
+        self.vision_width_pixel.append(vision_data.width)
+        self.vision_height_pixel.append(vision_data.height)
+
         if  len(self.vision_x_pixel) == self.param_noa and \
             len(self.vision_y_pixel) == self.param_noa and \
             len(self.average_width_pixel) == self.param_noa and \
@@ -70,12 +76,12 @@ class get_vision_target(EventState):
         mouvement_x = self.x
         mouvement_y = self.y
 
-        if mouvement_x > 1 :
-            mouvement_x = 1
-        if mouvement_y > 1 :
-            mouvement_y = 1
-        if self.param_cam == 2 :
-            self.new_pose = []
+        # if mouvement_x > self.param_mm :
+        #     mouvement_x = self.param_mm
+        # if mouvement_y > self.param_mm :
+        #     mouvement_y = self.param_mm
+        # if self.param_cam == 2 :
+        #     self.new_pose = []
         
     def position_with_vision(self):
 
@@ -85,18 +91,21 @@ class get_vision_target(EventState):
 
         mouvement = surface_target / surface_image
 
-        if mouvement > 1 :
-            mouvement = 1
+        if mouvement > self.param_mm :
+            mouvement = self.param_mm
         
         if self.param_cam == 2 :
-            self.new_pose = [0,0,mouvement,0,0,0,1]
+            self.new_pose = [0,0,mouvement]
         else :
-            self.new_pose = [mouvement, 0,0,0,0,0,1]
+            self.new_pose = [mouvement,0,0]
 
     def on_enter(self, userdata):
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
         self.vision_y_pixel = deque([], maxlen=self.param_noa)
         self.vision_width_pixel = deque([], maxlen=self.param_noa)
+        self.vision_height_pixel = deque([], maxlen=self.param_noa)
+
+        self.position_reached = False
         self.alignement_reached = False
         self.x = 0
         self.y = 0
@@ -105,9 +114,10 @@ class get_vision_target(EventState):
         self.number_of_sample = 0
 
         self.new_pose = []
+        self.constant_in_pose = [0,0,0,1,5,0,1]
         
         self.param_filterchain = userdata.filterchain
-        self.get_vision_data = rospy.Subscriber(self.param_filter_chain, VisionTarget, self.vison_cb)   
+        self.get_vision_data = rospy.Subscriber(self.param_filter_chain, VisionTarget, self.vision_cb)   
 
     def execute(self, userdata):
         Logger.log('Starting to gather data', Logger.REPORT_HINT)
@@ -117,11 +127,11 @@ class get_vision_target(EventState):
                 return 'success'
             elif self.alignement_reached == False:
                 self.align_with_vision()
-                userdata.pose = self.new_pose
+                userdata.pose = self.new_pose + self.constant_in_pose
                 return 'move'
             elif self.position_reached == False:
                 self.position_with_vision()
-                userdata.pose = self.new_pose
+                userdata.pose = self.new_pose + self.constant_in_pose
                 return 'move'
             else:
                 return 'failed'
