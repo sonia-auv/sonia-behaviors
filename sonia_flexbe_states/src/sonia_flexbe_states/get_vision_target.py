@@ -32,7 +32,6 @@ class get_vision_target(EventState):
     def __init__(self, topic_to_listen, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'move', 'failed'],
-                                                input_keys = ['filterchain'],
                                                 output_keys = ['pose'])
         
         self.param_ttl = topic_to_listen
@@ -87,15 +86,22 @@ class get_vision_target(EventState):
     def align_with_vision(self):
         
         #To test to see if working
+        new_pose = AddPose()
         mouvement_x = self.x
         mouvement_y = self.y
 
-        # if mouvement_x > self.param_mm :
-        #     mouvement_x = self.param_mm
-        # if mouvement_y > self.param_mm :
-        #     mouvement_y = self.param_mm
-        # if self.param_cam == 2 :
-        #     self.new_pose = []
+        #À confimer le behaviors de ça
+        if abs(mouvement_x) > self.param_mm :
+            mouvement_x = self.param_mm
+        if abs(mouvement_y) > self.param_mm :
+            mouvement_y = self.param_mm
+
+        if self.param_cam == 2 :
+            new_pose.position = Point(-mouvement_y, mouvement_x, 0.)
+        else :
+            new_pose.position = Point(0., mouvement_x, mouvement_y)
+
+        return self.fill_pose(new_pose)
         
     def position_with_vision(self):
 
@@ -156,12 +162,10 @@ class get_vision_target(EventState):
             if self.position_reached == True and self.alignement_reached == True:
                 return 'success'
             elif self.alignement_reached == False:
-                self.align_with_vision()
-                userdata.pose = self.new_pose + self.constant_in_pose
+                userdata.pose = self.align_with_vision()
                 return 'move'
             elif self.position_reached == False:
-                self.position_with_vision()
-                userdata.pose = self.new_pose + self.constant_in_pose
+                userdata.pose = self.position_with_vision()
                 return 'move'
             else:
                 return 'failed'
