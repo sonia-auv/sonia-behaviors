@@ -12,17 +12,29 @@ from geometry_msgs.msg import Point, Vector3
 class get_vision_target(EventState):
 
     '''
+        Get the movement target from vision filterchain
 
+        -- bounding_box_pixel       uint16      Side of square bounding box for alignement on target in pixel
+        -- target_width_meter       float       Width of the target in meters
+        -- target_height_meter      float       Height of the target in meters
+        -- ratio_victory            float       Ratio of the distance from the target for victory
+        -- number_of_average        uint8       Number of image to average before creating a pose
+        -- camera                   uint8       1 : front 
+                                                2 : bottom
+        -- max_mouvement            uint8       Maximum distance allowed to move
+
+        <= success                              The target has been reached. Ready for action
+        <= move                                 Movement ready to do with the pose calculated
+        <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(   self, bouding_box_pixel, target_width_meter, target_height_meter,\
-                    ratio_victory, number_of_average, camera, max_mouvement):
+    def __init__(self, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'move', 'failed'],
                                                 input_keys = ['filterchain'],
                                                 output_keys = ['pose'])
         
-        self.param_bbp = bouding_box_pixel
+        self.param_bbp = bounding_box_pixel
         self.param_twm = target_width_meter
         self.param_thm = target_height_meter
         self.param_rv = ratio_victory
