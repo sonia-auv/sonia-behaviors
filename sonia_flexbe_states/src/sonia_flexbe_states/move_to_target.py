@@ -12,7 +12,7 @@ from std_msgs.msg import Bool
 from geometry_msgs.msg import Point, Vector3
 from nav_msgs.msg import Odometry
 
-class move(EventState):
+class move_to_target(EventState):
 
     '''
         Move the submarine by defining every parameter.
@@ -39,22 +39,12 @@ class move(EventState):
 
         '''
 
-    def __init__(self, positionX, positionY, positionZ, orientationX, orientationY, orientationZ, frame, time=5, precision=0, rotation=True):
+    def __init__(self):
         
-        super(move, self).__init__(outcomes=['continue', 'failed'])
+        super(move_to_target, self).__init__(outcomes=['continue', 'failed'],
+                                             input_keys=['pose'])
 
         self.target_reached = False
-
-        self.param_distance_x = positionX
-        self.param_distance_y = positionY
-        self.param_distance_z = positionZ
-        self.param_orientation_x = orientationX
-        self.param_orientation_y = orientationY
-        self.param_orientation_z = orientationZ
-        self.param_frame = frame
-        self.param_time = time
-        self.param_precision = precision
-        self.param_rotation = rotation
         self.actual_x = 0
         self.actual_y = 0
         self.actual_z = 0
@@ -63,7 +53,8 @@ class move(EventState):
         self.get_current_position_sub = rospy.Subscriber('/telemetry/auv_states', Odometry, self.get_current_position_cb)
 
     def target_reach_cb(self, data):
-        self.target_reached = data
+        self.target_reached = data.data
+        #Logger.log('Target reached : %s' %str(self.target_reached), Logger.REPORT_HINT)
 
     def check_frame(self):
         if self.param_frame > 3:
@@ -90,7 +81,19 @@ class move(EventState):
             Logger.log('Changing time for %s' %self.param_time,Logger.REPORT_HINT)
 
     def on_enter(self, userdata):
-
+        Logger.log('starting',Logger.REPORT_HINT)
+        
+        self.param_distance_x = userdata.pose.position.x
+        self.param_distance_y = userdata.pose.position.y
+        self.param_distance_z = userdata.pose.position.z
+        self.param_orientation_x = userdata.pose.orientation.x
+        self.param_orientation_y = userdata.pose.orientation.y
+        self.param_orientation_z = userdata.pose.orientation.z
+        self.param_frame = userdata.pose.frame
+        self.param_time = userdata.pose.speed
+        self.param_precision = userdata.pose.fine
+        self.param_rotation = userdata.pose.rotation
+        
         self.check_frame()
         self.check_speed()
 
@@ -110,9 +113,8 @@ class move(EventState):
         self.target_reach_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reach_cb)
 
     def execute(self, userdata):
-        Logger.log('starting',Logger.REPORT_HINT)
         time_dif = time() - self.time_launch
-        if time_dif > self.param_time:
+        if time_dif > self.param_time + 5:
             Logger.log('ending',Logger.REPORT_HINT)
             if self.target_reached == True:
                 return 'continue'

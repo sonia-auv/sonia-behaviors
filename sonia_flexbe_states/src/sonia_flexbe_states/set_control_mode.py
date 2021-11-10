@@ -19,7 +19,7 @@ class set_control_mode(EventState):
         <= failed       Indicate that the mode didn't changed.
     """
 
-    def __init__(self, mode, timeout):
+    def __init__(self, mode, timeout=3):
         super(set_control_mode, self).__init__(outcomes=['continue', 'failed'])
         self.param_mode = mode
         self.mpc_status = 0
@@ -31,12 +31,12 @@ class set_control_mode(EventState):
         self.mpc_status = data 
 
     def on_enter(self, userdata):
+        Logger.log('starting',Logger.REPORT_HINT)
         self.set_mode.publish(self.param_mode)
         self.mpc_status_sub = rospy.Subscriber('proc_control/mpc_status', Int8, self.mpc_status_cb)
         self.launch_time = time()
 
     def execute(self, userdata):
-        Logger.log('starting',Logger.REPORT_HINT)
         time_dif = time() - self.launch_time
         if time_dif > self.param_timeout:
             Logger.log('ending',Logger.REPORT_HINT)

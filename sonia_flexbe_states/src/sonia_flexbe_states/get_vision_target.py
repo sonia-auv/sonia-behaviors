@@ -6,7 +6,7 @@ import rospy
 
 from Queue import deque
 from flexbe_core import EventState, Logger
-from sonia_common.msg import VisionTarget
+from sonia_common.msg import VisionTarget, AddPose
 from geometry_msgs.msg import Point, Vector3
 
 class get_vision_target(EventState):
@@ -14,6 +14,7 @@ class get_vision_target(EventState):
     '''
         Get the movement target from vision filterchain
 
+        -- topic_to_listen          string      Topic to listen from the filterchain started
         -- bounding_box_pixel       uint16      Side of square bounding box for alignement on target in pixel
         -- target_width_meter       float       Width of the target in meters
         -- target_height_meter      float       Height of the target in meters
@@ -28,12 +29,13 @@ class get_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement):
+    def __init__(self, topic_to_listen, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'move', 'failed'],
                                                 input_keys = ['filterchain'],
                                                 output_keys = ['pose'])
         
+        self.param_ttl = topic_to_listen
         self.param_bbp = bounding_box_pixel
         self.param_twm = target_width_meter
         self.param_thm = target_height_meter
@@ -98,6 +100,7 @@ class get_vision_target(EventState):
     def position_with_vision(self):
 
         # To test to see if working
+        new_pose = AddPose()
         surface_image = self.width * self.height
         surface_target = self.param_thm * self.param_thm
 
@@ -107,9 +110,28 @@ class get_vision_target(EventState):
             mouvement = self.param_mm
         
         if self.param_cam == 2 :
-            self.new_pose = [0,0,mouvement]
+            new_pose.position = Point(0.,0.,mouvement)
         else :
-            self.new_pose = [mouvement,0,0]
+            new_pose.position = Point(mouvement,0.,0.)
+
+        return self.fill_pose(new_pose)
+    
+    def fill_pose(self, pose):
+        pose.orientation = Vector3(0.,0.,0.)
+        pose.frame = 1
+        pose.speed = 5
+        pose.fine = 0.
+        pose.rotation = True
+
+        rospy.loginfo('Set position x = %f' % pose.position.x)
+        rospy.loginfo('Set position y = %f' % pose.position.y)
+        rospy.loginfo('Set position z = %f' % pose.position.z)
+        rospy.loginfo('Set orientation x = %f' % pose.orientation.x)
+        rospy.loginfo('Set orientation y = %f' % pose.orientation.y)
+        rospy.loginfo('Set orientation z = %f' % pose.orientation.z)
+        rospy.loginfo('Set frame = %f' % pose.speed)
+
+        return pose
 
     def on_enter(self, userdata):
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
@@ -125,11 +147,7 @@ class get_vision_target(EventState):
         self.height = 0
         self.number_of_sample = 0
 
-        self.new_pose = []
-        self.constant_in_pose = [0,0,0,1,5,0,1]
-        
-        self.param_filterchain = userdata.filterchain
-        self.get_vision_data = rospy.Subscriber(self.param_filter_chain, VisionTarget, self.vision_cb)   
+        self.get_vision_data = rospy.Subscriber(self.param_ttl, VisionTarget, self.vision_cb)   
 
     def execute(self, userdata):
         Logger.log('Starting to gather data', Logger.REPORT_HINT)

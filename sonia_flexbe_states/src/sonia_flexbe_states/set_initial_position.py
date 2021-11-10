@@ -7,39 +7,32 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from rospy.core import logerr
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Point, Quaternion
 
 class set_initial_position(EventState):
 
     '''
-        State to change the control mode.
-        [...]
-        
-        -- mode             uint8       choose the control mode
+        Set the intial position of the sub.
 
-        ># positionX        uint8       Input to the calculation function.
-
-        #> output_value     object      The result of the calculation.
-
-        <= done                         Indicates completion of the calculation.
+        <= continue                         Indicates completion of the calculation.
 
         '''
 
-    def __init__(self, positionX, positionY, positionZ, quaternionX, quaternionY, quaternionZ, quaternionW):
+    def __init__(self):
         
-        super(set_initial_position, self).__init__(outcomes=['continue', 'failed'])
-        #TO DO
-        self.param_positionX 
+        super(set_initial_position, self).__init__(outcomes=['continue'])
+
         self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
 
     def on_enter(self, userdata):
-
-        self.set_initial_position_pub.publish(self.param_position)
-        Logger.log('setting mode %s' %self.param_mode,Logger.REPORT_HINT)
+        pose = Pose()
+        pose.position = Point(0.,0.,0.)
+        pose.orientation = Quaternion(0.,0.,0.,1)
+        self.set_initial_position_pub.publish(pose)
 
     def execute(self, userdata):
-        Logger.log('waiting 3 sec',Logger.REPORT_HINT)
-        sleep(3)
+        Logger.log('waiting 5 sec',Logger.REPORT_HINT)
+        sleep(5)
         return 'continue'
         # TO DO : add handshake
 

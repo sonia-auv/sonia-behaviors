@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_move_sim">
+
+	<executable package_path="sonia_flexbe_behaviors.test_move_sim_sm" class="test_move_simSM" />
+	<tagstring></tagstring>
+	<author>FA</author>
+	<date>Wed Nov 10 2021</date>
+	<description>
+		Test movement for simulation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
