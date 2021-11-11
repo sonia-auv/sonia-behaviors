@@ -14,5 +14,11 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
+
+	</params>
+
 
 </behavior>

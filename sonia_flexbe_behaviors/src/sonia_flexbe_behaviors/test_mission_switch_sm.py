@@ -8,8 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.set_control_mode import set_control_mode
-from sonia_flexbe_states.set_initial_position import set_initial_position
 from sonia_flexbe_states.wait_mission import wait_mission
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -21,18 +19,17 @@ from sonia_flexbe_states.wait_mission import wait_mission
 Created on Thu Nov 11 2021
 @author: FA
 '''
-class init_simSM(Behavior):
+class test_missionswitchSM(Behavior):
 	'''
-	Behavior to start the simulation
+	Testing the mission switch in simulation
 	'''
 
 
 	def __init__(self):
-		super(init_simSM, self).__init__()
-		self.name = 'init_sim'
+		super(test_missionswitchSM, self).__init__()
+		self.name = 'test_mission switch'
 
 		# parameters of this behavior
-		self.add_parameter('simulation', False)
 
 		# references to used behaviors
 
@@ -46,7 +43,7 @@ class init_simSM(Behavior):
 
 
 	def create(self):
-		# x:856 y:161, x:582 y:125
+		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,20 +53,8 @@ class init_simSM(Behavior):
 
 
 		with _state_machine:
-			# x:97 y:72
-			OperatableStateMachine.add('initial condition',
-										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'set mode ', 'wait': 'wait for mission switch'},
-										autonomy={'continue': Autonomy.Off, 'wait': Autonomy.Off})
-
-			# x:369 y:180
-			OperatableStateMachine.add('set mode ',
-										set_control_mode(mode=32, timeout=3),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:354 y:24
-			OperatableStateMachine.add('wait for mission switch',
+			# x:315 y:158
+			OperatableStateMachine.add('test',
 										wait_mission(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
