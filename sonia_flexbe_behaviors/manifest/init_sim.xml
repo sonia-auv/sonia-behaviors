@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="init_sim">
+
+	<executable package_path="sonia_flexbe_behaviors.init_sim_sm" class="init_simSM" />
+	<tagstring>sim</tagstring>
+	<author>FA</author>
+	<date>Thu Nov 11 2021</date>
+	<description>
+		Behavior to start the simulation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

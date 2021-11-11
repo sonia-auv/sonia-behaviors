@@ -8,10 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.create_pose import create_pose
-from sonia_flexbe_states.move_to_target import move_to_target
-from sonia_flexbe_states.set_control_mode import set_control_mode
-from sonia_flexbe_states.set_initial_position import set_initial_position
+from sonia_flexbe_states.move_single import move_single
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -19,18 +16,18 @@ from sonia_flexbe_states.set_initial_position import set_initial_position
 
 
 '''
-Created on Wed Nov 10 2021
+Created on Thu Nov 11 2021
 @author: FA
 '''
-class test_move_simSM(Behavior):
+class move_coin_filpSM(Behavior):
 	'''
-	Test movement for simulation
+	Behavior to test the coin filp in simulation
 	'''
 
 
 	def __init__(self):
-		super(test_move_simSM, self).__init__()
-		self.name = 'test_move_sim'
+		super(move_coin_filpSM, self).__init__()
+		self.name = 'move_coin_filp'
 
 		# parameters of this behavior
 
@@ -46,7 +43,7 @@ class test_move_simSM(Behavior):
 
 
 	def create(self):
-		# x:820 y:388, x:268 y:463
+		# x:1124 y:460, x:327 y:403
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,31 +53,17 @@ class test_move_simSM(Behavior):
 
 
 		with _state_machine:
-			# x:99 y:95
-			OperatableStateMachine.add('asdf',
-										set_control_mode(mode=32, timeout=3),
-										transitions={'continue': 'start', 'failed': 'failed'},
+			# x:437 y:160
+			OperatableStateMachine.add('move to yaw',
+										move_single(positionX=0, positionY=0, positionZ=2, orientationX=0, orientationY=0, orientationZ=130, frame=0, time=10, precision=0, rotation=True),
+										transitions={'continue': 'rotate to gate', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:587 y:134
-			OperatableStateMachine.add('create_init',
-										create_pose(positionX=5, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
-										transitions={'continue': 'move_to_target'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'initial_pose'})
-
-			# x:588 y:286
-			OperatableStateMachine.add('move_to_target',
-										move_to_target(),
+			# x:687 y:242
+			OperatableStateMachine.add('rotate to gate',
+										move_single(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=68, frame=2, time=5, precision=0, rotation=True),
 										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'initial_pose'})
-
-			# x:364 y:112
-			OperatableStateMachine.add('start',
-										set_initial_position(),
-										transitions={'continue': 'create_init'},
-										autonomy={'continue': Autonomy.Off})
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_to_gate">
+
+	<executable package_path="sonia_flexbe_behaviors.move_to_gate_sm" class="move_to_gateSM" />
+	<tagstring>sim</tagstring>
+	<author>FA</author>
+	<date>Thu Nov 11 2021</date>
+	<description>
+		Movement to the gate in simulation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

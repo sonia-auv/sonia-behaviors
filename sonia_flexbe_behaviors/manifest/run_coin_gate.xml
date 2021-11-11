@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="run_coin_gate">
+
+	<executable package_path="sonia_flexbe_behaviors.run_coin_gate_sm" class="run_coin_gateSM" />
+	<tagstring>sim</tagstring>
+	<author>FA</author>
+	<date>Thu Nov 11 2021</date>
+	<description>
+		Test  run for coin filp and gate
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_sim" />
+	<contains name="move_coin_filp" />
+	<contains name="move_to_gate" />
+
+	<!-- Available Parameters -->
+
+</behavior>
