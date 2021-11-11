@@ -97,9 +97,9 @@ class get_vision_target(EventState):
             mouvement_y = self.param_mm
 
         if self.param_cam == 2 :
-            new_pose.position = Point(-mouvement_y, mouvement_x, 0.)
+            new_pose.position = Point(mouvement_y, mouvement_x, 0.)
         else :
-            new_pose.position = Point(0., mouvement_x, mouvement_y)
+            new_pose.position = Point(0., mouvement_x, -mouvement_y)
 
         return self.fill_pose(new_pose)
         
