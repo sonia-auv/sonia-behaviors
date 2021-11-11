@@ -23,7 +23,7 @@ Created on Thu Nov 11 2021
 '''
 class run_coin_gateSM(Behavior):
 	'''
-	Test  run for coin filp and gate
+	Test run for coin filp and gate
 	'''
 
 
@@ -32,6 +32,7 @@ class run_coin_gateSM(Behavior):
 		self.name = 'run_coin_gate'
 
 		# parameters of this behavior
+		self.add_parameter('simulation', True)
 
 		# references to used behaviors
 		self.add_behavior(init_simSM, 'init_sim')

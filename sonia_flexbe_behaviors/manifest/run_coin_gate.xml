@@ -7,7 +7,7 @@
 	<author>FA</author>
 	<date>Thu Nov 11 2021</date>
 	<description>
-		Test  run for coin filp and gate
+		Test run for coin filp and gate
 	</description>
 
 
@@ -17,5 +17,11 @@
 	<contains name="move_to_gate" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="simulation" default="True" label="simulation" hint="Sets the simulation" />
+
+	</params>
+
 
 </behavior>
