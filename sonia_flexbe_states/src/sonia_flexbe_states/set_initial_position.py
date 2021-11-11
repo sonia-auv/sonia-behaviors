@@ -24,6 +24,8 @@ class set_initial_position(EventState):
         super(set_initial_position, self).__init__(outcomes=['continue'])
 
         self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
+        
+        self.target_reach = False
 
     def target_reach_cb(self, data):
         self.target_reach = data.data
@@ -33,6 +35,7 @@ class set_initial_position(EventState):
         pose.position = Point(0.,0.,0.)
         pose.orientation = Quaternion(0.,0.,0.,1)
         self.set_initial_position_pub.publish(pose)
+
         self.target_reach_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reach_cb)
 
     def execute(self, userdata):
