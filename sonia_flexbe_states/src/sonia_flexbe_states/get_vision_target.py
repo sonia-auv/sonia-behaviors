@@ -13,7 +13,6 @@ class get_vision_target(EventState):
     '''
         Get the movement target from vision filterchain
 
-        -- topic_to_listen          string      Topic to listen from the filterchain started
         -- bounding_box_pixel       uint16      Side of square bounding box for alignement on target in pixel
         -- target_width_meter       float       Width of the target in meters
         -- target_height_meter      float       Height of the target in meters
@@ -31,12 +30,12 @@ class get_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, topic_to_listen, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement, min_mouvement):
+    def __init__(self, bounding_box_pixel, target_width_meter, target_height_meter, ratio_victory, number_of_average, camera, max_mouvement, min_mouvement):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'move', 'failed'],
+                                                input_keys = ['filterchain'],
                                                 output_keys = ['pose'])
-        
-        self.param_ttl = topic_to_listen
+
         self.param_bbp = bounding_box_pixel
         self.param_twm = target_width_meter
         self.param_thm = target_height_meter
@@ -187,7 +186,7 @@ class get_vision_target(EventState):
         self.height = 0
         self.number_of_sample = 0
 
-        self.get_vision_data = rospy.Subscriber(self.param_ttl, VisionTarget, self.vision_cb)
+        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
 
         Logger.log('Starting to gather data', Logger.REPORT_HINT) 
 

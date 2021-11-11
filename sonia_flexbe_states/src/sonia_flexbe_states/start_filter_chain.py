@@ -1,6 +1,7 @@
 #!/usr/bin/env python 
 #-*- coding: utf-8 -*-
 
+import logging
 import rospy
 
 from flexbe_core import EventState, Logger
@@ -12,7 +13,7 @@ class start_filter_chain(EventState):
         [...]
 
         -- param_node_name      string Detection task
-        -- camera_no uint8      Enter 1:Front 2:Bottom
+        -- camera_no uint8      Enter 1:Front 2:Bottom 3:Front simulation 4:Bottom simulation
         -- param_cmd uint8      Enter 1:Open  2:Close
 
         <= continue			Indicates that the camera started
@@ -20,7 +21,8 @@ class start_filter_chain(EventState):
 
     '''
     def __init__(self, param_node_name, camera_no, param_cmd):
-        super(start_filter_chain, self).__init__(outcomes=['continue', 'failed'])
+        super(start_filter_chain, self).__init__(   outcomes=['continue', 'failed'],
+                                                    output_keys=['filterchain'])
         self.execute_vision_cmd = None
         self.camera_no = camera_no
         self.param_node_name = param_node_name
@@ -52,6 +54,8 @@ class start_filter_chain(EventState):
             return 'failed'
 
     def execute(self, userdata):
+        userdata.filterchain = '/proc_image_processing/' + self.param_node_name + '_result'
+        Logger.log('Filter chain started : %s' %userdata.filterchain, Logger.REPORT_HINT)
         return 'continue'
 
     def on_exit(self, userdata):
