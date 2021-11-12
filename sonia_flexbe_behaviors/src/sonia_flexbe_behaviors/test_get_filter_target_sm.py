@@ -45,7 +45,7 @@ class test_get_filter_targetSM(Behavior):
 
 
 	def create(self):
-		# x:660 y:48, x:296 y:378
+		# x:777 y:411, x:296 y:378
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,19 +57,26 @@ class test_get_filter_targetSM(Behavior):
 		with _state_machine:
 			# x:93 y:102
 			OperatableStateMachine.add('start baby',
-										start_filter_chain(param_node_name='simple_body_baby', camera_no=3, param_cmd=1),
+										start_filter_chain(param_node_name='simple_pipe45', camera_no=4, param_cmd=1),
 										transitions={'continue': 'test', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'filter_cam'})
 
 			# x:356 y:113
 			OperatableStateMachine.add('test',
-										get_vision_target(bounding_box_pixel=75, target_width_meter=0.02, target_height_meter=0.08, ratio_victory=0.8, number_of_average=10, camera=3, max_mouvement=2, min_mouvement=0.25),
-										transitions={'success': 'finished', 'move': 'move target', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'pose': 'pose'})
+										get_vision_target(bounding_box_pixel=100, target_width_meter=0.7, target_height_meter=1.2, ratio_victory=0.8, number_of_average=15, max_mouvement=1, min_mouvement=0.25, timeout=60),
+										transitions={'success': 'twist to path', 'move': 'move target', 'failed': 'failed', 'search': 'failed'},
+										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'filter_cam', 'pose': 'pose'})
 
-			# x:658 y:230
+			# x:757 y:231
+			OperatableStateMachine.add('twist to path',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'pose'})
+
+			# x:460 y:223
 			OperatableStateMachine.add('move target',
 										move_to_target(),
 										transitions={'continue': 'test', 'failed': 'failed'},

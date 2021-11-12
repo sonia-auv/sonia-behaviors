@@ -49,7 +49,7 @@ class run_coin_gateSM(Behavior):
 
 
 	def create(self):
-		# x:885 y:341, x:426 y:445
+		# x:967 y:182, x:426 y:445
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags

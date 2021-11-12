@@ -22,7 +22,7 @@ class start_filter_chain(EventState):
     '''
     def __init__(self, param_node_name, camera_no, param_cmd):
         super(start_filter_chain, self).__init__(   outcomes=['continue', 'failed'],
-                                                    output_keys=['filterchain'])
+                                                    output_keys=['filterchain', 'camera_no'])
         self.execute_vision_cmd = None
         self.camera_no = camera_no
         self.param_node_name = param_node_name
@@ -55,6 +55,7 @@ class start_filter_chain(EventState):
 
     def execute(self, userdata):
         userdata.filterchain = '/proc_image_processing/' + self.param_node_name + '_result'
+        userdata.camera_no = self.camera_no
         Logger.log('Filter chain started : %s' %userdata.filterchain, Logger.REPORT_HINT)
         return 'continue'
 
