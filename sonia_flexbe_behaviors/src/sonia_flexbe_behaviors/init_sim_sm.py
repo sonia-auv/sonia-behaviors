@@ -59,8 +59,8 @@ class init_simSM(Behavior):
 			# x:97 y:72
 			OperatableStateMachine.add('initial condition',
 										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'set mode ', 'wait': 'wait for mission switch'},
-										autonomy={'continue': Autonomy.Off, 'wait': Autonomy.Off})
+										transitions={'continue': 'set mode ', 'skip': 'wait for mission switch'},
+										autonomy={'continue': Autonomy.Off, 'skip': Autonomy.Off})
 
 			# x:369 y:180
 			OperatableStateMachine.add('set mode ',

@@ -8,8 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.create_pose import create_pose
-from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_flexbe_states.set_control_mode import set_control_mode
+from sonia_flexbe_states.set_initial_position import set_initial_position
+from sonia_flexbe_states.wait_mission import wait_mission
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -20,17 +21,18 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Thu Nov 11 2021
 @author: FA
 '''
-class move_to_gateSM(Behavior):
+class init_subSM(Behavior):
 	'''
-	Movement to the gate in simulation
+	Behavior to start the simulation
 	'''
 
 
 	def __init__(self):
-		super(move_to_gateSM, self).__init__()
-		self.name = 'move_to_gate'
+		super(init_subSM, self).__init__()
+		self.name = 'init_sub'
 
 		# parameters of this behavior
+		self.add_parameter('simulation', False)
 
 		# references to used behaviors
 
@@ -44,7 +46,7 @@ class move_to_gateSM(Behavior):
 
 
 	def create(self):
-		# x:462 y:180, x:114 y:315
+		# x:856 y:161, x:582 y:125
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -54,19 +56,23 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:54 y:104
-			OperatableStateMachine.add('pose gate',
-										create_pose(positionX=10, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
-										transitions={'continue': 'move gate'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'gate_pose'})
+			# x:97 y:72
+			OperatableStateMachine.add('initial condition',
+										set_initial_position(simulation=self.simulation),
+										transitions={'continue': 'set mode ', 'skip': 'wait for mission switch'},
+										autonomy={'continue': Autonomy.Off, 'skip': Autonomy.Off})
 
-			# x:263 y:210
-			OperatableStateMachine.add('move gate',
-										move_to_target(),
+			# x:369 y:180
+			OperatableStateMachine.add('set mode ',
+										set_control_mode(mode=32, timeout=3),
 										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'gate_pose'})
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:354 y:24
+			OperatableStateMachine.add('wait for mission switch',
+										wait_mission(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine

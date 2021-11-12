@@ -55,7 +55,7 @@ class move_coin_filpSM(Behavior):
 		with _state_machine:
 			# x:437 y:160
 			OperatableStateMachine.add('move to yaw',
-										move_single(positionX=0, positionY=0, positionZ=2, orientationX=0, orientationY=0, orientationZ=130, frame=0, time=10, precision=0, rotation=True),
+										move_single(positionX=0, positionY=0, positionZ=2, orientationX=0, orientationY=0, orientationZ=180, frame=1, time=20, precision=0, rotation=True),
 										transitions={'continue': 'rotate to gate', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
