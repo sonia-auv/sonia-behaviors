@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="coin_flip_gate_complete">
+
+	<executable package_path="sonia_flexbe_behaviors.coin_flip_gate_complete_sm" class="coin_flip_gate_completeSM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Fri Nov 12 2021</date>
+	<description>
+		coin_flip task followed by move_to_gate task.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_sub" />
+	<contains name="move_to_gate" />
+	<contains name="coin_flip" />
+
+	<!-- Available Parameters -->
+
+</behavior>
