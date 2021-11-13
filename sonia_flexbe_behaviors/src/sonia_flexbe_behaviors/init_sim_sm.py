@@ -46,7 +46,7 @@ class init_simSM(Behavior):
 
 
 	def create(self):
-		# x:856 y:161, x:582 y:125
+		# x:948 y:109, x:461 y:350
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -59,16 +59,16 @@ class init_simSM(Behavior):
 			# x:97 y:72
 			OperatableStateMachine.add('initial condition',
 										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'set mode ', 'skip': 'wait for mission switch'},
-										autonomy={'continue': Autonomy.Off, 'skip': Autonomy.Off})
+										transitions={'continue': 'set mode '},
+										autonomy={'continue': Autonomy.Off})
 
-			# x:369 y:180
+			# x:363 y:83
 			OperatableStateMachine.add('set mode ',
 										set_control_mode(mode=32, timeout=3),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'wait for mission switch', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:354 y:24
+			# x:616 y:102
 			OperatableStateMachine.add('wait for mission switch',
 										wait_mission(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
