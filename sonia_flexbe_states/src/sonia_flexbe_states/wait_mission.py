@@ -1,12 +1,9 @@
 #!/usr/bin/env python 
 #-*- coding: utf-8 -*-
 
-from time import sleep, time
-from genpy.message import check_type
 import rospy
 
 from flexbe_core import EventState, Logger
-from rospy.core import logerr
 from sonia_common.msg import MissionSwitchMsg
 
 class wait_mission(EventState):
