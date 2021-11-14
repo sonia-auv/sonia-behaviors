@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_states.create_pose import create_pose
 from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_flexbe_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -44,7 +45,7 @@ class move_to_gateSM(Behavior):
 
 
 	def create(self):
-		# x:462 y:180, x:114 y:315
+		# x:743 y:232, x:114 y:315
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -61,10 +62,16 @@ class move_to_gateSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'gate_pose'})
 
+			# x:526 y:200
+			OperatableStateMachine.add('trickshot',
+										trick_shot(delay=3),
+										transitions={'continue': 'finished'},
+										autonomy={'continue': Autonomy.Off})
+
 			# x:263 y:210
 			OperatableStateMachine.add('move gate',
 										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'trickshot', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'gate_pose'})
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python 
 #-*- coding: utf-8 -*-
 
-from time import sleep, time
-from genpy.message import check_type
+from time import time
 import rospy
 
-from flexbe_core import EventState, Logger
-from rospy.core import logerr
+from flexbe_core import EventState
 from geometry_msgs.msg import Pose, Point, Quaternion
 from std_msgs.msg import Bool
 
@@ -19,32 +17,29 @@ class set_initial_position(EventState):
 
         '''
 
-    def __init__(self, simulation):
+    def __init__(self, simulation=False, timeout=10):
         
-        super(set_initial_position, self).__init__(outcomes=['continue', 'skip'])
+        super(set_initial_position, self).__init__(outcomes=['continue'])
 
         self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
-        
-        self.target_reach = False
-        self.param_simulation = simulation
 
-    def target_reach_cb(self, data):
-        self.target_reach = data.data
+        self.param_simulation = simulation
+        self.param_timeout = timeout
 
     def on_enter(self, userdata):
-        pose = Pose()
-        pose.position = Point(0.,0.,0.)
-        pose.orientation = Quaternion(0.,0.,0.,1)
-        self.set_initial_position_pub.publish(pose)
-
-        self.target_reach_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reach_cb)
+        self.start_time = time()
+        if self.param_simulation == True :
+            pose = Pose()
+            pose.position = Point(0.,0.,0.)
+            pose.orientation = Quaternion(0.,0.,0.,1)
+            self.set_initial_position_pub.publish(pose)
+        else :
+            return 'continue'
 
     def execute(self, userdata):
-        if self.param_simulation == True :
-            if self.target_reach == True :
-                return 'continue'
-        else :
-            return 'skip'
+        actual = time()-self.start_time
+        if actual > self.param_timeout :
+            return 'continue'
 
     def on_exit(self, userdata):
         pass
