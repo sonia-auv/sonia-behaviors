@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search for target test">
+
+	<executable package_path="sonia_flexbe_behaviors.search_for_target_test_sm" class="searchfortargettestSM" />
+	<tagstring>sim</tagstring>
+	<author>FA</author>
+	<date>Sun Nov 14 2021</date>
+	<description>
+		Testing the research for the target passed in parameter
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
