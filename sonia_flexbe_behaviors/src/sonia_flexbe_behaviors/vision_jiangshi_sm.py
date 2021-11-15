@@ -47,8 +47,8 @@ class vision_jiangshiSM(Behavior):
 
 
 	def create(self):
-		# x:617 y:46, x:186 y:498
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:783 y:62, x:186 y:498, x:374 y:353
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -78,11 +78,11 @@ class vision_jiangshiSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target'})
 
-			# x:379 y:206
+			# x:379 y:202
 			OperatableStateMachine.add('search_front',
 										self.use_behavior(search_frontSM, 'search_front'),
-										transitions={'finished': 'get_target', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										transitions={'finished': 'get_target', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
 

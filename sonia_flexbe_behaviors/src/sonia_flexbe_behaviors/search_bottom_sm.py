@@ -46,8 +46,8 @@ class search_bottomSM(Behavior):
 
 
 	def create(self):
-		# x:168 y:248, x:382 y:82
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['target'])
+		# x:168 y:248, x:382 y:82, x:338 y:210
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
 		_state_machine.userdata.target = '/proc_image_processing/simple_pipe45_result'
 
 		# Additional creation code can be added inside the following tags
@@ -55,11 +55,11 @@ class search_bottomSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:374 y:297, x:378 y:208, x:383 y:59, x:386 y:152, x:430 y:365, x:530 y:365
-		_sm_move_square_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['target'], conditions=[
+		# x:374 y:297, x:378 y:208, x:597 y:353, x:386 y:152, x:430 y:365, x:530 y:365, x:406 y:58, x:730 y:365
+		_sm_move_square_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
 										('finished', [('find_target', 'continue')]),
 										('failed', [('find_target', 'failed')]),
-										('finished', [('square_mouvement', 'finished')]),
+										('lost_target', [('square_mouvement', 'finished')]),
 										('failed', [('square_mouvement', 'failed')])
 										])
 
@@ -67,7 +67,7 @@ class search_bottomSM(Behavior):
 			# x:82 y:50
 			OperatableStateMachine.add('square_mouvement',
 										self.use_behavior(square_mouvementSM, 'move square/square_mouvement'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:84 y:179
@@ -83,8 +83,8 @@ class search_bottomSM(Behavior):
 			# x:122 y:66
 			OperatableStateMachine.add('move square',
 										_sm_move_square_0,
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
 

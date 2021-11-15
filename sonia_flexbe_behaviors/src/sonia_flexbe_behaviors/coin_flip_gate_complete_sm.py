@@ -70,7 +70,7 @@ class coin_flip_gate_completeSM(Behavior):
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:360 y:82
+			# x:375 y:78
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
 										transitions={'finished': 'move_to_gate', 'failed': 'failed'},

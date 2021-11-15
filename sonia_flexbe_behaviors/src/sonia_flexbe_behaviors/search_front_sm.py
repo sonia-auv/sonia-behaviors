@@ -8,10 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.create_pose import create_pose
+from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
 from sonia_flexbe_states.find_vision_target import find_vision_target
-from sonia_flexbe_states.move_single import move_single
-from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -35,6 +33,7 @@ class search_frontSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,119 +45,45 @@ class search_frontSM(Behavior):
 
 
 	def create(self):
-		# x:676 y:96, x:857 y:406
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['target'])
-		_state_machine.userdata.target = ' '
+		# x:418 y:40, x:449 y:123, x:390 y:216
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
+		_state_machine.userdata.target = '/proc_image_processing/simple_vampire_torpille_result'
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:335 y:23, x:333 y:115, x:332 y:189, x:328 y:275, x:430 y:365, x:530 y:365
-		_sm_move_right_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['target'], conditions=[
-										('finished', [('move right', 'continue')]),
-										('failed', [('move right', 'failed')]),
-										('failed', [('find front target', 'failed')]),
-										('finished', [('find front target', 'continue')])
+		# x:349 y:161, x:437 y:28, x:414 y:120, x:322 y:249, x:598 y:122, x:641 y:62, x:543 y:252
+		_sm_snake_searching_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+										('lost_target', [('snake_mouvement', 'finished')]),
+										('failed', [('snake_mouvement', 'failed')]),
+										('lost_target', [('find target', 'failed')]),
+										('finished', [('find target', 'continue')])
 										])
 
-		with _sm_move_right_0:
-			# x:108 y:43
-			OperatableStateMachine.add('move right',
-										move_single(positionX=0, positionY=2, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+		with _sm_snake_searching_0:
+			# x:126 y:63
+			OperatableStateMachine.add('snake_mouvement',
+										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement'),
+										transitions={'finished': 'lost_target', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:107 y:186
-			OperatableStateMachine.add('find front target',
-										find_vision_target(number_samples=10, timeout=20),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'target'})
-
-
-		# x:302 y:304, x:304 y:216, x:295 y:129, x:286 y:44, x:430 y:365, x:530 y:365
-		_sm_move_left_1 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['target'], conditions=[
-										('failed', [('find_target', 'failed')]),
-										('finished', [('find_target', 'continue')]),
-										('failed', [('left', 'failed')]),
-										('finished', [('left', 'continue')])
-										])
-
-		with _sm_move_left_1:
-			# x:77 y:104
-			OperatableStateMachine.add('left',
-										move_single(positionX=0, positionY=-1, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:77 y:253
-			OperatableStateMachine.add('find_target',
-										find_vision_target(number_samples=10, timeout=20),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'target'})
-
-
-		# x:413 y:34, x:417 y:135, x:414 y:320, x:411 y:209, x:430 y:365, x:530 y:365
-		_sm_move_forward_2 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['target'], conditions=[
-										('failed', [('move foward', 'failed')]),
-										('finished', [('move foward', 'continue')]),
-										('finished', [('find target', 'continue')]),
-										('failed', [('find target', 'failed')])
-										])
-
-		with _sm_move_forward_2:
-			# x:166 y:50
-			OperatableStateMachine.add('move foward',
-										move_single(positionX=1, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:155 y:225
+			# x:119 y:201
 			OperatableStateMachine.add('find target',
-										find_vision_target(number_samples=10, timeout=20),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										find_vision_target(number_samples=10, timeout=70),
+										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
 
 
 
 		with _state_machine:
-			# x:104 y:66
-			OperatableStateMachine.add('pose left',
-										create_pose(positionX=0, positionY=-1, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
-										transitions={'continue': 'Move left'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'left_pose'})
-
-			# x:333 y:40
-			OperatableStateMachine.add('Move left',
-										_sm_move_left_1,
-										transitions={'finished': 'finished', 'failed': 'Move right'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'target': 'target'})
-
-			# x:336 y:190
-			OperatableStateMachine.add('Move right',
-										_sm_move_right_0,
-										transitions={'finished': 'finished', 'failed': 'back to middle'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'target': 'target'})
-
-			# x:620 y:243
-			OperatableStateMachine.add('back to middle',
-										move_to_target(),
-										transitions={'continue': 'Move forward', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'left_pose'})
-
-			# x:857 y:186
-			OperatableStateMachine.add('Move forward',
-										_sm_move_forward_2,
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+			# x:111 y:54
+			OperatableStateMachine.add('Snake searching',
+										_sm_snake_searching_0,
+										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
 

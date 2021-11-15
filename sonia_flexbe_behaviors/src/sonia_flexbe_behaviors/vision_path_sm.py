@@ -47,8 +47,8 @@ class vision_pathSM(Behavior):
 
 
 	def create(self):
-		# x:1095 y:117, x:549 y:514
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:1095 y:117, x:549 y:514, x:420 y:333
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -57,7 +57,7 @@ class vision_pathSM(Behavior):
 
 
 		with _state_machine:
-			# x:67 y:160
+			# x:71 y:184
 			OperatableStateMachine.add('start path filter',
 										start_filter_chain(param_node_name='simple_pipe45', camera_no=4, param_cmd=1),
 										transitions={'continue': 'get target', 'failed': 'failed'},
@@ -81,8 +81,8 @@ class vision_pathSM(Behavior):
 			# x:323 y:196
 			OperatableStateMachine.add('search_bottom',
 										self.use_behavior(search_bottomSM, 'search_bottom'),
-										transitions={'finished': 'get target', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										transitions={'finished': 'get target', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
 			# x:521 y:52

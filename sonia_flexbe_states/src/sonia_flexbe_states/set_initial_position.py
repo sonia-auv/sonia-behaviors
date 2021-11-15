@@ -4,9 +4,9 @@
 from time import time
 import rospy
 
-from flexbe_core import EventState
+from flexbe_core import EventState, Logger
 from geometry_msgs.msg import Pose, Point, Quaternion
-from std_msgs.msg import Bool
+from std_msgs.msg import Int8
 
 class set_initial_position(EventState):
 
@@ -28,15 +28,16 @@ class set_initial_position(EventState):
 
     def on_enter(self, userdata):
         self.start_time = time()
-        if self.param_simulation == True :
-            pose = Pose()
-            pose.position = Point(0.,0.,0.)
-            pose.orientation = Quaternion(0.,0.,0.,1)
-            self.set_initial_position_pub.publish(pose)
 
     def execute(self, userdata):
         actual = time()-self.start_time
-        if actual > self.param_timeout or self.param_simulation == False:
+        if actual > self.param_timeout:
+            if self.param_simulation == True:
+                Logger.log('Setting initial condition', Logger.REPORT_HINT)
+                pose = Pose()
+                pose.position = Point(0.,0.,0.)
+                pose.orientation = Quaternion(0.,0.,0.,1)
+                self.set_initial_position_pub.publish(pose)
             return 'continue'
 
     def on_exit(self, userdata):
