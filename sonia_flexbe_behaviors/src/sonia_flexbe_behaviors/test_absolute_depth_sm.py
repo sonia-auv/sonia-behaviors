@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.set_control_mode import set_control_mode
-from sonia_flexbe_states.wait_mission import wait_mission
+from sonia_flexbe_states.create_absolute_depth import create_absolute_depth
+from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,21 +17,20 @@ from sonia_flexbe_states.wait_mission import wait_mission
 
 
 '''
-Created on Thu Nov 11 2021
+Created on Mon Nov 15 2021
 @author: FA
 '''
-class init_subSM(Behavior):
+class test_absolute_depthSM(Behavior):
 	'''
-	Behavior to start the simulation
+	Testing the state for reaching an absolute depth for searching objects
 	'''
 
 
 	def __init__(self):
-		super(init_subSM, self).__init__()
-		self.name = 'init_sub'
+		super(test_absolute_depthSM, self).__init__()
+		self.name = 'test_absolute_depth'
 
 		# parameters of this behavior
-		self.add_parameter('simulation', False)
 
 		# references to used behaviors
 
@@ -45,7 +44,7 @@ class init_subSM(Behavior):
 
 
 	def create(self):
-		# x:812 y:142, x:538 y:215
+		# x:508 y:251, x:352 y:223
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -55,17 +54,19 @@ class init_subSM(Behavior):
 
 
 		with _state_machine:
-			# x:178 y:107
-			OperatableStateMachine.add('set mode ',
-										set_control_mode(mode=32, timeout=3),
-										transitions={'continue': 'wait for mission switch', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+			# x:134 y:76
+			OperatableStateMachine.add('test pose',
+										create_absolute_depth(positionZ=1),
+										transitions={'continue': 'move'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'pose'})
 
-			# x:354 y:24
-			OperatableStateMachine.add('wait for mission switch',
-										wait_mission(),
+			# x:470 y:81
+			OperatableStateMachine.add('move',
+										move_to_target(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'pose'})
 
 
 		return _state_machine

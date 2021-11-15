@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
-from sonia_flexbe_behaviors.init_sub_sm import init_subSM
+from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
 from sonia_flexbe_behaviors.move_to_gate_sm import move_to_gateSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -35,7 +35,7 @@ class coin_flip_gate_completeSM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(coin_flipSM, 'coin_flip')
-		self.add_behavior(init_subSM, 'init_sub')
+		self.add_behavior(init_submarineSM, 'init_submarine')
 		self.add_behavior(move_to_gateSM, 'move_to_gate')
 
 		# Additional initialization code can be added inside the following tags
@@ -48,7 +48,7 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 	def create(self):
-		# x:789 y:349, x:445 y:269
+		# x:960 y:85, x:445 y:269
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,9 +58,9 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 		with _state_machine:
-			# x:75 y:83
-			OperatableStateMachine.add('init_sub',
-										self.use_behavior(init_subSM, 'init_sub'),
+			# x:98 y:69
+			OperatableStateMachine.add('init_submarine',
+										self.use_behavior(init_submarineSM, 'init_submarine'),
 										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

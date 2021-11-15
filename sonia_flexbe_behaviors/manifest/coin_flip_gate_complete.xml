@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="init_sub" />
+	<contains name="init_submarine" />
 	<contains name="move_to_gate" />
 	<contains name="coin_flip" />
 

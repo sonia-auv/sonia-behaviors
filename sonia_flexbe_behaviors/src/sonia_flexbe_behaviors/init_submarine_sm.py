@@ -21,18 +21,19 @@ from sonia_flexbe_states.wait_mission import wait_mission
 Created on Thu Nov 11 2021
 @author: FA
 '''
-class init_simSM(Behavior):
+class init_submarineSM(Behavior):
 	'''
-	Behavior to start the simulation
+	Behavior to start the submarine. Set mode of the control and wait for the mission switch
 	'''
 
 
 	def __init__(self):
-		super(init_simSM, self).__init__()
-		self.name = 'init_sim'
+		super(init_submarineSM, self).__init__()
+		self.name = 'init_submarine'
 
 		# parameters of this behavior
 		self.add_parameter('simulation', False)
+		self.add_parameter('mode', 32)
 
 		# references to used behaviors
 
@@ -58,13 +59,13 @@ class init_simSM(Behavior):
 		with _state_machine:
 			# x:97 y:72
 			OperatableStateMachine.add('initial condition',
-										set_initial_position(simulation=self.simulation),
+										set_initial_position(simulation=self.simulation, timeout=10),
 										transitions={'continue': 'set mode '},
 										autonomy={'continue': Autonomy.Off})
 
 			# x:363 y:83
 			OperatableStateMachine.add('set mode ',
-										set_control_mode(mode=32, timeout=3),
+										set_control_mode(mode=self.mode, timeout=3),
 										transitions={'continue': 'wait for mission switch', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

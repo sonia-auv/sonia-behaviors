@@ -44,7 +44,7 @@ class test_start_stop_filter_chainSM(Behavior):
 
 
 	def create(self):
-		# x:456 y:307, x:130 y:365
+		# x:573 y:310, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="square_mouvement">
+
+	<executable package_path="sonia_flexbe_behaviors.square_mouvement_sm" class="square_mouvementSM" />
+	<tagstring>mouvement</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Mouvement for searching on the bottom camera
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="square_distance" default="2" label="square_distance" hint="Sets the square_distance">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="numeric" name="move_time" default="5" label="move_time" hint="Sets the move_time">
+			<min value="0" />
+			<max value="20" />
+		</param>
+
+		<param type="numeric" name="down_distance" default="1" label="down_distance" hint="Sets the down_distance">
+			<min value="0" />
+			<max value="3" />
+		</param>
+
+	</params>
+
+
+</behavior>

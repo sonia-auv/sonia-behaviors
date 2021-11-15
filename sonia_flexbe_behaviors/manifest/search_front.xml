@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_front">
+
+	<executable package_path="sonia_flexbe_behaviors.search_front_sm" class="search_frontSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Sun Nov 14 2021</date>
+	<description>
+		Look for a vision target on the front camera
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

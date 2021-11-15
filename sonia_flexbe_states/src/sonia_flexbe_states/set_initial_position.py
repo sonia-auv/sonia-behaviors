@@ -33,12 +33,10 @@ class set_initial_position(EventState):
             pose.position = Point(0.,0.,0.)
             pose.orientation = Quaternion(0.,0.,0.,1)
             self.set_initial_position_pub.publish(pose)
-        else :
-            return 'continue'
 
     def execute(self, userdata):
         actual = time()-self.start_time
-        if actual > self.param_timeout :
+        if actual > self.param_timeout or self.param_simulation == False:
             return 'continue'
 
     def on_exit(self, userdata):
