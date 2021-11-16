@@ -3,7 +3,7 @@
 <behavior name="droppers">
 
 	<executable package_path="sonia_flexbe_behaviors.droppers_sm" class="droppersSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>pool</tagstring>
 	<author>FA</author>
 	<date>Tue Nov 16 2021</date>
 	<description>

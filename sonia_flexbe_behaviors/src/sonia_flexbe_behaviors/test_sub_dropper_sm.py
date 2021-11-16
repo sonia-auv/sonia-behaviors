@@ -21,7 +21,7 @@ Created on Tue Nov 16 2021
 '''
 class test_sub_dropperSM(Behavior):
 	'''
-	test of io state on sub
+	test of io state on sub (complete)
 	'''
 
 
