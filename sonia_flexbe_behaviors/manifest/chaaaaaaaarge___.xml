@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="CHAAAAAAAARGE!!!">
+
+	<executable package_path="sonia_flexbe_behaviors.chaaaaaaaarge____sm" class="CHAAAAAAAARGESM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Tue Nov 16 2021</date>
+	<description>
+		LEEEEROOOOOOOOOOYYYYYYYYYYYYYYY JENNKINNSSSSSS! 
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="charge_distance" default="2" label="charge_distance" hint="Sets the charge_distance">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+	</params>
+
+
+</behavior>

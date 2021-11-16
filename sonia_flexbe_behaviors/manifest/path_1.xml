@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="path_1">
+
+	<executable package_path="sonia_flexbe_behaviors.path_1_sm" class="path_1SM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Tue Nov 16 2021</date>
+	<description>
+		pose_buffer_1, path task pose_buffer_2. Before Jiangshi.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_path" />
+
+	<!-- Available Parameters -->
+
+</behavior>

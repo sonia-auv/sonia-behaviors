@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="CHARGE!!!">
+
+	<executable package_path="sonia_flexbe_behaviors.charge____sm" class="CHARGESM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Tue Nov 16 2021</date>
+	<description>
+		RAM INTO THE JIANGSHI!!! gently.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_jiangshi" />
+
+	<!-- Available Parameters -->
+
+</behavior>
