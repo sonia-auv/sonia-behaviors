@@ -66,9 +66,9 @@ class init_submarineSM(Behavior):
 
 			# x:363 y:83
 			OperatableStateMachine.add('set mode ',
-										set_control_mode(mode=self.mode, timeout=3),
-										transitions={'continue': 'wait for mission switch'},
-										autonomy={'continue': Autonomy.Off})
+										set_control_mode(mode=self.mode, timeout=5),
+										transitions={'continue': 'wait for mission switch', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:616 y:102
 			OperatableStateMachine.add('wait for mission switch',
