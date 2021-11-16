@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_sub_dropper">
+
+	<executable package_path="sonia_flexbe_behaviors.test_sub_dropper_sm" class="test_sub_dropperSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Tue Nov 16 2021</date>
+	<description>
+		test of io state on sub
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
