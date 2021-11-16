@@ -22,6 +22,11 @@
 			<max value="60" />
 		</param>
 
+		<param type="numeric" name="time_to_stop" default="1" label="time_to_stop" hint="Sets the time_to_stop">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
 	</params>
 
 

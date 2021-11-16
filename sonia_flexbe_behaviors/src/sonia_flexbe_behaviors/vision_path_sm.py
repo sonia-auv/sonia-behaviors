@@ -65,7 +65,7 @@ class vision_pathSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:695 y:256
+			# x:725 y:219
 			OperatableStateMachine.add('move to target',
 										move_to_target(),
 										transitions={'continue': 'get target', 'failed': 'failed'},
@@ -79,7 +79,7 @@ class vision_pathSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target_pose'})
 
-			# x:323 y:196
+			# x:312 y:200
 			OperatableStateMachine.add('search_bottom',
 										self.use_behavior(search_bottomSM, 'search_bottom'),
 										transitions={'finished': 'get target', 'failed': 'failed', 'lost_target': 'lost_target'},

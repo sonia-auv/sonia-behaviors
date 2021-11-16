@@ -4,8 +4,8 @@
 import rospy
 
 from flexbe_core import EventState, Logger
-from std_msgs.msg import UInt8, Int8
-from time import time
+from std_msgs.msg import UInt8, Bool
+from time import time, sleep
 
 class set_control_mode(EventState):
     """
@@ -28,21 +28,22 @@ class set_control_mode(EventState):
 
     def mpc_status_cb(self, data):
         self.mpc_status = data.data
-        Logger.log('MPC status is %d' %data.data, Logger.REPORT_HINT)
+        Logger.log('MPC status is %s' %str(data.data), Logger.REPORT_HINT)
 
     def on_enter(self, userdata):
         Logger.log('starting',Logger.REPORT_HINT)
-        self.mpc_status_sub = rospy.Subscriber('proc_control/mpc_status', Int8, self.mpc_status_cb)
+        self.mpc_status_sub = rospy.Subscriber('proc_control/is_mpc_active', Bool, self.mpc_status_cb)
         self.launch_time = time()
 
     def execute(self, userdata):
         time_dif = time() - self.launch_time
         if time_dif > self.param_timeout:
             Logger.log('ending',Logger.REPORT_HINT)
-            if self.mpc_status > 0:
+            if self.mpc_status == True:
                 return 'continue'
             else:
                 self.set_mode.publish(self.param_mode)
+                sleep(self.param_timeout)
 
     def on_exit(self, userdata):
         self.mpc_status_sub.unregister()

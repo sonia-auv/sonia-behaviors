@@ -6,7 +6,6 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from geometry_msgs.msg import Pose, Point, Quaternion
-from std_msgs.msg import Int8
 
 class set_initial_position(EventState):
 
@@ -38,7 +37,10 @@ class set_initial_position(EventState):
                 pose.position = Point(0.,0.,0.)
                 pose.orientation = Quaternion(0.,0.,0.,1)
                 self.set_initial_position_pub.publish(pose)
-            return 'continue'
+                return 'continue'
+            else:
+                Logger.log('Not in simulation. No need for intial condition', Logger.REPORT_HINT)
+                return 'continue'
 
     def on_exit(self, userdata):
         pass

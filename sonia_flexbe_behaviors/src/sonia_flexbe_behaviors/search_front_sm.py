@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
 from sonia_flexbe_states.find_vision_target import find_vision_target
+from sonia_flexbe_states.stop_move import stop_move
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -32,6 +33,7 @@ class search_frontSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('move_time', 15)
+		self.add_parameter('time_to_stop', 1)
 
 		# references to used behaviors
 		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')
@@ -46,7 +48,7 @@ class search_frontSM(Behavior):
 
 
 	def create(self):
-		# x:418 y:40, x:449 y:123, x:390 y:216
+		# x:642 y:64, x:389 y:239, x:209 y:246
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
 		_state_machine.userdata.target = ' '
 
@@ -84,9 +86,15 @@ class search_frontSM(Behavior):
 			# x:111 y:54
 			OperatableStateMachine.add('Snake searching',
 										_sm_snake_searching_0,
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
+										transitions={'finished': 'stop mouvement', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
+
+			# x:378 y:39
+			OperatableStateMachine.add('stop mouvement',
+										stop_move(timeout=self.time_to_stop),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
