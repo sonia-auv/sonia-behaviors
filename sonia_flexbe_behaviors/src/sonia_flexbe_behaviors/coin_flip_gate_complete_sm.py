@@ -48,7 +48,7 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 	def create(self):
-		# x:960 y:85, x:445 y:269
+		# x:910 y:97, x:470 y:316
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,19 +58,19 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 		with _state_machine:
-			# x:98 y:69
+			# x:104 y:85
 			OperatableStateMachine.add('init_submarine',
 										self.use_behavior(init_submarineSM, 'init_submarine'),
 										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:675 y:75
+			# x:672 y:83
 			OperatableStateMachine.add('move_to_gate',
 										self.use_behavior(move_to_gateSM, 'move_to_gate'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:375 y:78
+			# x:384 y:80
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
 										transitions={'finished': 'move_to_gate', 'failed': 'failed'},

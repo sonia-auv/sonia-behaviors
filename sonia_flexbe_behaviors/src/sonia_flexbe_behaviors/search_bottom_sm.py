@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.square_mouvement_sm import square_mouvementSM
+from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
 from sonia_flexbe_states.find_vision_target import find_vision_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -31,10 +31,10 @@ class search_bottomSM(Behavior):
 		self.name = 'search_bottom'
 
 		# parameters of this behavior
-		self.add_parameter('search_timeout', 0)
+		self.add_parameter('move_time', 15)
 
 		# references to used behaviors
-		self.add_behavior(square_mouvementSM, 'move square/square_mouvement')
+		self.add_behavior(snake_mouvementSM, 'move with search/snake_mouvement')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -48,32 +48,33 @@ class search_bottomSM(Behavior):
 	def create(self):
 		# x:168 y:248, x:382 y:82, x:338 y:210
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
-		_state_machine.userdata.target = '/proc_image_processing/simple_pipe45_result'
+		_state_machine.userdata.target = ' '
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:374 y:297, x:378 y:208, x:597 y:353, x:386 y:152, x:430 y:365, x:530 y:365, x:406 y:58, x:730 y:365
-		_sm_move_square_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+		# x:374 y:297, x:559 y:126, x:401 y:134, x:383 y:49, x:608 y:67, x:595 y:178, x:397 y:202
+		_sm_move_with_search_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
 										('finished', [('find_target', 'continue')]),
-										('failed', [('find_target', 'failed')]),
-										('lost_target', [('square_mouvement', 'finished')]),
-										('failed', [('square_mouvement', 'failed')])
+										('lost_target', [('find_target', 'failed')]),
+										('failed', [('snake_mouvement', 'failed')]),
+										('lost_target', [('snake_mouvement', 'finished')])
 										])
 
-		with _sm_move_square_0:
-			# x:82 y:50
-			OperatableStateMachine.add('square_mouvement',
-										self.use_behavior(square_mouvementSM, 'move square/square_mouvement'),
+		with _sm_move_with_search_0:
+			# x:99 y:41
+			OperatableStateMachine.add('snake_mouvement',
+										self.use_behavior(snake_mouvementSM, 'move with search/snake_mouvement',
+											parameters={'timeout': self.move_time}),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:84 y:179
+			# x:78 y:163
 			OperatableStateMachine.add('find_target',
-										find_vision_target(number_samples=10, timeout=self.search_timeout),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										find_vision_target(number_samples=10, timeout=self.move_time*7),
+										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
 
@@ -81,8 +82,8 @@ class search_bottomSM(Behavior):
 
 		with _state_machine:
 			# x:122 y:66
-			OperatableStateMachine.add('move square',
-										_sm_move_square_0,
+			OperatableStateMachine.add('move with search',
+										_sm_move_with_search_0,
 										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})

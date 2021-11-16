@@ -32,7 +32,7 @@ class snake_mouvementSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('distance_side', 2)
-		self.add_parameter('timeout', 10)
+		self.add_parameter('timeout', 15)
 
 		# references to used behaviors
 

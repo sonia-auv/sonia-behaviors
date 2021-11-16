@@ -31,6 +31,7 @@ class search_frontSM(Behavior):
 		self.name = 'search_front'
 
 		# parameters of this behavior
+		self.add_parameter('move_time', 15)
 
 		# references to used behaviors
 		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')
@@ -47,7 +48,7 @@ class search_frontSM(Behavior):
 	def create(self):
 		# x:418 y:40, x:449 y:123, x:390 y:216
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
-		_state_machine.userdata.target = '/proc_image_processing/simple_vampire_torpille_result'
+		_state_machine.userdata.target = ' '
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -65,13 +66,14 @@ class search_frontSM(Behavior):
 		with _sm_snake_searching_0:
 			# x:126 y:63
 			OperatableStateMachine.add('snake_mouvement',
-										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement'),
+										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement',
+											parameters={'timeout': self.move_time}),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:119 y:201
 			OperatableStateMachine.add('find target',
-										find_vision_target(number_samples=10, timeout=70),
+										find_vision_target(number_samples=10, timeout=self.move_time*7),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})

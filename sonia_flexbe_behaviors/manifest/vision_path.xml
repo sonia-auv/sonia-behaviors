@@ -15,5 +15,11 @@
 	<contains name="search_bottom" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filterchain_name" default="simple_pipe45" label="filterchain_name" hint="Sets the filterchain_name" />
+
+	</params>
+
 
 </behavior>

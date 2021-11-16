@@ -3,16 +3,25 @@
 <behavior name="move_to_gate">
 
 	<executable package_path="sonia_flexbe_behaviors.move_to_gate_sm" class="move_to_gateSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>pool</tagstring>
 	<author>FA</author>
-	<date>Thu Nov 11 2021</date>
+	<date>Mon Nov 15 2021</date>
 	<description>
-		Movement to the gate in simulation
+		Mouvement to gate with trickshot
 	</description>
 
 
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance_to_gate" default="10" label="distance_to_gate" hint="Sets the distance_to_gate">
+			<min value="0" />
+			<max value="60" />
+		</param>
+
+	</params>
+
 
 </behavior>

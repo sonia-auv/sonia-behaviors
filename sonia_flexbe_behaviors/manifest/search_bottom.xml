@@ -12,14 +12,14 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="square_mouvement" />
+	<contains name="snake_mouvement" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="search_timeout" default="0" label="search_timeout" hint="Sets the search_timeout (for 5 mouvements)">
+		<param type="numeric" name="move_time" default="15" label="move_time" hint="Sets the move_time">
 			<min value="0" />
-			<max value="120" />
+			<max value="60" />
 		</param>
 
 	</params>

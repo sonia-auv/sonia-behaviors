@@ -18,12 +18,12 @@ from sonia_flexbe_states.trick_shot import trick_shot
 
 
 '''
-Created on Thu Nov 11 2021
+Created on Mon Nov 15 2021
 @author: FA
 '''
 class move_to_gateSM(Behavior):
 	'''
-	Movement to the gate in simulation
+	Mouvement to gate with trickshot
 	'''
 
 
@@ -32,6 +32,7 @@ class move_to_gateSM(Behavior):
 		self.name = 'move_to_gate'
 
 		# parameters of this behavior
+		self.add_parameter('distance_to_gate', 10)
 
 		# references to used behaviors
 
@@ -45,7 +46,7 @@ class move_to_gateSM(Behavior):
 
 
 	def create(self):
-		# x:743 y:232, x:114 y:315
+		# x:846 y:87, x:398 y:199
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -55,20 +56,20 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:54 y:104
+			# x:111 y:68
 			OperatableStateMachine.add('pose gate',
-										create_pose(positionX=10, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
+										create_pose(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
 										transitions={'continue': 'move gate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'gate_pose'})
 
-			# x:526 y:200
+			# x:597 y:74
 			OperatableStateMachine.add('trickshot',
 										trick_shot(delay=3),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:263 y:210
+			# x:354 y:71
 			OperatableStateMachine.add('move gate',
 										move_to_target(),
 										transitions={'continue': 'trickshot', 'failed': 'failed'},

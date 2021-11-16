@@ -3,7 +3,7 @@
 <behavior name="snake_mouvement">
 
 	<executable package_path="sonia_flexbe_behaviors.snake_mouvement_sm" class="snake_mouvementSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>mouvement</tagstring>
 	<author>FA</author>
 	<date>Mon Nov 15 2021</date>
 	<description>
@@ -21,7 +21,7 @@
 			<max value="10" />
 		</param>
 
-		<param type="numeric" name="timeout" default="10" label="timeout" hint="Sets the timeout">
+		<param type="numeric" name="timeout" default="15" label="timeout" hint="Sets the timeout">
 			<min value="0" />
 			<max value="60" />
 		</param>
