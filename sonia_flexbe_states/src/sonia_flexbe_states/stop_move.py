@@ -19,7 +19,6 @@ class stop_move(EventState):
 
         self.param_timeout = timeout
         self.reset_trajectory = rospy.Publisher('/proc_control/reset_trajectory', Bool, queue_size=2)
-        self.target_reached_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reached_cb)
 
     def target_reached_cb(self, data):
         self.target_reached = data.data
@@ -28,6 +27,8 @@ class stop_move(EventState):
     def on_enter(self, userdata):
         self.target_reached = False
         self.start_time = time()
+        self.target_reached_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reached_cb)
+        
         Logger.log('Stopping mouvement', Logger.REPORT_HINT)
         self.reset_trajectory.publish(Bool(True))
 
