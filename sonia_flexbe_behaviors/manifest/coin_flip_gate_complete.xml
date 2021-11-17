@@ -7,14 +7,14 @@
 	<author>William Brouillard</author>
 	<date>Fri Nov 12 2021</date>
 	<description>
-		coin_flip task followed by move_to_gate task.
+		Orient to the gate and move to it.
 	</description>
 
 
 	<!-- Contained Behaviors -->
+	<contains name="coin_flip" />
 	<contains name="init_submarine" />
 	<contains name="move_to_gate" />
-	<contains name="coin_flip" />
 
 	<!-- Available Parameters -->
 

@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.move_single import move_single
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
+from sonia_flexbe_states.wait_mission import wait_mission
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -56,21 +56,21 @@ class test_start_stop_filter_chainSM(Behavior):
 		with _state_machine:
 			# x:123 y:66
 			OperatableStateMachine.add('Start_filter_chain',
-										start_filter_chain(param_node_name=jiangshi, camera_no=1, param_cmd=1),
-										transitions={'continue': 'move', 'failed': 'failed'},
+										start_filter_chain(param_node_name='deep_jiangshi', camera_no=1, param_cmd=1),
+										transitions={'continue': 'wait_for_mission_switch', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'jiangshi', 'camera_no': 'front'})
 
-			# x:497 y:139
+			# x:511 y:160
 			OperatableStateMachine.add('Stop_filter_chain',
-										start_filter_chain(param_node_name=jiangshi, camera_no=1, param_cmd=2),
+										start_filter_chain(param_node_name='deep_jiangshi', camera_no=1, param_cmd=2),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'jiangshi', 'camera_no': 'front'})
 
-			# x:323 y:67
-			OperatableStateMachine.add('move',
-										move_single(positionX=20, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=2, time=60, precision=0, rotation=True),
+			# x:317 y:74
+			OperatableStateMachine.add('wait_for_mission_switch',
+										wait_mission(),
 										transitions={'continue': 'Stop_filter_chain', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

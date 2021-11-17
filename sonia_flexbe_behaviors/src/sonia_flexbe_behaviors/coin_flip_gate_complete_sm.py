@@ -11,6 +11,8 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
 from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
 from sonia_flexbe_behaviors.move_to_gate_sm import move_to_gateSM
+from sonia_flexbe_states.create_pose import create_pose
+from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -23,7 +25,7 @@ Created on Fri Nov 12 2021
 '''
 class coin_flip_gate_completeSM(Behavior):
 	'''
-	coin_flip task followed by move_to_gate task.
+	Orient to the gate and move to it.
 	'''
 
 
@@ -48,7 +50,7 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 	def create(self):
-		# x:910 y:97, x:470 y:316
+		# x:856 y:615, x:465 y:590
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,22 +60,36 @@ class coin_flip_gate_completeSM(Behavior):
 
 
 		with _state_machine:
-			# x:104 y:85
+			# x:137 y:90
+			OperatableStateMachine.add('buffer_pose',
+										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
+										transitions={'continue': 'init_submarine'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
+
+			# x:392 y:403
+			OperatableStateMachine.add('coin_flip',
+										self.use_behavior(coin_flipSM, 'coin_flip'),
+										transitions={'finished': 'move_to_gate', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:130 y:415
 			OperatableStateMachine.add('init_submarine',
 										self.use_behavior(init_submarineSM, 'init_submarine'),
 										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:672 y:83
+			# x:634 y:552
+			OperatableStateMachine.add('move_buffer',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
+
+			# x:647 y:387
 			OperatableStateMachine.add('move_to_gate',
 										self.use_behavior(move_to_gateSM, 'move_to_gate'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:384 y:80
-			OperatableStateMachine.add('coin_flip',
-										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'move_to_gate', 'failed': 'failed'},
+										transitions={'finished': 'move_buffer', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 

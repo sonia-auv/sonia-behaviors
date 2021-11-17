@@ -47,7 +47,7 @@ class vision_jiangshiSM(Behavior):
 
 
 	def create(self):
-		# x:783 y:62, x:186 y:498, x:374 y:353
+		# x:913 y:72, x:295 y:506, x:387 y:357
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
