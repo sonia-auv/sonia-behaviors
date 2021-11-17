@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Jiangshi_task">
+
+	<executable package_path="sonia_flexbe_behaviors.jiangshi_task_sm" class="Jiangshi_taskSM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Wed Nov 17 2021</date>
+	<description>
+		Find the Jiangshi and ram into it.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_jiangshi" />
+	<contains name="CHAAAAAAAARGE!!!" />
+
+	<!-- Available Parameters -->
+
+</behavior>
