@@ -3,11 +3,11 @@
 <behavior name="test_mission switch">
 
 	<executable package_path="sonia_flexbe_behaviors.test_mission_switch_sm" class="test_missionswitchSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>test</tagstring>
 	<author>FA</author>
 	<date>Thu Nov 11 2021</date>
 	<description>
-		Testing the mission switch in simulation
+		Testing the mission switch to test connectivity to the sub.
 	</description>
 
 

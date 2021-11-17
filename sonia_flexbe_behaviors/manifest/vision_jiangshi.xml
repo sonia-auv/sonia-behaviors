@@ -15,5 +15,11 @@
 	<contains name="search_front" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filter_name" default="deep_jiangshi" label="filter_name" hint="Sets the filter_name" />
+
+	</params>
+
 
 </behavior>

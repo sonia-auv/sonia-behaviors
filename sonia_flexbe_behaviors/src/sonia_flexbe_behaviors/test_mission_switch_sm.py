@@ -21,7 +21,7 @@ Created on Thu Nov 11 2021
 '''
 class test_missionswitchSM(Behavior):
 	'''
-	Testing the mission switch in simulation
+	Testing the mission switch to test connectivity to the sub.
 	'''
 
 
