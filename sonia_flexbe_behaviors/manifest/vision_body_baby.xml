@@ -19,7 +19,7 @@
 
 		<param type="text" name="filterchain_name" default="simple_body_baby" label="filterchain_name" hint="Sets the filterchain_name" />
 
-		<param type="numeric" name="self.camera_no" default="2" label="self.camera_no" hint="Sets the self.camera_no">
+		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>

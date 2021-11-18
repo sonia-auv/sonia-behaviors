@@ -34,7 +34,7 @@ class vision_body_babySM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('filterchain_name', 'simple_body_baby')
-		self.add_parameter('self.camera_no', 2)
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(search_bottomSM, 'search_bottom')
@@ -61,7 +61,7 @@ class vision_body_babySM(Behavior):
 		with _state_machine:
 			# x:71 y:184
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.filterchain_name, camera_no=self.self.camera_no, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
@@ -82,7 +82,7 @@ class vision_body_babySM(Behavior):
 
 			# x:521 y:52
 			OperatableStateMachine.add('get target',
-										get_vision_target(bounding_box_pixel=150, target_width_meter=0.6, target_height_meter=1.2, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
+										get_vision_target(bounding_box_pixel=150, target_width_meter=0.6, target_height_meter=0.3, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
 										transitions={'success': 'finished', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose'})
