@@ -14,6 +14,9 @@ Gate, path, Jiangshi, path, droppers.
 
 	<!-- Contained Behaviors -->
 	<contains name="coin_flip_gate_complete" />
+	<contains name="droppers_task" />
+	<contains name="path_task" />
+	<contains name="Jiangshi_task" />
 
 	<!-- Available Parameters -->
 

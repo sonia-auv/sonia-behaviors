@@ -69,7 +69,7 @@ class droppers_taskSM(Behavior):
 
 			# x:428 y:64
 			OperatableStateMachine.add('get_target',
-										get_vision_target(bounding_box_pixel=75, target_width_meter=0, target_height_meter=0, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=60),
+										get_vision_target(bounding_box_pixel=75, target_width_meter=0.9, target_height_meter=0.6, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=60),
 										transitions={'success': 'droppers', 'move': 'move_to_target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose'})

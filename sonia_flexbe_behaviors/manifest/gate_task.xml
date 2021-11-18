@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="coin_flip_gate_complete">
+<behavior name="gate_task">
 
-	<executable package_path="sonia_flexbe_behaviors.coin_flip_gate_complete_sm" class="coin_flip_gate_completeSM" />
+	<executable package_path="sonia_flexbe_behaviors.gate_task_sm" class="gate_taskSM" />
 	<tagstring>pool</tagstring>
 	<author>William Brouillard</author>
 	<date>Fri Nov 12 2021</date>
