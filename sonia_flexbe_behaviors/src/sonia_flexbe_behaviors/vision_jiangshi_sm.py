@@ -34,6 +34,7 @@ class vision_jiangshiSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('filter_name', 'deep_jiangshi')
+		self.add_parameter('cam_number', 1)
 
 		# references to used behaviors
 		self.add_behavior(search_frontSM, 'search_front')
@@ -60,7 +61,7 @@ class vision_jiangshiSM(Behavior):
 		with _state_machine:
 			# x:133 y:62
 			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(param_node_name=self.filter_name, camera_no=1, param_cmd=1),
+										start_filter_chain(param_node_name=self.filter_name, camera_no=self.cam_number, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'jiangshi', 'camera_no': 'front'})

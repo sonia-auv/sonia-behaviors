@@ -34,6 +34,7 @@ class vision_pathSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('filterchain_name', 'simple_pipe45')
+		self.add_parameter('cam_number', 2)
 
 		# references to used behaviors
 		self.add_behavior(search_bottomSM, 'search_bottom')
@@ -60,7 +61,7 @@ class vision_pathSM(Behavior):
 		with _state_machine:
 			# x:71 y:184
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.filterchain_name, camera_no=4, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, camera_no=self.cam_number, param_cmd=1),
 										transitions={'continue': 'get target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
