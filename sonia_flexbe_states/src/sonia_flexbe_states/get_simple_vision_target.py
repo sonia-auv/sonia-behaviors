@@ -32,7 +32,7 @@ class get_simple_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=60):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain', 'camera_no'],
@@ -44,7 +44,7 @@ class get_simple_vision_target(EventState):
         self.param_rv = ratio_victory
         self.param_noa = number_of_average
         self.param_mm = max_mouvement
-        self.param_min_mouvement = min_mouvement
+        self.param_alignement_distance = alignement_distance
         self.param_timeout = timeout
         
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
@@ -116,30 +116,8 @@ class get_simple_vision_target(EventState):
         Logger.log('Alignement on target', Logger.REPORT_HINT)
         #To test to see if working
         new_pose = AddPose()
-        mouvement_x = self.x
-        mouvement_y = self.y
-
-        if abs(mouvement_x) > self.param_mm :
-            if mouvement_x < 0 :
-                mouvement_x = -self.param_mm
-            else :
-                mouvement_x = self.param_mm
-        elif abs(mouvement_x) < self.param_min_mouvement :
-            if mouvement_x < 0 :
-                mouvement_x = -self.param_min_mouvement
-            else :
-                mouvement_x = self.param_min_mouvement
-
-        if abs(mouvement_y) > self.param_mm :
-            if mouvement_y < 0 :
-                mouvement_y = -self.param_mm
-            else :
-                mouvement_y = self.param_mm
-        elif abs(mouvement_y) < self.param_min_mouvement :
-            if mouvement_y < 0 :
-                mouvement_y = -self.param_min_mouvement
-            else :
-                mouvement_y = self.param_min_mouvement
+        mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
+        mouvement_y = self.param_alignement_distance * (self.y / self.param_image_height)
 
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(mouvement_y, mouvement_x, 0.)
@@ -214,6 +192,7 @@ class get_simple_vision_target(EventState):
                 return 'success'
             elif self.alignement_reached == False:
                 userdata.pose = self.align_with_vision()
+                userdata.bounding_box = self.param_bbp
                 return 'align'
             elif self.position_reached == False:
                 userdata.pose = self.position_with_vision()
@@ -224,5 +203,4 @@ class get_simple_vision_target(EventState):
             return 'search'
 
     def on_exit(self, userdata):
-        userdata.bounding_box = self.param_bbp
         self.get_vision_data.unregister()

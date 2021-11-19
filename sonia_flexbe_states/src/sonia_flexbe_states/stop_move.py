@@ -22,7 +22,6 @@ class stop_move(EventState):
 
     def target_reached_cb(self, data):
         self.target_reached = data.data
-        Logger.log('Target reached : %s' %str(data.data), Logger.REPORT_HINT)
 
     def on_enter(self, userdata):
         self.target_reached = False
