@@ -64,14 +64,14 @@ class vision_path_new_algoSM(Behavior):
 		with _state_machine:
 			# x:51 y:243
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=4, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.3, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
+										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
 										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
@@ -97,7 +97,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:807 y:246
+			# x:755 y:222
 			OperatableStateMachine.add('Aligment with stopping',
 										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
 										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get_target'},

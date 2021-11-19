@@ -16,14 +16,19 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="distance_side" default="4" label="distance_side" hint="Sets the distance to move left and right (m)">
+		<param type="numeric" name="distance_y" default="2" label="distance_y" hint="Sets the distance to move right (m)">
 			<min value="0" />
-			<max value="10" />
+			<max value="4" />
 		</param>
 
-		<param type="numeric" name="timeout" default="30" label="timeout" hint="Sets the time for each move in the patern">
+		<param type="numeric" name="timeout" default="50" label="timeout" hint="Sets the time for each move in the patern">
 			<min value="0" />
 			<max value="60" />
+		</param>
+
+		<param type="numeric" name="distance_x" default="1" label="distance_x" hint="Sets the distance to move left (m)">
+			<min value="0" />
+			<max value="2" />
 		</param>
 
 	</params>
