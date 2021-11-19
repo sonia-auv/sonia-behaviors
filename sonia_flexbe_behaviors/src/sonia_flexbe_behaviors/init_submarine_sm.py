@@ -57,22 +57,22 @@ class init_submarineSM(Behavior):
 
 
 		with _state_machine:
-			# x:97 y:72
+			# x:119 y:72
 			OperatableStateMachine.add('initial condition',
 										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'set mode '},
+										transitions={'continue': 'wait for mission switch'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:363 y:83
+			# x:647 y:77
 			OperatableStateMachine.add('set mode ',
 										set_control_mode(mode=self.mode, timeout=5),
-										transitions={'continue': 'wait for mission switch', 'failed': 'failed'},
+										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:616 y:102
+			# x:345 y:82
 			OperatableStateMachine.add('wait for mission switch',
 										wait_mission(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'set mode ', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 

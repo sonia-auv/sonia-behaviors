@@ -7,7 +7,7 @@
 	<author>William Brouillard</author>
 	<date>Fri Nov 12 2021</date>
 	<description>
-		Orient to the gate and move to it.
+		Init the submarine, orient to the gate with the right orientation and move through it with a trickshot.
 	</description>
 
 

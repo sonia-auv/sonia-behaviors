@@ -82,4 +82,4 @@ class verify_centroid(EventState):
             return 'timeout_reached'
 
     def on_exit(self, userdata):
-        pass
+        self.get_vision_target.unregister()

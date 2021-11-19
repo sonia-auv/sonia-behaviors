@@ -36,6 +36,7 @@ class vision_path_new_algoSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('filterchain_name', 'simple_pipe45')
 		self.add_parameter('header_name', 'pipe')
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
@@ -63,7 +64,7 @@ class vision_path_new_algoSM(Behavior):
 		with _state_machine:
 			# x:51 y:243
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=4, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
@@ -96,7 +97,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:755 y:222
+			# x:807 y:246
 			OperatableStateMachine.add('Aligment with stopping',
 										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
 										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get_target'},

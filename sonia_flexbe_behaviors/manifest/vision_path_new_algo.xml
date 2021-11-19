@@ -22,6 +22,11 @@
 
 		<param type="text" name="header_name" default="pipe" label="header_name" hint="Sets the header name to filter the vision target message" />
 
+		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
 	</params>
 
 

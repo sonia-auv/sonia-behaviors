@@ -25,7 +25,7 @@ Created on Fri Nov 12 2021
 '''
 class gate_taskSM(Behavior):
 	'''
-	Orient to the gate and move to it.
+	Init the submarine, orient to the gate with the right orientation and move through it with a trickshot.
 	'''
 
 
@@ -50,7 +50,7 @@ class gate_taskSM(Behavior):
 
 
 	def create(self):
-		# x:856 y:615, x:465 y:590
+		# x:878 y:587, x:465 y:590
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -67,26 +67,26 @@ class gate_taskSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
-			# x:392 y:403
+			# x:417 y:280
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
 										transitions={'finished': 'move_to_gate', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:130 y:415
+			# x:128 y:271
 			OperatableStateMachine.add('init_submarine',
 										self.use_behavior(init_submarineSM, 'init_submarine'),
 										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:634 y:552
+			# x:657 y:560
 			OperatableStateMachine.add('move_buffer',
 										move_to_target(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
-			# x:647 y:387
+			# x:684 y:278
 			OperatableStateMachine.add('move_to_gate',
 										self.use_behavior(move_to_gateSM, 'move_to_gate'),
 										transitions={'finished': 'move_buffer', 'failed': 'failed'},

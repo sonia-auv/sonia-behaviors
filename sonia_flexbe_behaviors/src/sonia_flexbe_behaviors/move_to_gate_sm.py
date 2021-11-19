@@ -32,7 +32,7 @@ class move_to_gateSM(Behavior):
 		self.name = 'move_to_gate'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 10)
+		self.add_parameter('distance_to_gate', 2)
 
 		# references to used behaviors
 

@@ -124,7 +124,7 @@ class get_simple_vision_target(EventState):
         else :
             new_pose.position = Point(0., mouvement_x, -mouvement_y)
 
-        return self.fill_pose(new_pose, 15)
+        return self.fill_pose(new_pose, 30)
         
     def position_with_vision(self):
         Logger.log('Alignement for position. Creating pose', Logger.REPORT_HINT)
