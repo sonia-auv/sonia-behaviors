@@ -16,31 +16,24 @@ class set_initial_position(EventState):
 
         '''
 
-    def __init__(self, simulation=False, timeout=10):
+    def __init__(self, simulation=False):
         
         super(set_initial_position, self).__init__(outcomes=['continue'])
 
         self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
 
         self.param_simulation = simulation
-        self.param_timeout = timeout
-
-    def on_enter(self, userdata):
-        self.start_time = time()
 
     def execute(self, userdata):
-        actual = time()-self.start_time
-        if actual > self.param_timeout:
-            if self.param_simulation == True:
-                Logger.log('Setting initial condition', Logger.REPORT_HINT)
-                pose = Pose()
-                pose.position = Point(0.,0.,0.)
-                pose.orientation = Quaternion(0.,0.,0.,1)
-                self.set_initial_position_pub.publish(pose)
-                return 'continue'
-            else:
-                Logger.log('Not in simulation. No need for intial condition', Logger.REPORT_HINT)
-                return 'continue'
+        if self.param_simulation == True:
+            Logger.log('Setting initial condition', Logger.REPORT_HINT)
+            pose = Pose()
+            pose.position = Point(0.,0.,0.)
+            pose.orientation = Quaternion(0.,0.,0.,1)
+            self.set_initial_position_pub.publish(pose)
+        else:
+            Logger.log('Not in simulation. No need for intial condition', Logger.REPORT_HINT)
+        return 'continue'
 
     def on_exit(self, userdata):
         pass

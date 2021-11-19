@@ -32,8 +32,7 @@ class search_bottomSM(Behavior):
 		self.name = 'search_bottom'
 
 		# parameters of this behavior
-		self.add_parameter('move_time', 15)
-		self.add_parameter('time_to_stop', 5)
+		self.add_parameter('time_stop_search', 105)
 
 		# references to used behaviors
 		self.add_behavior(snake_mouvementSM, 'move with search/snake_mouvement')
@@ -57,7 +56,7 @@ class search_bottomSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:374 y:297, x:559 y:126, x:401 y:134, x:383 y:49, x:608 y:67, x:595 y:178, x:397 y:202
+		# x:374 y:297, x:559 y:126, x:401 y:134, x:469 y:41, x:608 y:67, x:595 y:178, x:397 y:202
 		_sm_move_with_search_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
 										('finished', [('find_target', 'continue')]),
 										('lost_target', [('find_target', 'failed')]),
@@ -68,14 +67,13 @@ class search_bottomSM(Behavior):
 		with _sm_move_with_search_0:
 			# x:99 y:41
 			OperatableStateMachine.add('snake_mouvement',
-										self.use_behavior(snake_mouvementSM, 'move with search/snake_mouvement',
-											parameters={'timeout': self.move_time}),
+										self.use_behavior(snake_mouvementSM, 'move with search/snake_mouvement'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:78 y:163
 			OperatableStateMachine.add('find_target',
-										find_vision_target(number_samples=10, timeout=self.move_time*7),
+										find_vision_target(number_samples=10, timeout=self.time_stop_search),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
@@ -92,7 +90,7 @@ class search_bottomSM(Behavior):
 
 			# x:413 y:42
 			OperatableStateMachine.add('stop mouvement',
-										stop_move(timeout=self.time_to_stop),
+										stop_move(timeout=10),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

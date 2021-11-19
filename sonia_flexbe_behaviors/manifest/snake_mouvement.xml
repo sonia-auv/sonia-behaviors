@@ -16,12 +16,12 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="distance_side" default="2" label="distance_side" hint="Sets the distance_side">
+		<param type="numeric" name="distance_side" default="4" label="distance_side" hint="Sets the distance to move left and right (m)">
 			<min value="0" />
 			<max value="10" />
 		</param>
 
-		<param type="numeric" name="timeout" default="15" label="timeout" hint="Sets the timeout">
+		<param type="numeric" name="timeout" default="15" label="timeout" hint="Sets the time for each move in the patern">
 			<min value="0" />
 			<max value="60" />
 		</param>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_path_new_algo">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_path_new_algo_sm" class="vision_path_new_algoSM" />
+	<tagstring>sim</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Behaviors for the task of the path and rotate to the right orientation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_bottom" />
+	<contains name="test new alignement" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filterchain_name" default="simple_pipe45" label="filterchain_name" hint="Sets the filterchain name to start the vision target" />
+
+		<param type="text" name="header_name" default="pipe" label="header_name" hint="Sets the header name to filter the vision target message" />
+
+	</params>
+
+
+</behavior>

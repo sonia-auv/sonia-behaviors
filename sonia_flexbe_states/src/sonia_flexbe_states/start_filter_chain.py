@@ -12,20 +12,22 @@ class start_filter_chain(EventState):
         Start the filterchain entered
         [...]
 
-        -- param_node_name      string Detection task
-        -- camera_no uint8      Enter 1:Front 2:Bottom 3:Front simulation 4:Bottom simulation
-        -- param_cmd uint8      Enter 1:Open  2:Close
+        -- param_node_name      string      Detection task
+        -- header_name          string      Header name to filter result
+        -- camera_no            uint8       Enter 1:Front 2:Bottom 3:Front simulation 4:Bottom simulation
+        -- param_cmd            uint8       Enter 1:Open  2:Close
 
         <= continue			Indicates that the camera started
         <= failed			Indicates that the camera didn't started
 
     '''
-    def __init__(self, param_node_name, camera_no, param_cmd):
+    def __init__(self, param_node_name, header_name, camera_no, param_cmd):
         super(start_filter_chain, self).__init__(   outcomes=['continue', 'failed'],
-                                                    output_keys=['filterchain', 'camera_no'])
+                                                    output_keys=['filterchain', 'camera_no', 'header_name'])
         self.execute_vision_cmd = None
         self.camera_no = camera_no
         self.param_node_name = param_node_name
+        self.param_header_name = header_name
         self.param_cmd = param_cmd
         
     def on_enter(self, userdata):
@@ -54,11 +56,12 @@ class start_filter_chain(EventState):
             return 'failed'
 
     def execute(self, userdata):
-        userdata.filterchain = '/proc_image_processing/' + self.param_node_name + '_result'
-        userdata.camera_no = self.camera_no
-        Logger.log('Filter chain started : %s' %userdata.filterchain, Logger.REPORT_HINT)
         return 'continue'
 
     def on_exit(self, userdata):
+        userdata.filterchain = '/proc_image_processing/' + self.param_node_name + '_result'
+        userdata.camera_no = self.camera_no
+        userdata.header_name = self.param_header_name
+        Logger.log('Filter chain started : %s' %userdata.filterchain, Logger.REPORT_HINT)
         pass
  

@@ -31,7 +31,7 @@ class snake_mouvementSM(Behavior):
 		self.name = 'snake_mouvement'
 
 		# parameters of this behavior
-		self.add_parameter('distance_side', 2)
+		self.add_parameter('distance_side', 4)
 		self.add_parameter('timeout', 15)
 
 		# references to used behaviors
@@ -58,7 +58,7 @@ class snake_mouvementSM(Behavior):
 		with _state_machine:
 			# x:67 y:67
 			OperatableStateMachine.add('slide left half pose',
-										create_pose(positionX=self.distance_side/2, positionY=-self.distance_side, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
+										create_pose(positionX=self.distance_side/4, positionY=-self.distance_side/2, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
 										transitions={'continue': 'slide right pose'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'slide_left_half'})
@@ -86,7 +86,7 @@ class snake_mouvementSM(Behavior):
 
 			# x:69 y:283
 			OperatableStateMachine.add('slide left pose',
-										create_pose(positionX=self.distance_side/2, positionY=-self.distance_side*2, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
+										create_pose(positionX=self.distance_side/4, positionY=-self.distance_side, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
 										transitions={'continue': 'half slide left'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'slide_left'})
@@ -114,7 +114,7 @@ class snake_mouvementSM(Behavior):
 
 			# x:67 y:175
 			OperatableStateMachine.add('slide right pose',
-										create_pose(positionX=self.distance_side/2, positionY=self.distance_side*2, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
+										create_pose(positionX=self.distance_side/4, positionY=self.distance_side, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
 										transitions={'continue': 'slide left pose'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'slide_right'})
