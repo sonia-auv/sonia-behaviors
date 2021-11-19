@@ -32,10 +32,10 @@ class get_simple_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no'],
+                                                input_keys = ['filterchain_target', 'filterchain_obstacle' 'camera_no'],
                                                 output_keys = ['pose', 'bounding_box'])
 
         self.param_bbp = bounding_box_pixel
@@ -47,26 +47,47 @@ class get_simple_vision_target(EventState):
         self.param_alignement_distance = alignement_distance
         self.param_timeout = timeout
         
-        self.vision_x_pixel = deque([], maxlen=self.param_noa)
-        self.vision_y_pixel = deque([], maxlen=self.param_noa)
-        self.vision_width_pixel = deque([], maxlen=self.param_noa)
-        self.vision_height_pixel = deque([], maxlen=self.param_noa)
+        self.x_pixel_1 = deque([], maxlen=self.param_noa)
+        self.y_pixel_1 = deque([], maxlen=self.param_noa)
+        self.width_pixel_1 = deque([], maxlen=self.param_noa)
+        self.height_pixel_1 = deque([], maxlen=self.param_noa)
+
+        self.x_pixel_2 = deque([], maxlen=self.param_noa)
+        self.y_pixel_2 = deque([], maxlen=self.param_noa)
+        self.width_pixel_2 = deque([], maxlen=self.param_noa)
+        self.height_pixel_2 = deque([], maxlen=self.param_noa)
+
+
         self.vision_angle = deque([], maxlen=self.param_noa)
 
-    def vision_cb(self, vision_data):
-        self.vision_x_pixel.append(vision_data.x)
-        self.vision_y_pixel.append(vision_data.y)
-        self.vision_width_pixel.append(vision_data.width)
-        self.vision_height_pixel.append(vision_data.height)
+    def vision_target_cb(self, vision_data):
+        self.x_pixel_1.append(vision_data.x)
+        self.y_pixel_1.append(vision_data.y)
+        self.width_pixel_1.append(vision_data.width)
+        self.height_pixel_1.append(vision_data.height)
         self.vision_angle.append(vision_data.angle)
 
-        if  len(self.vision_x_pixel) == self.param_noa and \
-            len(self.vision_y_pixel) == self.param_noa and \
-            len(self.vision_width_pixel) == self.param_noa and \
-            len(self.vision_height_pixel) == self.param_noa and \
+        if  len(self.x_pixel_1) == self.param_noa and \
+            len(self.y_pixel_1) == self.param_noa and \
+            len(self.width_pixel_1) == self.param_noa and \
+            len(self.height_pixel_1) == self.param_noa and \
             len(self.vision_angle) == self.param_noa:
             self.parse_vision_data()
-            self.parse_data = True
+            self.parse_data_1 = True
+
+    def vision_obstacle_cb(self, vision_data):
+        self.x_pixel_2.append(vision_data.x)
+        self.y_pixel_2.append(vision_data.y)
+        self.width_pixel_2.append(vision_data.width)
+        self.height_pixel_2.append(vision_data.height)
+        self.vision_angle.append(vision_data.angle)
+
+        if  len(self.x_pixel_2) == self.param_noa and \
+            len(self.y_pixel_2) == self.param_noa and \
+            len(self.width_pixel_2) == self.param_noa and \
+            len(self.height_pixel_2) == self.param_noa:
+            self.parse_vision_data()
+            self.parse_data_2 = True
 
     def parse_vision_data(self):
         average_x_pixel = 0.
@@ -75,21 +96,21 @@ class get_simple_vision_target(EventState):
         average_height_pixel = 0.
         average_angle = 0.
 
-        for i in self.vision_x_pixel:
+        for i in self.x_pixel_1:
             average_x_pixel += i
-        average_x_pixel /= len(self.vision_x_pixel)
+        average_x_pixel /= len(self.x_pixel_1)
 
-        for i in self.vision_y_pixel:
+        for i in self.y_pixel_1:
             average_y_pixel += i
-        average_y_pixel /= len(self.vision_y_pixel)
+        average_y_pixel /= len(self.y_pixel_1)
 
-        for i in self.vision_width_pixel:
+        for i in self.width_pixel_1:
             average_width_pixel += i
-        average_width_pixel /= len(self.vision_width_pixel)
+        average_width_pixel /= len(self.width_pixel_1)
 
-        for i in self.vision_height_pixel:
+        for i in self.height_pixel_1:
             average_height_pixel += i
-        average_height_pixel /= len(self.vision_height_pixel)
+        average_height_pixel /= len(self.height_pixel_1)
 
         for i in self.vision_angle:
             average_angle += i
@@ -113,7 +134,7 @@ class get_simple_vision_target(EventState):
             Logger.log('Offset y bounding box (px): %f' %self.y, Logger.REPORT_HINT)
 
     def align_with_vision(self):
-        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
+        Logger.log('Alignement on target', Logger.REPORT_HINT)
         #To test to see if working
         new_pose = AddPose()
         mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
@@ -124,7 +145,7 @@ class get_simple_vision_target(EventState):
         else :
             new_pose.position = Point(0., mouvement_x, -mouvement_y)
 
-        return self.fill_pose(new_pose, 20)
+        return self.fill_pose(new_pose, 15)
         
     def position_with_vision(self):
         Logger.log('Alignement for position. Creating pose', Logger.REPORT_HINT)
@@ -157,15 +178,20 @@ class get_simple_vision_target(EventState):
 
     def on_enter(self, userdata):
 
-        self.vision_x_pixel.clear()
-        self.vision_y_pixel.clear()
-        self.vision_width_pixel.clear()
-        self.vision_height_pixel.clear()
+        self.x_pixel_1.clear()
+        self.y_pixel_1.clear()
+        self.width_pixel_1.clear()
+        self.height_pixel_1.clear()
+        self.x_pixel_2.clear()
+        self.y_pixel_2.clear()
+        self.width_pixel_2.clear()
+        self.height_pixel_2.clear()
         self.vision_angle.clear()
 
         self.position_reached = False
         self.alignement_reached = False
-        self.parse_data = False
+        self.parse_data_1 = False
+        self.parse_data_2 = False
         self.x = 0.
         self.y = 0.
         self.angle = 0.
@@ -176,7 +202,8 @@ class get_simple_vision_target(EventState):
         else :
             self.param_ra = False
 
-        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
+        self.get_vision_data_target = rospy.Subscriber(userdata.filterchain_target, VisionTarget, self.vision_target)
+
         self.start_time = time()
 
         Logger.log('Starting to gather data', Logger.REPORT_HINT) 
@@ -185,7 +212,7 @@ class get_simple_vision_target(EventState):
         actual = time() - self.start_time
         if self.parse_data == True:
             self.parse_data = False
-            Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
+            Logger.log('Ending', Logger.REPORT_HINT)
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
                     userdata.pose = self.angle_obtained()
