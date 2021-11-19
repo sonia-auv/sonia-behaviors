@@ -19,6 +19,11 @@
 
 		<param type="text" name="filterchain_name" default="simple_pipe45" label="filterchain_name" hint="Sets the filterchain_name" />
 
+		<param type="numeric" name="cam_number" default="2" label="cam_number" hint="Sets the cam_number">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
 	</params>
 
 

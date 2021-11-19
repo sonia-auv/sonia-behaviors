@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_body_baby">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_body_baby_sm" class="vision_body_babySM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Behaviors for the task to detect the baby.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_bottom" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filterchain_name" default="simple_body_baby" label="filterchain_name" hint="Sets the filterchain_name" />
+
+		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+	</params>
+
+
+</behavior>

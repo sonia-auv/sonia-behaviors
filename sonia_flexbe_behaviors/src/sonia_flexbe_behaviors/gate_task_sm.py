@@ -23,15 +23,15 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Fri Nov 12 2021
 @author: William Brouillard
 '''
-class coin_flip_gate_completeSM(Behavior):
+class gate_taskSM(Behavior):
 	'''
 	Orient to the gate and move to it.
 	'''
 
 
 	def __init__(self):
-		super(coin_flip_gate_completeSM, self).__init__()
-		self.name = 'coin_flip_gate_complete'
+		super(gate_taskSM, self).__init__()
+		self.name = 'gate_task'
 
 		# parameters of this behavior
 

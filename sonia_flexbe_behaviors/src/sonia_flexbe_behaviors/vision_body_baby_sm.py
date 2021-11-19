@@ -22,19 +22,19 @@ from sonia_flexbe_states.start_filter_chain import start_filter_chain
 Created on Mon Nov 15 2021
 @author: FA
 '''
-class vision_pathSM(Behavior):
+class vision_body_babySM(Behavior):
 	'''
-	Behaviors for the task of the path and rotate to the right orientation
+	Behaviors for the task to detect the baby.
 	'''
 
 
 	def __init__(self):
-		super(vision_pathSM, self).__init__()
-		self.name = 'vision_path'
+		super(vision_body_babySM, self).__init__()
+		self.name = 'vision_body_baby'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain_name', 'simple_pipe45')
-		self.add_parameter('cam_number', 2)
+		self.add_parameter('filterchain_name', 'simple_body_baby')
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(search_bottomSM, 'search_bottom')
@@ -49,7 +49,7 @@ class vision_pathSM(Behavior):
 
 
 	def create(self):
-		# x:1212 y:229, x:549 y:514, x:420 y:333
+		# x:888 y:106, x:549 y:514, x:420 y:333
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -61,7 +61,7 @@ class vision_pathSM(Behavior):
 		with _state_machine:
 			# x:71 y:184
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.filterchain_name, camera_no=self.cam_number, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
@@ -70,13 +70,6 @@ class vision_pathSM(Behavior):
 			OperatableStateMachine.add('move to target',
 										move_to_target(),
 										transitions={'continue': 'get target', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'target_pose'})
-
-			# x:984 y:232
-			OperatableStateMachine.add('rotate to path',
-										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target_pose'})
 
@@ -89,8 +82,8 @@ class vision_pathSM(Behavior):
 
 			# x:521 y:52
 			OperatableStateMachine.add('get target',
-										get_vision_target(bounding_box_pixel=150, target_width_meter=0.6, target_height_meter=1.2, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
-										transitions={'success': 'rotate to path', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
+										get_vision_target(bounding_box_pixel=150, target_width_meter=0.6, target_height_meter=0.3, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
+										transitions={'success': 'finished', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose'})
 
