@@ -70,7 +70,7 @@ class vision_path_new_algoSM(Behavior):
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
+										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.3, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
 										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
