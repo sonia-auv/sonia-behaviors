@@ -113,7 +113,7 @@ class get_simple_vision_target(EventState):
             Logger.log('Offset y bounding box (px): %f' %self.y, Logger.REPORT_HINT)
 
     def align_with_vision(self):
-        Logger.log('Alignement on target', Logger.REPORT_HINT)
+        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
         #To test to see if working
         new_pose = AddPose()
         mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
@@ -185,7 +185,7 @@ class get_simple_vision_target(EventState):
         actual = time() - self.start_time
         if self.parse_data == True:
             self.parse_data = False
-            Logger.log('Ending', Logger.REPORT_HINT)
+            Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
                     userdata.pose = self.angle_obtained()

@@ -23,11 +23,6 @@
 			<max value="99" />
 		</param>
 
-		<param type="numeric" name="initial_condition_timeout" default="2" label="initial_condition_timeout" hint="Sets the initial_condition_timeout">
-			<min value="0" />
-			<max value="10" />
-		</param>
-
 	</params>
 
 

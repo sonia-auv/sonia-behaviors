@@ -99,24 +99,21 @@ class move_single(EventState):
             self.param_frame, self.param_time, self.param_precision, self.param_rotation )
         self.time_launch = time()
 
-        rospy.loginfo('Set position x = %f' % self.param_distance_x)
-        rospy.loginfo('Set position y = %f' % self.param_distance_y)
-        rospy.loginfo('Set position z = %f' % self.param_distance_z)
-        rospy.loginfo('Set orientation x = %f' % self.param_orientation_x)
-        rospy.loginfo('Set orientation y = %f' % self.param_orientation_y)
-        rospy.loginfo('Set orientation z = %f' % self.param_orientation_z)
-        rospy.loginfo('Set frame = %f' % self.param_frame)
+        Logger.log('Pose : x = '+ str(self.param_distance_x) + ', y = ' + str(self.param_distance_y) + ' z = ' + str(self.param_distance_z) + \
+            ' roll = ' + str(self.param_orientation_x) + ' pitch = ' + str(self.param_orientation_y) + ' yaw = ' + str(self.param_orientation_z) + \
+            ' frame = ' + str(self.param_frame), Logger.REPORT_HINT)
 
         self.target_reach_sub = rospy.Subscriber('/proc_control/target_reached', Bool, self.target_reach_cb)
 
     def execute(self, userdata):
         time_dif = time() - self.time_launch
-        if time_dif > self.param_time + 5:
-            Logger.log('ending',Logger.REPORT_HINT)
+        if time_dif > self.param_time:
             if self.target_reached == True:
+                Logger.log('Target reached', Logger.REPORT_HINT)
                 return 'continue'
-            else:
-                return 'failed'        
+            elif time_dif > self.param_time + 30:
+                Logger.log('Target not reached', Logger.REPORT_HINT)
+                return 'failed'
 
 
     def on_exit(self, userdata):

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_bottom_no_stop">
+
+	<executable package_path="sonia_flexbe_behaviors.search_bottom_no_stop_sm" class="search_bottom_no_stopSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Looking for a vision target on bottom camera. Waiting for the actual move to complete.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="snake_mouvement" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="time_stop_search" default="105" label="time_stop_search" hint="Sets the time to stop the search of the vision target">
+			<min value="0" />
+			<max value="300" />
+		</param>
+
+	</params>
+
+
+</behavior>

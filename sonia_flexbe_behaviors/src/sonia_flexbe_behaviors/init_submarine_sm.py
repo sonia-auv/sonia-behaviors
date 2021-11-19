@@ -34,7 +34,6 @@ class init_submarineSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('simulation', False)
 		self.add_parameter('mode', 32)
-		self.add_parameter('initial_condition_timeout', 2)
 
 		# references to used behaviors
 
@@ -60,7 +59,7 @@ class init_submarineSM(Behavior):
 		with _state_machine:
 			# x:97 y:72
 			OperatableStateMachine.add('initial condition',
-										set_initial_position(simulation=self.simulation, timeout=self.initial_condition_timeout),
+										set_initial_position(simulation=self.simulation),
 										transitions={'continue': 'set mode '},
 										autonomy={'continue': Autonomy.Off})
 

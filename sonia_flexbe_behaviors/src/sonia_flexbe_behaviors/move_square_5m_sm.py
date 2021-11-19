@@ -46,7 +46,7 @@ Turn 90 degree anticlockwise then move 5m.
 
 
 	def create(self):
-		# x:695 y:564, x:748 y:464
+		# x:1379 y:701, x:478 y:554
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,11 +58,11 @@ Turn 90 degree anticlockwise then move 5m.
 		with _state_machine:
 			# x:135 y:99
 			OperatableStateMachine.add('depth',
-										move_single(positionX=0, positionY=0, positionZ=2, orientationX=0, orientationY=0, orientationZ=0, frame=0, time=5, precision=0, rotation=True),
+										move_single(positionX=0, positionY=0, positionZ=0.5, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
 										transitions={'continue': 'Pose_Forward', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:921 y:239
+			# x:921 y:210
 			OperatableStateMachine.add('Forward_2',
 										move_to_target(),
 										transitions={'continue': 'Turn_2', 'failed': 'failed'},
@@ -85,19 +85,19 @@ Turn 90 degree anticlockwise then move 5m.
 
 			# x:343 y:104
 			OperatableStateMachine.add('Pose_Forward',
-										create_pose(positionX=5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=15, precision=0, rotation=True),
+										create_pose(positionX=2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=12, precision=0, rotation=True),
 										transitions={'continue': 'Pose_Turn'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'forward_pose'})
 
-			# x:555 y:109
+			# x:535 y:107
 			OperatableStateMachine.add('Pose_Turn',
-										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=90, frame=1, time=2, precision=0, rotation=True),
+										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=90, frame=1, time=5, precision=0, rotation=True),
 										transitions={'continue': 'Forward_1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'turn_pose'})
 
-			# x:724 y:239
+			# x:717 y:197
 			OperatableStateMachine.add('Turn_1',
 										move_to_target(),
 										transitions={'continue': 'Forward_2', 'failed': 'failed'},
@@ -125,7 +125,7 @@ Turn 90 degree anticlockwise then move 5m.
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'turn_pose'})
 
-			# x:536 y:239
+			# x:470 y:221
 			OperatableStateMachine.add('Forward_1',
 										move_to_target(),
 										transitions={'continue': 'Turn_1', 'failed': 'failed'},
