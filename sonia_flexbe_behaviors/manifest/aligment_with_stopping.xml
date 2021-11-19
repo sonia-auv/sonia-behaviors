@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Aligment with stopping">
+
+	<executable package_path="sonia_flexbe_behaviors.aligment_with_stopping_sm" class="AligmentwithstoppingSM" />
+	<tagstring>align</tagstring>
+	<author>FA</author>
+	<date>Fri Nov 19 2021</date>
+	<description>
+		Alignement on the target by stopping the mouvement when the target is in the centroid.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="test new alignement" />
+
+	<!-- Available Parameters -->
+
+</behavior>

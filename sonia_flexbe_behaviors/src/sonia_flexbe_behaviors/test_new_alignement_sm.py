@@ -44,7 +44,7 @@ class testnewalignementSM(Behavior):
 
 
 	def create(self):
-		# x:755 y:90, x:367 y:300, x:559 y:289
+		# x:873 y:83, x:367 y:300, x:559 y:289
 		_state_machine = OperatableStateMachine(outcomes=['align_successed', 'timeout_reached', 'failed'], input_keys=['filterchain', 'bounding_box', 'header_name'])
 		_state_machine.userdata.filterchain = ' '
 		_state_machine.userdata.bounding_box = 150
@@ -57,14 +57,14 @@ class testnewalignementSM(Behavior):
 
 
 		with _state_machine:
-			# x:149 y:67
+			# x:260 y:78
 			OperatableStateMachine.add('Check centroid',
 										verify_centroid(number_sample=10, timeout=30),
 										transitions={'align_complete': 'stop move', 'timeout_reached': 'timeout_reached'},
 										autonomy={'align_complete': Autonomy.Off, 'timeout_reached': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
 
-			# x:453 y:62
+			# x:564 y:87
 			OperatableStateMachine.add('stop move',
 										stop_move(timeout=10),
 										transitions={'continue': 'align_successed', 'failed': 'failed'},

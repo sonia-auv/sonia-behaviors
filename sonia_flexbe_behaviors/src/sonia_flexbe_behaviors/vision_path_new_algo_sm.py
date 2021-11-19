@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
 from sonia_flexbe_behaviors.search_bottom_sm import search_bottomSM
-from sonia_flexbe_behaviors.test_new_alignement_sm import testnewalignementSM
 from sonia_flexbe_states.get_simple_vision_target import get_simple_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
@@ -38,8 +38,8 @@ class vision_path_new_algoSM(Behavior):
 		self.add_parameter('header_name', 'pipe')
 
 		# references to used behaviors
+		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
 		self.add_behavior(search_bottomSM, 'search_bottom')
-		self.add_behavior(testnewalignementSM, 'test new alignement')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -68,6 +68,13 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
+			# x:486 y:36
+			OperatableStateMachine.add('get_target',
+										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
+										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
+										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
+
 			# x:596 y:260
 			OperatableStateMachine.add('move to target',
 										move_to_target(),
@@ -89,19 +96,12 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:789 y:250
-			OperatableStateMachine.add('test new alignement',
-										self.use_behavior(testnewalignementSM, 'test new alignement'),
-										transitions={'align_successed': 'get_target', 'timeout_reached': 'failed', 'failed': 'failed'},
-										autonomy={'align_successed': Autonomy.Inherit, 'timeout_reached': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
-
-			# x:486 y:36
-			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
-										transitions={'success': 'rotate to path', 'align': 'test new alignement', 'move': 'move to target', 'failed': 'failed', 'search': 'search_bottom'},
-										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
+			# x:755 y:222
+			OperatableStateMachine.add('Aligment with stopping',
+										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
+										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get_target'},
+										autonomy={'lost_target': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'success': Autonomy.Inherit},
+										remapping={'target': 'target_pose', 'filterchain': 'filterchain', 'header_name': 'header_name', 'bounding_box': 'bounding_box'})
 
 
 		return _state_machine

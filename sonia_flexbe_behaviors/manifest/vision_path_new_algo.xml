@@ -13,7 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="search_bottom" />
-	<contains name="test new alignement" />
+	<contains name="Aligment with stopping" />
 
 	<!-- Available Parameters -->
 	<params>
