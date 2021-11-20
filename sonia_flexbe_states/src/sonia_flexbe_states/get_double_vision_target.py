@@ -57,7 +57,6 @@ class get_simple_vision_target(EventState):
         self.width_pixel_2 = deque([], maxlen=self.param_noa)
         self.height_pixel_2 = deque([], maxlen=self.param_noa)
 
-
         self.vision_angle = deque([], maxlen=self.param_noa)
 
     def vision_target_cb(self, vision_data):
@@ -73,7 +72,7 @@ class get_simple_vision_target(EventState):
             len(self.height_pixel_1) == self.param_noa and \
             len(self.vision_angle) == self.param_noa:
             self.stop_vision(self.get_vision_data_target)
-            self.parse_vision_data(self.x_pixel_1, self.y_pixel_1, self.width_pixel_1, self.height_pixel_1, self.vision_angle)
+            self.parse_vision_data(self.x_pixel_1, self.y_pixel_1, self.width_pixel_1, self.height_pixel_1, self.vision_angle, 1)
             self.parse_data_1 = True
 
     def vision_obstacle_cb(self, vision_data):
@@ -88,10 +87,10 @@ class get_simple_vision_target(EventState):
             len(self.width_pixel_2) == self.param_noa and \
             len(self.height_pixel_2) == self.param_noa:
             self.stop_vision(self.get_vision_data_obstacle)
-            self.parse_vision_data(self.x_pixel_2, self.y_pixel_2, self.width_pixel_2, self.height_pixel_2, self.vision_angle)
+            self.parse_vision_data(self.x_pixel_2, self.y_pixel_2, self.width_pixel_2, self.height_pixel_2, self.vision_angle, 2)
             self.parse_data_2 = True
 
-    def parse_vision_data(self, x, y, width, height, angle):
+    def parse_vision_data(self, x, y, width, height, angle, unit):
         average_x_pixel = 0.
         average_y_pixel = 0.
         average_width_pixel = 0.
@@ -117,23 +116,23 @@ class get_simple_vision_target(EventState):
         for i in angle:
             average_angle += i
         average_angle /= len(angle)
-        self.angle = average_angle
 
-        if average_width_pixel * average_height_pixel > self.param_image_width * self.param_image_height * self.param_rv :
-            self.position_reached = True
+        if unit == 1:
+            self.x1 = average_x_pixel
+            self.y1 = average_y_pixel
+            self.width_pixel_1 = average_width_pixel
+            self.height_pixel_1 = average_height_pixel
+            self.angle = average_angle
         else:
-            self.position_reached = False
-            Logger.log('Width of bounding box (px): %f' %average_width_pixel, Logger.REPORT_HINT)
-            Logger.log('Height of bounding box (px): %f' %average_height_pixel, Logger.REPORT_HINT)
-
-        if abs(average_x_pixel) <= self.param_bbp and abs(average_y_pixel) <= self.param_bbp :
-            self.alignement_reached = True
-        else:
-            self.alignement_reached = False
-            self.x = average_x_pixel
-            self.y = average_y_pixel
-            Logger.log('Offset x from reference (px): %f' %self.x, Logger.REPORT_HINT)
-            Logger.log('Offset y bounding box (px): %f' %self.y, Logger.REPORT_HINT)
+            self.x2 = average_x_pixel
+            self.y2 = average_y_pixel
+            self.width_pixel_2 = average_width_pixel
+            self.height_pixel_2 = average_height_pixel
+        
+        Logger.log('Offset x from reference (px): %f' %average_x_pixel, Logger.REPORT_HINT)
+        Logger.log('Offset y bounding box (px): %f' %average_y_pixel, Logger.REPORT_HINT)
+        Logger.log('Width of bounding box (px): %f' %average_width_pixel, Logger.REPORT_HINT)
+        Logger.log('Height of bounding box (px): %f' %average_height_pixel, Logger.REPORT_HINT)
 
     def align_with_vision(self):
         Logger.log('Alignement on target', Logger.REPORT_HINT)
@@ -181,6 +180,9 @@ class get_simple_vision_target(EventState):
     def stop_vision(self, topic):
         topic.unregister()
 
+    def verify_data(self):
+        if abs(self.x1): 
+
     def on_enter(self, userdata):
 
         self.x_pixel_1.clear()
@@ -197,8 +199,10 @@ class get_simple_vision_target(EventState):
         self.alignement_reached = False
         self.parse_data_1 = False
         self.parse_data_2 = False
-        self.x = 0.
-        self.y = 0.
+        self.x1 = 0.
+        self.x2 = 0.
+        self.y1 = 0.
+        self.y2 = 0.
         self.angle = 0.
         self.param_cam = userdata.camera_no
 
@@ -216,9 +220,11 @@ class get_simple_vision_target(EventState):
 
     def execute(self, userdata):
         actual = time() - self.start_time
-        if self.parse_data == True:
-            self.parse_data = False
-            Logger.log('Ending', Logger.REPORT_HINT)
+        if self.parse_data_1 == True and self.parse_data_2 == True:
+            self.parse_data_1 = False
+            self.parse_data_2 = False
+            Logger.log('Both filter got data', Logger.REPORT_HINT)
+            self.verify_data()
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
                     userdata.pose = self.angle_obtained()
@@ -236,4 +242,4 @@ class get_simple_vision_target(EventState):
             return 'search'
 
     def on_exit(self, userdata):
-        self.get_vision_data.unregister()
+        pass
