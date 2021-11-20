@@ -8,8 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.test_new_alignement_sm import testnewalignementSM
 from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_flexbe_states.stop_move import stop_move
+from sonia_flexbe_states.verify_centroid import verify_centroid
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -33,7 +34,6 @@ class AligmentwithstoppingSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(testnewalignementSM, 'Alignement with stop/test new alignement')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -45,7 +45,7 @@ class AligmentwithstoppingSM(Behavior):
 
 
 	def create(self):
-		# x:127 y:293, x:361 y:264, x:422 y:93
+		# x:187 y:296, x:419 y:249, x:848 y:133
 		_state_machine = OperatableStateMachine(outcomes=['lost_target', 'failed', 'success'], input_keys=['target', 'filterchain', 'header_name', 'bounding_box'])
 		_state_machine.userdata.target = ' '
 		_state_machine.userdata.filterchain = ' '
@@ -57,24 +57,23 @@ class AligmentwithstoppingSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:490 y:212, x:604 y:144, x:443 y:55, x:330 y:365, x:598 y:278, x:530 y:365, x:630 y:365, x:730 y:365
+		# x:703 y:332, x:537 y:129, x:569 y:42, x:397 y:168, x:794 y:118, x:654 y:243, x:733 y:190
 		_sm_alignement_with_stop_0 = ConcurrencyContainer(outcomes=['failed', 'lost_target', 'success'], input_keys=['target', 'filterchain', 'bounding_box', 'header_name'], conditions=[
-										('failed', [('test new alignement', 'failed')]),
-										('success', [('test new alignement', 'align_successed')]),
-										('lost_target', [('test new alignement', 'timeout_reached')]),
 										('lost_target', [('move', 'continue')]),
-										('failed', [('move', 'failed')])
+										('failed', [('move', 'failed')]),
+										('success', [('centroid', 'align_complete')]),
+										('lost_target', [('centroid', 'timeout_reached')])
 										])
 
 		with _sm_alignement_with_stop_0:
-			# x:145 y:53
-			OperatableStateMachine.add('test new alignement',
-										self.use_behavior(testnewalignementSM, 'Alignement with stop/test new alignement'),
-										transitions={'align_successed': 'success', 'timeout_reached': 'lost_target', 'failed': 'failed'},
-										autonomy={'align_successed': Autonomy.Inherit, 'timeout_reached': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+			# x:160 y:48
+			OperatableStateMachine.add('centroid',
+										verify_centroid(number_sample=10, timeout=30),
+										transitions={'align_complete': 'success', 'timeout_reached': 'lost_target'},
+										autonomy={'align_complete': Autonomy.Off, 'timeout_reached': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
 
-			# x:83 y:189
+			# x:106 y:156
 			OperatableStateMachine.add('move',
 										move_to_target(),
 										transitions={'continue': 'lost_target', 'failed': 'failed'},
@@ -87,9 +86,15 @@ class AligmentwithstoppingSM(Behavior):
 			# x:138 y:92
 			OperatableStateMachine.add('Alignement with stop',
 										_sm_alignement_with_stop_0,
-										transitions={'failed': 'failed', 'lost_target': 'lost_target', 'success': 'success'},
+										transitions={'failed': 'failed', 'lost_target': 'lost_target', 'success': 'stop move'},
 										autonomy={'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'success': Autonomy.Inherit},
 										remapping={'target': 'target', 'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
+
+			# x:568 y:102
+			OperatableStateMachine.add('stop move',
+										stop_move(timeout=10),
+										transitions={'continue': 'success', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine

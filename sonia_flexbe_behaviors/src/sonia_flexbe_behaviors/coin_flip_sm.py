@@ -57,7 +57,7 @@ class coin_flipSM(Behavior):
 		with _state_machine:
 			# x:128 y:61
 			OperatableStateMachine.add('pose_depth',
-										create_pose(positionX=0, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
+										create_pose(positionX=0, positionY=0, positionZ=1.5, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
 										transitions={'continue': 'pose_gate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'depth_pose'})

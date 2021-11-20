@@ -32,8 +32,8 @@ class snake_mouvementSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('distance_y', 2)
-		self.add_parameter('timeout', 50)
-		self.add_parameter('distance_x', 1)
+		self.add_parameter('timeout', 25)
+		self.add_parameter('distance_x', 2)
 
 		# references to used behaviors
 
@@ -87,7 +87,7 @@ class snake_mouvementSM(Behavior):
 
 			# x:69 y:283
 			OperatableStateMachine.add('slide left pose',
-										create_pose(positionX=self.distance_x/2, positionY=-self.distance_y, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
+										create_pose(positionX=self.distance_x, positionY=-self.distance_y, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
 										transitions={'continue': 'half slide left'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'slide_left'})

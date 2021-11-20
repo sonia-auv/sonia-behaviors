@@ -73,11 +73,11 @@ class verify_centroid(EventState):
         Logger.log('Starting the verify the centroid', Logger.REPORT_HINT)
     
     def execute(self, userdata):
+        actual = time() - self.start_time
         if self.at_centroid == True:
             Logger.log('Alignement on centroid complete', Logger.REPORT_HINT)
             return 'align_complete'
-        actual = time() - self.start_time
-        if actual >= self.param_timeout:
+        elif actual >= self.param_timeout:
             Logger.log('Timeout has been reached', Logger.REPORT_HINT)
             return 'timeout_reached'
 

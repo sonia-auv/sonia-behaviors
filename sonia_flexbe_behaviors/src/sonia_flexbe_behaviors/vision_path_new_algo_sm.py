@@ -76,7 +76,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
 
-			# x:596 y:260
+			# x:582 y:217
 			OperatableStateMachine.add('move to target',
 										move_to_target(),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
@@ -97,7 +97,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:755 y:222
+			# x:767 y:244
 			OperatableStateMachine.add('Aligment with stopping',
 										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
 										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get_target'},

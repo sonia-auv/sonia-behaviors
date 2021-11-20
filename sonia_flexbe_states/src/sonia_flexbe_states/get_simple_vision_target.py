@@ -114,7 +114,7 @@ class get_simple_vision_target(EventState):
 
     def align_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
-        #To test to see if working
+
         new_pose = AddPose()
         mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
         mouvement_y = self.param_alignement_distance * (self.y / self.param_image_height)
@@ -128,7 +128,7 @@ class get_simple_vision_target(EventState):
         
     def position_with_vision(self):
         Logger.log('Alignement for position. Creating pose', Logger.REPORT_HINT)
-        # To test to see if working
+
         new_pose = AddPose()        
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(0.,0.,self.param_mm)
