@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="vision_path" />
+	<contains name="vision_path_new_algo" />
 
 	<!-- Available Parameters -->
 

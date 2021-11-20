@@ -24,19 +24,19 @@ from sonia_flexbe_states.start_filter_chain import start_filter_chain
 Created on Wed Nov 17 2021
 @author: William Brouillard
 '''
-class droppers_taskSM(Behavior):
+class vision_droppersSM(Behavior):
 	'''
 	Find the bin with the right filter chain, then drop the markers in the bin.
 	'''
 
 
 	def __init__(self):
-		super(droppers_taskSM, self).__init__()
-		self.name = 'droppers_task'
+		super(vision_droppersSM, self).__init__()
+		self.name = 'vision_droppers'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'deep_wolf')
-		self.add_parameter('header_name', 'wolf')
+		self.add_parameter('filterchain', 'deep_bat')
+		self.add_parameter('header_name', 'bat')
 		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
@@ -54,7 +54,7 @@ class droppers_taskSM(Behavior):
 
 
 	def create(self):
-		# x:970 y:386, x:429 y:499, x:343 y:329
+		# x:756 y:373, x:429 y:499, x:338 y:317
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -64,41 +64,41 @@ class droppers_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:67 y:193
+			# x:41 y:211
 			OperatableStateMachine.add('start_filter_chain',
 										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:1074 y:193
+			# x:1122 y:203
 			OperatableStateMachine.add('droppers',
 										self.use_behavior(droppersSM, 'droppers'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:463 y:32
+			# x:438 y:27
 			OperatableStateMachine.add('get target',
-										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
+										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
 										transitions={'success': 'droppers', 'align': 'Aligment with stopping', 'move': 'move_to_target', 'failed': 'failed', 'search': 'search_bottom'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
-			# x:526 y:176
+			# x:530 y:165
 			OperatableStateMachine.add('move_to_target',
 										move_to_target(),
-										transitions={'continue': 'get target', 'failed': 'failed'},
+										transitions={'continue': 'lost_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose'})
 
-			# x:262 y:202
+			# x:245 y:204
 			OperatableStateMachine.add('search_bottom',
 										self.use_behavior(search_bottomSM, 'search_bottom'),
 										transitions={'finished': 'get target', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:727 y:203
+			# x:753 y:198
 			OperatableStateMachine.add('Aligment with stopping',
 										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
 										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get target'},

@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.gate_quick_task_sm import gate_quick_taskSM
+from sonia_flexbe_behaviors.jiangshi_task_sm import jiangshi_taskSM
 from sonia_flexbe_behaviors.path_task_sm import path_taskSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -20,20 +21,21 @@ from sonia_flexbe_behaviors.path_task_sm import path_taskSM
 Created on Sat Nov 20 2021
 @author: William Brouillard
 '''
-class Test_gate_path_taskSM(Behavior):
+class Test_gate_path_jiangshi_taskSM(Behavior):
 	'''
-	Test the gate quick task with the path_task.
+	Test the gate quick task with the path_task and jiangshi
 	'''
 
 
 	def __init__(self):
-		super(Test_gate_path_taskSM, self).__init__()
-		self.name = 'Test_gate_path_task'
+		super(Test_gate_path_jiangshi_taskSM, self).__init__()
+		self.name = 'Test_gate_path_jiangshi_task'
 
 		# parameters of this behavior
 
 		# references to used behaviors
 		self.add_behavior(gate_quick_taskSM, 'gate_quick_task')
+		self.add_behavior(jiangshi_taskSM, 'jiangshi_task')
 		self.add_behavior(path_taskSM, 'path_task')
 
 		# Additional initialization code can be added inside the following tags
@@ -46,7 +48,7 @@ class Test_gate_path_taskSM(Behavior):
 
 
 	def create(self):
-		# x:706 y:77, x:130 y:365, x:516 y:306
+		# x:913 y:78, x:130 y:365, x:516 y:306
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -62,10 +64,16 @@ class Test_gate_path_taskSM(Behavior):
 										transitions={'finished': 'path_task', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
+			# x:659 y:69
+			OperatableStateMachine.add('jiangshi_task',
+										self.use_behavior(jiangshi_taskSM, 'jiangshi_task'),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
 			# x:388 y:69
 			OperatableStateMachine.add('path_task',
 										self.use_behavior(path_taskSM, 'path_task'),
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
+										transitions={'finished': 'jiangshi_task', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 

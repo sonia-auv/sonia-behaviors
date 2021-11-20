@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="droppers_task">
+<behavior name="vision_droppers">
 
-	<executable package_path="sonia_flexbe_behaviors.droppers_task_sm" class="droppers_taskSM" />
+	<executable package_path="sonia_flexbe_behaviors.vision_droppers_sm" class="vision_droppersSM" />
 	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Wed Nov 17 2021</date>
@@ -19,9 +19,9 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="deep_wolf" label="filterchain" hint="Sets the filterchain" />
+		<param type="text" name="filterchain" default="deep_bat" label="filterchain" hint="Sets the filterchain" />
 
-		<param type="text" name="header_name" default="wolf" label="header_name" hint="Sets the header_name" />
+		<param type="text" name="header_name" default="bat" label="header_name" hint="Sets the header_name" />
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />

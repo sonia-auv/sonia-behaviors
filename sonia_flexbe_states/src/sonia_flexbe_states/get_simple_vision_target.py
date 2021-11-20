@@ -122,7 +122,7 @@ class get_simple_vision_target(EventState):
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(mouvement_y, mouvement_x, 0.)
         else :
-            new_pose.position = Point(0., mouvement_x, -mouvement_y)
+            new_pose.position = Point(0., mouvement_x, -mouvement_y/4)
 
         return self.fill_pose(new_pose, 20)
         
@@ -135,7 +135,7 @@ class get_simple_vision_target(EventState):
         else :
             new_pose.position = Point(self.param_mm,0.,0.)
 
-        return self.fill_pose(new_pose, 5)
+        return self.fill_pose(new_pose, 10)
     
     def fill_pose(self, pose, speed):
         pose.orientation = Vector3(0.,0.,0.)

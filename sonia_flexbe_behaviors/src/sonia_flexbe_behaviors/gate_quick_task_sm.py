@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.gate_quick_task_sm import gate_quick_taskSM
-from sonia_flexbe_behaviors.path_task_sm import path_taskSM
+from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
+from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -18,23 +18,23 @@ from sonia_flexbe_behaviors.path_task_sm import path_taskSM
 
 '''
 Created on Sat Nov 20 2021
-@author: William Brouillard
+@author: FA
 '''
-class Test_gate_path_taskSM(Behavior):
+class gate_quick_taskSM(Behavior):
 	'''
-	Test the gate quick task with the path_task.
+	No mission, no trickshot, for test run only
 	'''
 
 
 	def __init__(self):
-		super(Test_gate_path_taskSM, self).__init__()
-		self.name = 'Test_gate_path_task'
+		super(gate_quick_taskSM, self).__init__()
+		self.name = 'gate_quick_task'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(gate_quick_taskSM, 'gate_quick_task')
-		self.add_behavior(path_taskSM, 'path_task')
+		self.add_behavior(coin_flipSM, 'coin_flip')
+		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,8 +46,8 @@ class Test_gate_path_taskSM(Behavior):
 
 
 	def create(self):
-		# x:706 y:77, x:130 y:365, x:516 y:306
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
+		# x:943 y:79, x:591 y:421
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -56,17 +56,17 @@ class Test_gate_path_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:90 y:69
-			OperatableStateMachine.add('gate_quick_task',
-										self.use_behavior(gate_quick_taskSM, 'gate_quick_task'),
-										transitions={'finished': 'path_task', 'failed': 'failed'},
+			# x:152 y:57
+			OperatableStateMachine.add('coin_flip',
+										self.use_behavior(coin_flipSM, 'coin_flip'),
+										transitions={'finished': 'move_to_gate_no_trickshot', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:388 y:69
-			OperatableStateMachine.add('path_task',
-										self.use_behavior(path_taskSM, 'path_task'),
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+			# x:467 y:69
+			OperatableStateMachine.add('move_to_gate_no_trickshot',
+										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
 		return _state_machine

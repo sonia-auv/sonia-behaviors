@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.vision_path_sm import vision_pathSM
+from sonia_flexbe_behaviors.vision_path_new_algo_sm import vision_path_new_algoSM
 from sonia_flexbe_states.create_pose import create_pose
 from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
@@ -34,7 +34,7 @@ class path_taskSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(vision_pathSM, 'vision_path')
+		self.add_behavior(vision_path_new_algoSM, 'vision_path_new_algo')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,8 +46,8 @@ class path_taskSM(Behavior):
 
 
 	def create(self):
-		# x:735 y:71, x:312 y:287
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:735 y:71, x:312 y:287, x:165 y:240
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -56,16 +56,16 @@ class path_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:340 y:45
-			OperatableStateMachine.add('vision_path',
-										self.use_behavior(vision_pathSM, 'vision_path'),
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'failed'},
+			# x:256 y:54
+			OperatableStateMachine.add('vision_path_new_algo',
+										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo'),
+										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:64 y:214
+			# x:776 y:265
 			OperatableStateMachine.add('pose_buffer',
 										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
-										transitions={'continue': 'vision_path'},
+										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
