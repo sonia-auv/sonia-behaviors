@@ -32,8 +32,8 @@ class search_frontSM(Behavior):
 		self.name = 'search_front'
 
 		# parameters of this behavior
-		self.add_parameter('move_time', 15)
-		self.add_parameter('time_to_stop', 1)
+		self.add_parameter('move_time', 25)
+		self.add_parameter('time_to_stop', 10)
 
 		# references to used behaviors
 		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')

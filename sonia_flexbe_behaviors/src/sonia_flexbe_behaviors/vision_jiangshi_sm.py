@@ -40,6 +40,7 @@ class vision_jiangshiSM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
+		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping_2')
 		self.add_behavior(search_frontSM, 'search_front')
 
 		# Additional initialization code can be added inside the following tags
@@ -69,6 +70,13 @@ class vision_jiangshiSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
+			# x:1082 y:203
+			OperatableStateMachine.add('Aligment with stopping_2',
+										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping_2'),
+										transitions={'lost_target': 'stop_filter_success', 'failed': 'stop_filter_fail', 'success': 'stop_filter_success'},
+										autonomy={'lost_target': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'success': Autonomy.Inherit},
+										remapping={'target': 'pose', 'filterchain': 'filterchain', 'header_name': 'header_name', 'bounding_box': 'bounding_box'})
+
 			# x:489 y:32
 			OperatableStateMachine.add('get target',
 										get_simple_vision_target(bounding_box_pixel=200, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
@@ -76,12 +84,26 @@ class vision_jiangshiSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
-			# x:602 y:209
+			# x:947 y:523
+			OperatableStateMachine.add('get_vision_2',
+										get_simple_vision_target(bounding_box_pixel=200, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
+										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping_2', 'move': 'move_target', 'failed': 'stop_filter_fail', 'search': 'Aligment with stopping_2'},
+										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose_2', 'bounding_box': 'bounding_box'})
+
+			# x:583 y:196
 			OperatableStateMachine.add('move',
 										move_to_target(),
-										transitions={'continue': 'get target', 'failed': 'stop_filter_fail'},
+										transitions={'continue': 'get_vision_2', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose'})
+
+			# x:1152 y:377
+			OperatableStateMachine.add('move_target',
+										move_to_target(),
+										transitions={'continue': 'stop_filter_success', 'failed': 'stop_filter_fail'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'pose_2'})
 
 			# x:294 y:193
 			OperatableStateMachine.add('search_front',
