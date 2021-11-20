@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Jiangshi_task">
+<behavior name="jiangshi_task">
 
-	<executable package_path="sonia_flexbe_behaviors.jiangshi_task_sm" class="Jiangshi_taskSM" />
-	<tagstring>pool</tagstring>
+	<executable package_path="sonia_flexbe_behaviors.jiangshi_task_sm" class="jiangshi_taskSM" />
+	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Wed Nov 17 2021</date>
 	<description>

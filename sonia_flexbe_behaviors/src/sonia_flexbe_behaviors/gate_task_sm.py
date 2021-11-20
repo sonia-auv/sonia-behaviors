@@ -60,23 +60,16 @@ class gate_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:137 y:90
-			OperatableStateMachine.add('buffer_pose',
-										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
-										transitions={'continue': 'init_submarine'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'buffer_pose'})
+			# x:128 y:271
+			OperatableStateMachine.add('init_submarine',
+										self.use_behavior(init_submarineSM, 'init_submarine'),
+										transitions={'finished': 'coin_flip', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:417 y:280
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
 										transitions={'finished': 'move_to_gate', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:128 y:271
-			OperatableStateMachine.add('init_submarine',
-										self.use_behavior(init_submarineSM, 'init_submarine'),
-										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:657 y:560
@@ -89,8 +82,15 @@ class gate_taskSM(Behavior):
 			# x:684 y:278
 			OperatableStateMachine.add('move_to_gate',
 										self.use_behavior(move_to_gateSM, 'move_to_gate'),
-										transitions={'finished': 'move_buffer', 'failed': 'failed'},
+										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:137 y:90
+			OperatableStateMachine.add('buffer_pose',
+										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
+										transitions={'continue': 'init_submarine'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
 
 
 		return _state_machine

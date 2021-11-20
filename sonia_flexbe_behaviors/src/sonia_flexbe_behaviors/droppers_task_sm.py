@@ -34,7 +34,9 @@ class droppers_taskSM(Behavior):
 		self.name = 'droppers_task'
 
 		# parameters of this behavior
-		self.add_parameter('filter_chain', 'deep_bat')
+		self.add_parameter('filterchain', 'deep_bat')
+		self.add_parameter('header_name', 'bat')
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(droppersSM, 'droppers')
@@ -50,7 +52,7 @@ class droppers_taskSM(Behavior):
 
 
 	def create(self):
-		# x:756 y:373, x:429 y:499, x:113 y:345
+		# x:756 y:373, x:429 y:499, x:338 y:317
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -60,12 +62,12 @@ class droppers_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:38 y:178
+			# x:67 y:193
 			OperatableStateMachine.add('start_filter_chain',
-										start_filter_chain(param_node_name=self.filter_chain, camera_no=2, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:428 y:64
 			OperatableStateMachine.add('get_target',

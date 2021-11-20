@@ -3,7 +3,7 @@
 <behavior name="test_start_stop_filter_chain">
 
 	<executable package_path="sonia_flexbe_behaviors.test_start_stop_filter_chain_sm" class="test_start_stop_filter_chainSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>test</tagstring>
 	<author>William Brouillard</author>
 	<date>Sat Nov 13 2021</date>
 	<description>

@@ -14,9 +14,9 @@ Gate, path, Jiangshi, path, droppers.
 
 	<!-- Contained Behaviors -->
 	<contains name="gate_task" />
-	<contains name="droppers_task" />
+	<contains name="jiangshi_task" />
 	<contains name="path_task" />
-	<contains name="Jiangshi_task" />
+	<contains name="droppers_task" />
 
 	<!-- Available Parameters -->
 

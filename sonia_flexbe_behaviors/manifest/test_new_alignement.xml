@@ -3,7 +3,7 @@
 <behavior name="test new alignement">
 
 	<executable package_path="sonia_flexbe_behaviors.test_new_alignement_sm" class="testnewalignementSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>test</tagstring>
 	<author>FA</author>
 	<date>Thu Nov 18 2021</date>
 	<description>

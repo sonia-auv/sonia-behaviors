@@ -3,7 +3,7 @@
 <behavior name="gate_task">
 
 	<executable package_path="sonia_flexbe_behaviors.gate_task_sm" class="gate_taskSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Fri Nov 12 2021</date>
 	<description>
@@ -12,8 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="coin_flip" />
 	<contains name="init_submarine" />
+	<contains name="coin_flip" />
 	<contains name="move_to_gate" />
 
 	<!-- Available Parameters -->

@@ -3,7 +3,7 @@
 <behavior name="path_task">
 
 	<executable package_path="sonia_flexbe_behaviors.path_task_sm" class="path_taskSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Tue Nov 16 2021</date>
 	<description>

@@ -3,7 +3,7 @@
 <behavior name="search_front">
 
 	<executable package_path="sonia_flexbe_behaviors.search_front_sm" class="search_frontSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>search</tagstring>
 	<author>FA</author>
 	<date>Sun Nov 14 2021</date>
 	<description>

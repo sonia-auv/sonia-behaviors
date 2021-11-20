@@ -46,7 +46,7 @@ class path_taskSM(Behavior):
 
 
 	def create(self):
-		# x:308 y:440, x:327 y:244
+		# x:735 y:71, x:312 y:287
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,20 +56,20 @@ class path_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:86 y:58
+			# x:340 y:45
+			OperatableStateMachine.add('vision_path',
+										self.use_behavior(vision_pathSM, 'vision_path'),
+										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
+			# x:64 y:214
 			OperatableStateMachine.add('pose_buffer',
 										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
 										transitions={'continue': 'vision_path'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
-			# x:345 y:114
-			OperatableStateMachine.add('vision_path',
-										self.use_behavior(vision_pathSM, 'vision_path'),
-										transitions={'finished': 'move_buffer', 'failed': 'failed', 'lost_target': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
-
-			# x:529 y:332
+			# x:515 y:209
 			OperatableStateMachine.add('move_buffer',
 										move_to_target(),
 										transitions={'continue': 'finished', 'failed': 'failed'},

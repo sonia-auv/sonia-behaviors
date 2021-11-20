@@ -22,15 +22,15 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Wed Nov 17 2021
 @author: William Brouillard
 '''
-class Jiangshi_taskSM(Behavior):
+class jiangshi_taskSM(Behavior):
 	'''
 	Find the Jiangshi and ram into it.
 	'''
 
 
 	def __init__(self):
-		super(Jiangshi_taskSM, self).__init__()
-		self.name = 'Jiangshi_task'
+		super(jiangshi_taskSM, self).__init__()
+		self.name = 'jiangshi_task'
 
 		# parameters of this behavior
 
@@ -48,7 +48,7 @@ class Jiangshi_taskSM(Behavior):
 
 
 	def create(self):
-		# x:687 y:374, x:250 y:380
+		# x:683 y:96, x:250 y:380
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,6 +58,19 @@ class Jiangshi_taskSM(Behavior):
 
 
 		with _state_machine:
+			# x:134 y:132
+			OperatableStateMachine.add('vision_jiangshi',
+										self.use_behavior(vision_jiangshiSM, 'vision_jiangshi'),
+										transitions={'finished': 'CHAAAAAAAARGE!!!', 'failed': 'failed', 'lost_target': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
+			# x:636 y:290
+			OperatableStateMachine.add('move_buffer',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
+
 			# x:120 y:29
 			OperatableStateMachine.add('pose_buffer',
 										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
@@ -65,23 +78,10 @@ class Jiangshi_taskSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
-			# x:640 y:201
-			OperatableStateMachine.add('move_buffer',
-										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'buffer_pose'})
-
-			# x:134 y:132
-			OperatableStateMachine.add('vision_jiangshi',
-										self.use_behavior(vision_jiangshiSM, 'vision_jiangshi'),
-										transitions={'finished': 'CHAAAAAAAARGE!!!', 'failed': 'failed', 'lost_target': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
-
 			# x:409 y:139
 			OperatableStateMachine.add('CHAAAAAAAARGE!!!',
 										self.use_behavior(CHAAAAAAAARGESM, 'CHAAAAAAAARGE!!!'),
-										transitions={'finished': 'move_buffer', 'failed': 'failed'},
+										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 

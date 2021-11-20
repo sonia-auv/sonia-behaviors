@@ -3,7 +3,7 @@
 <behavior name="droppers_task">
 
 	<executable package_path="sonia_flexbe_behaviors.droppers_task_sm" class="droppers_taskSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Wed Nov 17 2021</date>
 	<description>
@@ -18,7 +18,14 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filter_chain" default="deep_bat" label="filter_chain" hint="Sets the filter_chain" />
+		<param type="text" name="filterchain" default="deep_bat" label="filterchain" hint="Sets the filterchain" />
+
+		<param type="text" name="header_name" default="bat" label="header_name" hint="Sets the header_name" />
+
+		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
 
 	</params>
 

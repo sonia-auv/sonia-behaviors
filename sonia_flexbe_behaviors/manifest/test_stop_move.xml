@@ -3,7 +3,7 @@
 <behavior name="test_stop_move">
 
 	<executable package_path="sonia_flexbe_behaviors.test_stop_move_sm" class="test_stop_moveSM" />
-	<tagstring>sim</tagstring>
+	<tagstring>test</tagstring>
 	<author>FA</author>
 	<date>Tue Nov 16 2021</date>
 	<description>
