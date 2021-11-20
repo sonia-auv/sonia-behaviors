@@ -72,7 +72,8 @@ class get_simple_vision_target(EventState):
             len(self.width_pixel_1) == self.param_noa and \
             len(self.height_pixel_1) == self.param_noa and \
             len(self.vision_angle) == self.param_noa:
-            self.parse_vision_data()
+            self.stop_vision(self.get_vision_data_target)
+            self.parse_vision_data(self.x_pixel_1, self.y_pixel_1, self.width_pixel_1, self.height_pixel_1, self.vision_angle)
             self.parse_data_1 = True
 
     def vision_obstacle_cb(self, vision_data):
@@ -86,35 +87,36 @@ class get_simple_vision_target(EventState):
             len(self.y_pixel_2) == self.param_noa and \
             len(self.width_pixel_2) == self.param_noa and \
             len(self.height_pixel_2) == self.param_noa:
-            self.parse_vision_data()
+            self.stop_vision(self.get_vision_data_obstacle)
+            self.parse_vision_data(self.x_pixel_2, self.y_pixel_2, self.width_pixel_2, self.height_pixel_2, self.vision_angle)
             self.parse_data_2 = True
 
-    def parse_vision_data(self):
+    def parse_vision_data(self, x, y, width, height, angle):
         average_x_pixel = 0.
         average_y_pixel = 0.
         average_width_pixel = 0.
         average_height_pixel = 0.
         average_angle = 0.
 
-        for i in self.x_pixel_1:
+        for i in x:
             average_x_pixel += i
-        average_x_pixel /= len(self.x_pixel_1)
+        average_x_pixel /= len(x)
 
-        for i in self.y_pixel_1:
+        for i in y:
             average_y_pixel += i
-        average_y_pixel /= len(self.y_pixel_1)
+        average_y_pixel /= len(y)
 
-        for i in self.width_pixel_1:
+        for i in width:
             average_width_pixel += i
-        average_width_pixel /= len(self.width_pixel_1)
+        average_width_pixel /= len(width)
 
-        for i in self.height_pixel_1:
+        for i in height:
             average_height_pixel += i
-        average_height_pixel /= len(self.height_pixel_1)
+        average_height_pixel /= len(height)
 
-        for i in self.vision_angle:
+        for i in angle:
             average_angle += i
-        average_angle /= len(self.vision_angle)
+        average_angle /= len(angle)
         self.angle = average_angle
 
         if average_width_pixel * average_height_pixel > self.param_image_width * self.param_image_height * self.param_rv :
@@ -176,6 +178,9 @@ class get_simple_vision_target(EventState):
         pose.rotation = True
         return pose
 
+    def stop_vision(self, topic):
+        topic.unregister()
+
     def on_enter(self, userdata):
 
         self.x_pixel_1.clear()
@@ -202,7 +207,8 @@ class get_simple_vision_target(EventState):
         else :
             self.param_ra = False
 
-        self.get_vision_data_target = rospy.Subscriber(userdata.filterchain_target, VisionTarget, self.vision_target)
+        self.get_vision_data_target = rospy.Subscriber(userdata.filterchain_target, VisionTarget, self.vision_target_cb)
+        self.get_vision_data_obstacle = rospy.Subscriber(userdata.filterchain_obstacle, VisionTarget, self.vision_obstacle_cb)
 
         self.start_time = time()
 
