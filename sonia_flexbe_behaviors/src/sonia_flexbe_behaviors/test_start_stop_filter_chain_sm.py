@@ -56,14 +56,14 @@ class test_start_stop_filter_chainSM(Behavior):
 		with _state_machine:
 			# x:123 y:66
 			OperatableStateMachine.add('Start_filter_chain',
-										start_filter_chain(param_node_name='simple_body_baby', header_name=oof, camera_no=1, param_cmd=1),
+										start_filter_chain(param_node_name='simple_pipe_45', header_name=oof, camera_no=1, param_cmd=1),
 										transitions={'continue': 'wait_for_mission_switch', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'bebe', 'camera_no': 'front', 'header_name': 'header_name'})
 
 			# x:511 y:160
 			OperatableStateMachine.add('Stop_filter_chain',
-										start_filter_chain(param_node_name='simple_body_baby', header_name=off, camera_no=1, param_cmd=2),
+										start_filter_chain(param_node_name='simple_pipe_45', header_name=off, camera_no=1, param_cmd=2),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'bebe', 'camera_no': 'front', 'header_name': 'header_name'})

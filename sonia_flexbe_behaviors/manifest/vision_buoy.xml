@@ -24,6 +24,8 @@
 			<max value="4" />
 		</param>
 
+		<param type="text" name="header_name" default="buoy" label="header_name" hint="Sets the header_name" />
+
 	</params>
 
 
