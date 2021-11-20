@@ -23,7 +23,7 @@ Created on Tue Nov 16 2021
 '''
 class CHAAAAAAAARGESM(Behavior):
 	'''
-	LEEEEROOOOOOOOOOYYYYYYYYYYYYYYY JENNKINNSSSSSS! 
+	LEEEEROOOOOOOOOOYYYYYYYYYYYYYYY JENNKINNSSSSSS!
 	'''
 
 
@@ -32,7 +32,7 @@ class CHAAAAAAAARGESM(Behavior):
 		self.name = 'CHAAAAAAAARGE!!!'
 
 		# parameters of this behavior
-		self.add_parameter('charge_distance', 2)
+		self.add_parameter('charge_distance', 3)
 
 		# references to used behaviors
 
@@ -58,7 +58,7 @@ class CHAAAAAAAARGESM(Behavior):
 		with _state_machine:
 			# x:75 y:34
 			OperatableStateMachine.add('pose_charge',
-										create_pose(positionX=self.charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
+										create_pose(positionX=self.charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=30, precision=0, rotation=True),
 										transitions={'continue': 'pose_backoff'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'charge_pose'})
@@ -86,7 +86,7 @@ class CHAAAAAAAARGESM(Behavior):
 
 			# x:275 y:35
 			OperatableStateMachine.add('pose_backoff',
-										create_pose(positionX=-1, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=5, precision=0, rotation=True),
+										create_pose(positionX=-1, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
 										transitions={'continue': 'charge_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'backoff_pose'})
