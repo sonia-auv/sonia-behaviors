@@ -19,7 +19,6 @@ Dropper double vision task
 	<contains name="gate_no_trickshot_task" />
 	<contains name="jiangshi_task" />
 	<contains name="path_task" />
-	<contains name="droppers_no_ai_task" />
 
 	<!-- Available Parameters -->
 

@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.droppers_no_ai_task_sm import droppers_no_ai_taskSM
 from sonia_flexbe_behaviors.gate_no_trickshot_task_sm import gate_no_trickshot_taskSM
 from sonia_flexbe_behaviors.jiangshi_task_sm import jiangshi_taskSM
 from sonia_flexbe_behaviors.path_task_sm import path_taskSM
@@ -40,7 +39,6 @@ Dropper double vision task
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(droppers_no_ai_taskSM, 'droppers_no_ai_task')
 		self.add_behavior(gate_no_trickshot_taskSM, 'gate_no_trickshot_task')
 		self.add_behavior(jiangshi_taskSM, 'jiangshi_task')
 		self.add_behavior(path_taskSM, 'path_task')
@@ -87,7 +85,7 @@ Dropper double vision task
 			# x:462 y:328
 			OperatableStateMachine.add('path_task_2',
 										self.use_behavior(path_taskSM, 'path_task_2'),
-										transitions={'finished': 'droppers_no_ai_task', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
+										transitions={'finished': 'stop control 1', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:627 y:571
@@ -101,12 +99,6 @@ Dropper double vision task
 										set_control_mode(mode=0, timeout=3),
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:400 y:453
-			OperatableStateMachine.add('droppers_no_ai_task',
-										self.use_behavior(droppers_no_ai_taskSM, 'droppers_no_ai_task'),
-										transitions={'finished': 'stop control 1', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 
 		return _state_machine
