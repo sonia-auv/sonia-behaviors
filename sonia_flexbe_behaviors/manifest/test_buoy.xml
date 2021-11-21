@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_buoy">
+
+	<executable package_path="sonia_flexbe_behaviors.test_buoy_sm" class="test_buoySM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Sat Nov 20 2021</date>
+	<description>
+		Test the front alignement for jiangshi
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Aligment with stopping" />
+
+	<!-- Available Parameters -->
+
+</behavior>
