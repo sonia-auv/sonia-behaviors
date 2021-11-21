@@ -34,8 +34,8 @@ class trick_shot(EventState):
 			            #{ 'position': Point(0, 0, 0), 'orientation': Vector3(0, 0, 180), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True },
                             [Point(0, 0, 0),Vector3(0, 55, 0),1,6,0,True],
                             [Point(0, 0, 0),Vector3(0, 0, 180),1,5,0,True],
-                            [Point(0, 0, 0),Vector3(180, -0, 0),1,3,0,True],
-                            [Point(0, 0, 0),Vector3(180, -0, 0),1,3,0,True]]
+                            # [Point(0, 0, 0),Vector3(180, -0, 0),1,3,0,True],
+                            # [Point(0, 0, 0),Vector3(180, -0, 0),1,3,0,True]]
 
 			#funnystuff2			  
 			 #{ 'position': Point(0, 0, 1), 'orientation': Vector3(0, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True },
