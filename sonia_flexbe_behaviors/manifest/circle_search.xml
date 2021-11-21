@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="circle_search">
+
+	<executable package_path="sonia_flexbe_behaviors.circle_search_sm" class="circle_searchSM" />
+	<tagstring>mouvement</tagstring>
+	<author>William Brouillard</author>
+	<date>Sat Nov 20 2021</date>
+	<description>
+		Search in a squarry circle pattern.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance" default="1" label="distance" hint="Sets the distance">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+	</params>
+
+
+</behavior>
