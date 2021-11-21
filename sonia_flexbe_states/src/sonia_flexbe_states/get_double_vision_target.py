@@ -193,6 +193,10 @@ class get_simple_vision_target(EventState):
                 self.alignement_reached = True
             else :
                 self.alignement_reached = False
+            if self.width_merge * self.height_merge <= self.param_image_height * self.param_image_width * self.param_rv :
+                self.position_reached = True
+            else :
+                self.position_reached = False
 
     def on_enter(self, userdata):
 
