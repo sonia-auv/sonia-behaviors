@@ -21,15 +21,15 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Sat Nov 20 2021
 @author: William Brouillard
 '''
-class circle_searchSM(Behavior):
+class squarry_circleSM(Behavior):
 	'''
-	Search in a squarry circle pattern.
+	Move in a squarry circle pattern.
 	'''
 
 
 	def __init__(self):
-		super(circle_searchSM, self).__init__()
-		self.name = 'circle_search'
+		super(squarry_circleSM, self).__init__()
+		self.name = 'squarry_circle'
 
 		# parameters of this behavior
 		self.add_parameter('distance', 1)

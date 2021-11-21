@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
-from sonia_flexbe_behaviors.search_front_sm import search_frontSM
+from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
 from sonia_flexbe_states.get_simple_vision_target import get_simple_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
@@ -41,7 +41,7 @@ class vision_jiangshiSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping_2')
-		self.add_behavior(search_frontSM, 'search_front')
+		self.add_behavior(search_snakeSM, 'search_snake')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -80,7 +80,7 @@ class vision_jiangshiSM(Behavior):
 			# x:489 y:32
 			OperatableStateMachine.add('get target',
 										get_simple_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
-										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_front'},
+										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
@@ -105,9 +105,9 @@ class vision_jiangshiSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose_2'})
 
-			# x:294 y:193
-			OperatableStateMachine.add('search_front',
-										self.use_behavior(search_frontSM, 'search_front'),
+			# x:325 y:171
+			OperatableStateMachine.add('search_snake',
+										self.use_behavior(search_snakeSM, 'search_snake'),
 										transitions={'finished': 'get target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="search_bottom">
+<behavior name="search_circle">
 
-	<executable package_path="sonia_flexbe_behaviors.search_bottom_sm" class="search_bottomSM" />
+	<executable package_path="sonia_flexbe_behaviors.search_circle_sm" class="search_circleSM" />
 	<tagstring>search</tagstring>
-	<author>FA</author>
+	<author>William Brouillard</author>
 	<date>Mon Nov 15 2021</date>
 	<description>
-		Looking for a vision target on bottom camera
+		Looking for a vision target in a squarry circle pattern.
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="snake_mouvement" />
+	<contains name="squarry_circle" />
 
 	<!-- Available Parameters -->
 	<params>

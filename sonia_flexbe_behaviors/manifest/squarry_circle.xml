@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="circle_search">
+<behavior name="squarry_circle">
 
-	<executable package_path="sonia_flexbe_behaviors.circle_search_sm" class="circle_searchSM" />
+	<executable package_path="sonia_flexbe_behaviors.squarry_circle_sm" class="squarry_circleSM" />
 	<tagstring>mouvement</tagstring>
 	<author>William Brouillard</author>
 	<date>Sat Nov 20 2021</date>
 	<description>
-		Search in a squarry circle pattern.
+		Move in a squarry circle pattern.
 	</description>
 
 
