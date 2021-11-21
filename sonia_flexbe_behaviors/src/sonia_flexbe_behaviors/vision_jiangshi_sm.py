@@ -53,7 +53,7 @@ class vision_jiangshiSM(Behavior):
 
 
 	def create(self):
-		# x:1059 y:119, x:527 y:682, x:388 y:449
+		# x:1171 y:65, x:285 y:666, x:388 y:449
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -79,14 +79,14 @@ class vision_jiangshiSM(Behavior):
 
 			# x:489 y:32
 			OperatableStateMachine.add('get target',
-										get_simple_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=30),
+										get_simple_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=60),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
 			# x:1070 y:523
 			OperatableStateMachine.add('get_vision_2',
-										get_simple_vision_target(bounding_box_pixel=50, image_height=400, image_width=600, ratio_victory=0.85, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=30),
+										get_simple_vision_target(bounding_box_pixel=50, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=30),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping_2', 'move': 'move_target', 'failed': 'stop_filter_fail', 'search': 'stop_filter_success'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'pose': 'pose_2', 'bounding_box': 'bounding_box'})
@@ -98,7 +98,7 @@ class vision_jiangshiSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose'})
 
-			# x:881 y:299
+			# x:867 y:303
 			OperatableStateMachine.add('move_target',
 										move_to_target(),
 										transitions={'continue': 'stop_filter_success', 'failed': 'stop_filter_fail'},

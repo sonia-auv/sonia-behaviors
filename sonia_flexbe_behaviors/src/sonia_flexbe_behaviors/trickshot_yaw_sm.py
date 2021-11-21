@@ -56,7 +56,7 @@ class trickshotyawSM(Behavior):
 		with _state_machine:
 			# x:107 y:68
 			OperatableStateMachine.add('rotation',
-										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=180, frame=1, time=8, precision=0, rotation=True),
+										create_pose(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=180, frame=1, time=5, precision=0, rotation=True),
 										transitions={'continue': 'rotate 1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'rotation'})
