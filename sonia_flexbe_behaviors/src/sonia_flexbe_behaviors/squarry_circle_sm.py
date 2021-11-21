@@ -71,14 +71,14 @@ class squarry_circleSM(Behavior):
 
 			# x:373 y:33
 			OperatableStateMachine.add('pose_move_2',
-										create_pose(positionX=self.distance*2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.distance*5, precision=0, rotation=True),
+										create_pose(positionX=self.distance*2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.distance*10, precision=0, rotation=True),
 										transitions={'continue': 'pose_move_3'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'distance_2'})
 
 			# x:599 y:21
 			OperatableStateMachine.add('pose_move_3',
-										create_pose(positionX=self.distance*3, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.distance*5, precision=0, rotation=True),
+										create_pose(positionX=self.distance*3, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.distance*15, precision=0, rotation=True),
 										transitions={'continue': 'pose_rotate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'distance_3'})
