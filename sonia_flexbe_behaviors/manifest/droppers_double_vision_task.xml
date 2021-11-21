@@ -12,6 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="vision_double_droppers" />
+	<contains name="droppers" />
 
 	<!-- Available Parameters -->
 

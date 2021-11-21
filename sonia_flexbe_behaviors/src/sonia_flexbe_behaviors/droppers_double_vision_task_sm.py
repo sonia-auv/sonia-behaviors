@@ -8,6 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.droppers_sm import droppersSM
+from sonia_flexbe_behaviors.vision_double_droppers_sm import vision_double_droppersSM
 from sonia_flexbe_states.create_absolute_depth import create_absolute_depth
 from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
@@ -33,6 +35,8 @@ class droppers_double_vision_taskSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(droppersSM, 'droppers')
+		self.add_behavior(vision_double_droppersSM, 'vision_double_droppers')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -44,7 +48,7 @@ class droppers_double_vision_taskSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365, x:230 y:365
+		# x:857 y:386, x:296 y:284, x:831 y:129
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -64,9 +68,21 @@ class droppers_double_vision_taskSM(Behavior):
 			# x:364 y:35
 			OperatableStateMachine.add('move depth',
 										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'vision_double_droppers', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose'})
+
+			# x:578 y:67
+			OperatableStateMachine.add('vision_double_droppers',
+										self.use_behavior(vision_double_droppersSM, 'vision_double_droppers'),
+										transitions={'finished': 'droppers', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
+			# x:519 y:224
+			OperatableStateMachine.add('droppers',
+										self.use_behavior(droppersSM, 'droppers'),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
 		return _state_machine
