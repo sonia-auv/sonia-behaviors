@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from flexbe_states.log_state import LogState
 from sonia_flexbe_states.create_absolute_depth import create_absolute_depth
 from sonia_flexbe_states.create_pose import create_pose
 from sonia_flexbe_states.move_to_target import move_to_target
@@ -45,7 +46,7 @@ class CHAAAAAAAARGESM(Behavior):
 
 
 	def create(self):
-		# x:744 y:466, x:130 y:365
+		# x:972 y:514, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -55,12 +56,11 @@ class CHAAAAAAAARGESM(Behavior):
 
 
 		with _state_machine:
-			# x:75 y:34
-			OperatableStateMachine.add('pose_charge',
-										create_pose(positionX=3.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=35, precision=0, rotation=True),
-										transitions={'continue': 'pose_backoff'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'charge_pose'})
+			# x:49 y:54
+			OperatableStateMachine.add('log',
+										LogState(text='RAMMING', severity=2),
+										transitions={'done': 'pose_charge'},
+										autonomy={'done': Autonomy.Off})
 
 			# x:381 y:156
 			OperatableStateMachine.add('backoff',
@@ -69,26 +69,39 @@ class CHAAAAAAAARGESM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'backoff_pose'})
 
-			# x:137 y:157
+			# x:115 y:168
 			OperatableStateMachine.add('charge_forward',
 										move_to_target(),
 										transitions={'continue': 'backoff', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'charge_pose'})
 
+			# x:792 y:379
+			OperatableStateMachine.add('log_end',
+										LogState(text='Raming done', severity=2),
+										transitions={'done': 'finished'},
+										autonomy={'done': Autonomy.Off})
+
 			# x:602 y:286
 			OperatableStateMachine.add('move_absolute_depth',
 										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'log_end', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'depth_pose'})
 
-			# x:275 y:35
+			# x:546 y:19
 			OperatableStateMachine.add('pose_backoff',
-										create_pose(positionX=-1, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=10, precision=0, rotation=True),
+										create_pose(positionX=-2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=20, precision=0, rotation=True),
 										transitions={'continue': 'charge_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'backoff_pose'})
+
+			# x:247 y:27
+			OperatableStateMachine.add('pose_charge',
+										create_pose(positionX=4.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=45, precision=0, rotation=True),
+										transitions={'continue': 'pose_backoff'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'charge_pose'})
 
 			# x:615 y:161
 			OperatableStateMachine.add('absolute_dedpth_pose',

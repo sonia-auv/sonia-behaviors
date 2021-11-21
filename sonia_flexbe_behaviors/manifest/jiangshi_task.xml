@@ -18,9 +18,9 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="after_charge_distance" default="3" label="after_charge_distance" hint="Sets the after_charge_distance">
+		<param type="numeric" name="after_charge_distance" default="6" label="after_charge_distance" hint="Sets the after_charge_distance">
 			<min value="0" />
-			<max value="5" />
+			<max value="8" />
 		</param>
 
 	</params>

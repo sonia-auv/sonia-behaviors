@@ -34,7 +34,7 @@ class jiangshi_taskSM(Behavior):
 		self.name = 'jiangshi_task'
 
 		# parameters of this behavior
-		self.add_parameter('after_charge_distance', 3)
+		self.add_parameter('after_charge_distance', 6)
 
 		# references to used behaviors
 		self.add_behavior(CHAAAAAAAARGESM, 'CHAAAAAAAARGE!!!')
@@ -83,7 +83,7 @@ class jiangshi_taskSM(Behavior):
 
 			# x:485 y:22
 			OperatableStateMachine.add('pose_after_charge',
-										create_pose(positionX=self.after_charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=15, precision=0, rotation=True),
+										create_pose(positionX=self.after_charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.after_charge_distance*5, precision=0, rotation=True),
 										transitions={'continue': 'move_buffer'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'after_charge_pose'})
