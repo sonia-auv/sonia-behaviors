@@ -94,7 +94,7 @@ class jiangshi_taskSM(Behavior):
 										transitions={'finished': 'CHAAAAAAAARGE!!!', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:457 y:188
+			# x:464 y:154
 			OperatableStateMachine.add('CHAAAAAAAARGE!!!',
 										self.use_behavior(CHAAAAAAAARGESM, 'CHAAAAAAAARGE!!!'),
 										transitions={'finished': 'move_after_charge', 'failed': 'failed'},

@@ -89,14 +89,14 @@ class CHAAAAAAAARGESM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'depth_pose'})
 
-			# x:546 y:19
+			# x:657 y:32
 			OperatableStateMachine.add('pose_backoff',
 										create_pose(positionX=-2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=20, precision=0, rotation=True),
 										transitions={'continue': 'charge_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'backoff_pose'})
 
-			# x:247 y:27
+			# x:268 y:29
 			OperatableStateMachine.add('pose_charge',
 										create_pose(positionX=4.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=45, precision=0, rotation=True),
 										transitions={'continue': 'pose_backoff'},
