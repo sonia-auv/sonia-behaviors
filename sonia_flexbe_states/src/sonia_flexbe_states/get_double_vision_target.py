@@ -32,7 +32,7 @@ class get_simple_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, timeout=20):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain_target', 'filterchain_obstacle' 'camera_no'],
@@ -45,6 +45,7 @@ class get_simple_vision_target(EventState):
         self.param_noa = number_of_average
         self.param_mm = max_mouvement
         self.param_alignement_distance = alignement_distance
+        self.param_distance_to_confirm_data = distance_to_confirm_data
         self.param_timeout = timeout
         
         self.x_pixel_1 = deque([], maxlen=self.param_noa)
@@ -144,9 +145,9 @@ class get_simple_vision_target(EventState):
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(mouvement_y, mouvement_x, 0.)
         else :
-            new_pose.position = Point(0., mouvement_x, -mouvement_y)
+            new_pose.position = Point(0., mouvement_x, -mouvement_y/4)
 
-        return self.fill_pose(new_pose, 15)
+        return self.fill_pose(new_pose, 20)
         
     def position_with_vision(self):
         Logger.log('Alignement for position. Creating pose', Logger.REPORT_HINT)
@@ -157,7 +158,7 @@ class get_simple_vision_target(EventState):
         else :
             new_pose.position = Point(self.param_mm,0.,0.)
 
-        return self.fill_pose(new_pose, 5)
+        return self.fill_pose(new_pose, 10)
     
     def fill_pose(self, pose, speed):
         pose.orientation = Vector3(0.,0.,0.)
@@ -181,7 +182,17 @@ class get_simple_vision_target(EventState):
         topic.unregister()
 
     def verify_data(self):
-        if abs(self.x1): 
+        if sqrt((self.x2-self.x1)**2-(self.y2-self.y1)**2) < self.param_distance_to_confirm_data:
+            Logger.log('Sample are at less than'+ str(self.param_distance_to_confirm_data) + 'pixels', Logger.REPORT_HINT)
+            self.x_merge = (self.x2+self.x1)/2
+            self.y_merge = (self.y2+self.y1)/2
+            self.width_merge = (self.width_pixel_2+self.width_pixel_1)/2
+            self.height_merge = (self.height_pixel_2+self.height_pixel_1)/2
+            
+            if abs(self.x_merge) <= self.param_bbp and abs(self.y_merge) <= self.param_bbp :
+                self.alignement_reached = True
+            else :
+                self.alignement_reached = False
 
     def on_enter(self, userdata):
 
@@ -203,6 +214,10 @@ class get_simple_vision_target(EventState):
         self.x2 = 0.
         self.y1 = 0.
         self.y2 = 0.
+        self.x_merge = 0.
+        self.y_merge = 0.
+        self.width_merge = 0.
+        self.height_merge = 0.
         self.angle = 0.
         self.param_cam = userdata.camera_no
 

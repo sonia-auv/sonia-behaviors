@@ -59,14 +59,14 @@ class test_buoySM(Behavior):
 		with _state_machine:
 			# x:112 y:58
 			OperatableStateMachine.add('start',
-										start_filter_chain(param_node_name='simple_body_baby', header_name='', camera_no=3, param_cmd=1),
+										start_filter_chain(param_node_name='simple_test', header_name='', camera_no=3, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:525 y:76
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
+										get_simple_vision_target(bounding_box_pixel=50, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
 										transitions={'success': 'finished', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'failed', 'search': 'lost_target'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
