@@ -127,7 +127,7 @@ class get_simple_vision_target(EventState):
         return self.fill_pose(new_pose, 20)
         
     def position_with_vision(self):
-        Logger.log('Alignement for position. Creating pose', Logger.REPORT_HINT)
+        Logger.log('Moving to target. Creating pose', Logger.REPORT_HINT)
 
         new_pose = AddPose()        
         if self.param_cam == 2 or self.param_cam == 4 :
