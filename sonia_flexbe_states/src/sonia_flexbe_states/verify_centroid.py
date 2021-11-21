@@ -41,6 +41,7 @@ class verify_centroid(EventState):
             self.vision_y_pixel.append(vision_data.y)
         if len(self.vision_x_pixel) == self.param_number_sample and \
            len(self.vision_y_pixel) == self.param_number_sample:
+            Logger.log('Veirfying the centroid', Logger.REPORT_HINT)
             self.verify_centroid()
 
     def verify_centroid(self):
