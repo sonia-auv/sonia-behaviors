@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_bottom" />
+	<contains name="search_snake" />
 
 	<!-- Available Parameters -->
 	<params>

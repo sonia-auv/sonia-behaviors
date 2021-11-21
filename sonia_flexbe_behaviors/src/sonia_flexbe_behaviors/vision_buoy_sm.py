@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.search_front_sm import search_frontSM
+from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
 from sonia_flexbe_states.get_vision_target import get_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
@@ -38,7 +38,7 @@ class vision_buoySM(Behavior):
 		self.add_parameter('header_name', 'buoy')
 
 		# references to used behaviors
-		self.add_behavior(search_frontSM, 'search_front')
+		self.add_behavior(search_snakeSM, 'search_snake')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -65,14 +65,14 @@ class vision_buoySM(Behavior):
 										start_filter_chain(param_node_name=self.filter_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'jiangshi', 'camera_no': 'front', 'header_name': 'header_name'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'header_name': 'header_name'})
 
 			# x:365 y:46
 			OperatableStateMachine.add('get_target',
 										get_vision_target(bounding_box_pixel=100, target_width_meter=0.1, target_height_meter=0.1, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
-										transitions={'success': 'stop_filter_success', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_front'},
+										transitions={'success': 'stop_filter_success', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'jiangshi', 'camera_no': 'front', 'pose': 'target'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'pose': 'target'})
 
 			# x:726 y:231
 			OperatableStateMachine.add('move',
@@ -81,12 +81,12 @@ class vision_buoySM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target'})
 
-			# x:379 y:202
-			OperatableStateMachine.add('search_front',
-										self.use_behavior(search_frontSM, 'search_front'),
+			# x:352 y:150
+			OperatableStateMachine.add('search_snake',
+										self.use_behavior(search_snakeSM, 'search_snake'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
-										remapping={'target': 'target'})
+										remapping={'target': 'filterchain'})
 
 			# x:120 y:477
 			OperatableStateMachine.add('stop_filter_fail',

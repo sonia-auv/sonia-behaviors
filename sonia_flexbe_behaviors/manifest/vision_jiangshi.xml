@@ -13,7 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="Aligment with stopping" />
-	<contains name="search_front" />
+	<contains name="search_snake" />
 
 	<!-- Available Parameters -->
 	<params>

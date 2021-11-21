@@ -8,12 +8,10 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
 from sonia_flexbe_behaviors.droppers_sm import droppersSM
-from sonia_flexbe_behaviors.search_bottom_sm import search_bottomSM
-from sonia_flexbe_states.get_simple_vision_target import get_simple_vision_target
+from sonia_flexbe_behaviors.vision_droppers_sm import vision_droppersSM
+from sonia_flexbe_states.create_absolute_depth import create_absolute_depth
 from sonia_flexbe_states.move_to_target import move_to_target
-from sonia_flexbe_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -40,9 +38,8 @@ class droppers_taskSM(Behavior):
 		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
-		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
 		self.add_behavior(droppersSM, 'droppers')
-		self.add_behavior(search_bottomSM, 'search_bottom')
+		self.add_behavior(vision_droppersSM, 'vision_droppers')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -64,46 +61,31 @@ class droppers_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:67 y:193
-			OperatableStateMachine.add('start_filter_chain',
-										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'get target', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+			# x:120 y:52
+			OperatableStateMachine.add('depth',
+										create_absolute_depth(positionZ=0.5),
+										transitions={'continue': 'depth_move'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'depth_pose'})
 
-			# x:1074 y:193
+			# x:272 y:113
+			OperatableStateMachine.add('depth_move',
+										move_to_target(),
+										transitions={'continue': 'vision_droppers', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'depth_pose'})
+
+			# x:948 y:199
 			OperatableStateMachine.add('droppers',
 										self.use_behavior(droppersSM, 'droppers'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:463 y:32
-			OperatableStateMachine.add('get target',
-										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
-										transitions={'success': 'droppers', 'align': 'Aligment with stopping', 'move': 'move_to_target', 'failed': 'failed', 'search': 'search_bottom'},
-										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
-
-			# x:526 y:176
-			OperatableStateMachine.add('move_to_target',
-										move_to_target(),
-										transitions={'continue': 'get target', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'pose'})
-
-			# x:262 y:202
-			OperatableStateMachine.add('search_bottom',
-										self.use_behavior(search_bottomSM, 'search_bottom'),
-										transitions={'finished': 'get target', 'failed': 'failed', 'lost_target': 'lost_target'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
-										remapping={'target': 'filterchain'})
-
-			# x:727 y:203
-			OperatableStateMachine.add('Aligment with stopping',
-										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
-										transitions={'lost_target': 'lost_target', 'failed': 'failed', 'success': 'get target'},
-										autonomy={'lost_target': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'success': Autonomy.Inherit},
-										remapping={'target': 'pose', 'filterchain': 'filterchain', 'header_name': 'header_name', 'bounding_box': 'bounding_box'})
+			# x:518 y:103
+			OperatableStateMachine.add('vision_droppers',
+										self.use_behavior(vision_droppersSM, 'vision_droppers'),
+										transitions={'finished': 'droppers', 'failed': 'failed', 'lost_target': 'lost_target'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 
 		return _state_machine

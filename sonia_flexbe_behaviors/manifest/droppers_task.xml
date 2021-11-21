@@ -13,8 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="droppers" />
-	<contains name="search_bottom" />
-	<contains name="Aligment with stopping" />
+	<contains name="vision_droppers" />
 
 	<!-- Available Parameters -->
 	<params>

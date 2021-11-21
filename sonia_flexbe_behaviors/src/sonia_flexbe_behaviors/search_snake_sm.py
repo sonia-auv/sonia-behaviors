@@ -18,24 +18,24 @@ from sonia_flexbe_states.stop_move import stop_move
 
 
 '''
-Created on Mon Nov 15 2021
+Created on Sun Nov 14 2021
 @author: FA
 '''
-class search_bottomSM(Behavior):
+class search_snakeSM(Behavior):
 	'''
-	Looking for a vision target on bottom camera
+	Search in a snake pattern.
 	'''
 
 
 	def __init__(self):
-		super(search_bottomSM, self).__init__()
-		self.name = 'search_bottom'
+		super(search_snakeSM, self).__init__()
+		self.name = 'search_snake'
 
 		# parameters of this behavior
 		self.add_parameter('time_stop_search', 105)
 
 		# references to used behaviors
-		self.add_behavior(snake_mouvementSM, 'move with search/snake_mouvement')
+		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -47,7 +47,7 @@ class search_bottomSM(Behavior):
 
 
 	def create(self):
-		# x:683 y:76, x:446 y:218, x:179 y:231
+		# x:642 y:64, x:389 y:239, x:209 y:246
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
 		_state_machine.userdata.target = ' '
 
@@ -56,23 +56,23 @@ class search_bottomSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:374 y:297, x:559 y:126, x:401 y:134, x:469 y:41, x:608 y:67, x:595 y:178, x:397 y:202
-		_sm_move_with_search_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
-										('finished', [('find_target', 'continue')]),
-										('lost_target', [('find_target', 'failed')]),
+		# x:349 y:161, x:437 y:28, x:414 y:120, x:322 y:249, x:598 y:122, x:641 y:62, x:543 y:252
+		_sm_snake_searching_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+										('lost_target', [('snake_mouvement', 'finished')]),
 										('failed', [('snake_mouvement', 'failed')]),
-										('lost_target', [('snake_mouvement', 'finished')])
+										('lost_target', [('find target', 'failed')]),
+										('finished', [('find target', 'continue')])
 										])
 
-		with _sm_move_with_search_0:
-			# x:99 y:41
+		with _sm_snake_searching_0:
+			# x:126 y:63
 			OperatableStateMachine.add('snake_mouvement',
-										self.use_behavior(snake_mouvementSM, 'move with search/snake_mouvement'),
+										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:78 y:163
-			OperatableStateMachine.add('find_target',
+			# x:119 y:201
+			OperatableStateMachine.add('find target',
 										find_vision_target(number_samples=10, timeout=self.time_stop_search),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
@@ -81,16 +81,16 @@ class search_bottomSM(Behavior):
 
 
 		with _state_machine:
-			# x:122 y:66
-			OperatableStateMachine.add('move with search',
-										_sm_move_with_search_0,
+			# x:111 y:54
+			OperatableStateMachine.add('Snake searching',
+										_sm_snake_searching_0,
 										transitions={'finished': 'stop mouvement', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
-			# x:413 y:42
+			# x:378 y:39
 			OperatableStateMachine.add('stop mouvement',
-										stop_move(timeout=10),
+										stop_move(timeout=20),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

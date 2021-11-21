@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.search_bottom_sm import search_bottomSM
+from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
 from sonia_flexbe_states.get_vision_target import get_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
@@ -38,7 +38,7 @@ class vision_body_babySM(Behavior):
 		self.add_parameter('header_name', 'body_baby')
 
 		# references to used behaviors
-		self.add_behavior(search_bottomSM, 'search_bottom')
+		self.add_behavior(search_snakeSM, 'search_snake')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -74,9 +74,9 @@ class vision_body_babySM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target_pose'})
 
-			# x:312 y:200
-			OperatableStateMachine.add('search_bottom',
-										self.use_behavior(search_bottomSM, 'search_bottom'),
+			# x:354 y:200
+			OperatableStateMachine.add('search_snake',
+										self.use_behavior(search_snakeSM, 'search_snake'),
 										transitions={'finished': 'get target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
@@ -105,7 +105,7 @@ class vision_body_babySM(Behavior):
 			# x:521 y:52
 			OperatableStateMachine.add('get target',
 										get_vision_target(bounding_box_pixel=150, target_width_meter=0.6, target_height_meter=0.3, ratio_victory=0.8, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
-										transitions={'success': 'stop_filter_success', 'move': 'move to target', 'failed': 'stop_filter_fail', 'search': 'search_bottom'},
+										transitions={'success': 'stop_filter_success', 'move': 'move to target', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose'})
 

@@ -10,7 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
 from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
-from sonia_flexbe_behaviors.move_to_gate_sm import move_to_gateSM
+from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
 from sonia_flexbe_states.create_pose import create_pose
 from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
@@ -23,22 +23,22 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Fri Nov 12 2021
 @author: William Brouillard
 '''
-class gate_task_wihtout_initSM(Behavior):
+class gate_no_trickshot_taskSM(Behavior):
 	'''
-	Orient to the gate with the right orientation and move through it with a trickshot.
+	Init the submarine, orient to the gate with the right orientation and move through it.
 	'''
 
 
 	def __init__(self):
-		super(gate_task_wihtout_initSM, self).__init__()
-		self.name = 'gate_task_wihtout_init'
+		super(gate_no_trickshot_taskSM, self).__init__()
+		self.name = 'gate_no_trickshot_task'
 
 		# parameters of this behavior
 
 		# references to used behaviors
 		self.add_behavior(coin_flipSM, 'coin_flip')
 		self.add_behavior(init_submarineSM, 'init_submarine')
-		self.add_behavior(move_to_gateSM, 'move_to_gate')
+		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -69,7 +69,7 @@ class gate_task_wihtout_initSM(Behavior):
 			# x:417 y:280
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'move_to_gate', 'failed': 'failed'},
+										transitions={'finished': 'move_to_gate_no_trickshot', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:657 y:560
@@ -79,9 +79,9 @@ class gate_task_wihtout_initSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'buffer_pose'})
 
-			# x:684 y:278
-			OperatableStateMachine.add('move_to_gate',
-										self.use_behavior(move_to_gateSM, 'move_to_gate'),
+			# x:645 y:286
+			OperatableStateMachine.add('move_to_gate_no_trickshot',
+										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

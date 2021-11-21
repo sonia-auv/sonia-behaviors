@@ -7,12 +7,12 @@
 	<author>FA</author>
 	<date>Mon Nov 15 2021</date>
 	<description>
-		Behaviors for the task of the path and rotate to the right orientation
+		Behaviors for the task of the path and rotate to the right orientationLook for a vision target on the front camera
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_bottom" />
+	<contains name="search_snake" />
 	<contains name="Aligment with stopping" />
 
 	<!-- Available Parameters -->

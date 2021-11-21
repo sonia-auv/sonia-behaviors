@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
-from sonia_flexbe_behaviors.search_bottom_sm import search_bottomSM
+from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
 from sonia_flexbe_states.get_simple_vision_target import get_simple_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
 from sonia_flexbe_states.start_filter_chain import start_filter_chain
@@ -25,7 +25,7 @@ Created on Mon Nov 15 2021
 '''
 class vision_path_new_algoSM(Behavior):
 	'''
-	Behaviors for the task of the path and rotate to the right orientation
+	Behaviors for the task of the path and rotate to the right orientationLook for a vision target on the front camera
 	'''
 
 
@@ -40,7 +40,7 @@ class vision_path_new_algoSM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
-		self.add_behavior(search_bottomSM, 'search_bottom')
+		self.add_behavior(search_snakeSM, 'search_snake')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -72,7 +72,7 @@ class vision_path_new_algoSM(Behavior):
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
 										get_simple_vision_target(bounding_box_pixel=150, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=20),
-										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'stop_filter_fail', 'search': 'search_bottom'},
+										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
 
@@ -90,9 +90,9 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target_pose'})
 
-			# x:324 y:227
-			OperatableStateMachine.add('search_bottom',
-										self.use_behavior(search_bottomSM, 'search_bottom'),
+			# x:330 y:201
+			OperatableStateMachine.add('search_snake',
+										self.use_behavior(search_snakeSM, 'search_snake'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})

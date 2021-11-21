@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="gate_no_trickshot_task">
+
+	<executable package_path="sonia_flexbe_behaviors.gate_no_trickshot_task_sm" class="gate_no_trickshot_taskSM" />
+	<tagstring>task</tagstring>
+	<author>William Brouillard</author>
+	<date>Fri Nov 12 2021</date>
+	<description>
+		Init the submarine, orient to the gate with the right orientation and move through it.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_submarine" />
+	<contains name="coin_flip" />
+	<contains name="move_to_gate_no_trickshot" />
+
+	<!-- Available Parameters -->
+
+</behavior>
