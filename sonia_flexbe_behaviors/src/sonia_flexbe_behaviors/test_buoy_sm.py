@@ -66,7 +66,7 @@ class test_buoySM(Behavior):
 
 			# x:525 y:76
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=50, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
+										get_simple_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
 										transitions={'success': 'finished', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'failed', 'search': 'lost_target'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
