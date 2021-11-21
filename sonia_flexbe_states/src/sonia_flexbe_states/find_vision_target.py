@@ -28,7 +28,6 @@ class find_vision_target(EventState):
 
     def vision_cb(self, data):
         self.number_of_found += 1
-        Logger.log('Found the target after %d number of samples' %self.number_of_found, Logger.REPORT_HINT)
 
     def on_enter(self, userdata): 
         self.number_of_found = 0

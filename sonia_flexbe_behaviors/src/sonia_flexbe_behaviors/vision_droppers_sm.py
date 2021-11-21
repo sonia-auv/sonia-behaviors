@@ -52,7 +52,7 @@ class vision_droppersSM(Behavior):
 
 
 	def create(self):
-		# x:1015 y:225, x:108 y:530, x:366 y:444
+		# x:1015 y:225, x:166 y:490, x:366 y:444
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -62,16 +62,16 @@ class vision_droppersSM(Behavior):
 
 
 		with _state_machine:
-			# x:48 y:336
-			OperatableStateMachine.add('start rotate filter',
-										start_filter_chain(param_node_name='deep_rotate', header_name='', camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'start_filter_chain', 'failed': 'failed'},
+			# x:47 y:187
+			OperatableStateMachine.add('start_filter_chain',
+										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
+										transitions={'continue': 'get target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:438 y:27
 			OperatableStateMachine.add('get target',
-										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
+										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=True, timeout=60),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move_to_target', 'failed': 'stop_filter_fail', 'search': 'search_circle'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'pose': 'pose', 'bounding_box': 'bounding_box'})
@@ -89,13 +89,6 @@ class vision_droppersSM(Behavior):
 										transitions={'finished': 'get target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
-
-			# x:47 y:187
-			OperatableStateMachine.add('start_filter_chain',
-										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'get target', 'failed': 'stop_filter_fail'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:397 y:509
 			OperatableStateMachine.add('stop_filter_fail',

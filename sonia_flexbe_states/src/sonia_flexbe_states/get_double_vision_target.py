@@ -6,6 +6,7 @@ import rospy
 
 from Queue import deque
 from flexbe_core import EventState, Logger
+from rospy.core import logfatal
 from sonia_common.msg import VisionTarget, AddPose
 from geometry_msgs.msg import Point, Vector3
 
@@ -32,7 +33,7 @@ class get_double_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, timeout=20):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, rotation=False, timeout=20):
         
         super(get_double_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain_target', 'header_target', 'filterchain_obstacle', 'header_obstacle', 'camera_no'],
@@ -46,6 +47,7 @@ class get_double_vision_target(EventState):
         self.param_mm = max_mouvement
         self.param_alignement_distance = alignement_distance
         self.param_distance_to_confirm_data = distance_to_confirm_data
+        self.param_rotation = rotation
         self.param_timeout = timeout
         
         self.x_pixel_1 = deque([], maxlen=self.param_noa)
@@ -200,6 +202,12 @@ class get_double_vision_target(EventState):
             else :
                 self.position_reached = False
 
+    def rotate(self):
+        new_x = -self.y_merge
+        new_y = self.x_merge
+        self.x_merge = new_x
+        self.y_merge = new_y
+
     def on_enter(self, userdata):
 
         self.x_pixel_1.clear()
@@ -248,6 +256,9 @@ class get_double_vision_target(EventState):
             self.parse_data_2 = False
             Logger.log('Both filter got data', Logger.REPORT_HINT)
             self.verify_data()
+            if self.param_rotation == True:
+                Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)
+                self.rotate()
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
                     userdata.pose = self.angle_obtained()

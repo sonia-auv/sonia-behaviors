@@ -54,7 +54,7 @@ class vision_double_droppersSM(Behavior):
 
 
 	def create(self):
-		# x:1015 y:225, x:236 y:488, x:366 y:444
+		# x:1015 y:225, x:249 y:503, x:366 y:444
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -64,16 +64,16 @@ class vision_double_droppersSM(Behavior):
 
 
 		with _state_machine:
-			# x:40 y:433
-			OperatableStateMachine.add('start deep rotate',
-										start_filter_chain(param_node_name='deep_rotate', header_name='', camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'start_conventionnal', 'failed': 'failed'},
+			# x:62 y:380
+			OperatableStateMachine.add('start_conventionnal',
+										start_filter_chain(param_node_name=self.vision_filter, header_name=self.vision_header, camera_no=self.camera_no, param_cmd=1),
+										transitions={'continue': 'start_ai', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+										remapping={'filterchain': 'filter_obstacle', 'camera_no': 'camera_no', 'header_name': 'header_obstacle'})
 
 			# x:412 y:13
 			OperatableStateMachine.add('get double target',
-										get_double_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, timeout=20),
+										get_double_vision_target(bounding_box_pixel=75, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, rotation=True, timeout=20),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move_to_target', 'failed': 'stop_filter_fail', 'search': 'search_circle'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain_target': 'filterchain', 'header_target': 'header_name', 'filterchain_obstacle': 'filter_obstacle', 'header_obstacle': 'header_obstacle', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
@@ -92,21 +92,14 @@ class vision_double_droppersSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
-			# x:57 y:219
+			# x:73 y:246
 			OperatableStateMachine.add('start_ai',
 										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
 										transitions={'continue': 'get double target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:110 y:333
-			OperatableStateMachine.add('start_conventionnal',
-										start_filter_chain(param_node_name=self.vision_filter, header_name=self.vision_header, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'start_ai', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filter_obstacle', 'camera_no': 'camera_no', 'header_name': 'header_obstacle'})
-
-			# x:440 y:510
+			# x:403 y:528
 			OperatableStateMachine.add('stop_filter_fail',
 										start_filter_chain(param_node_name=self.filterchain, header_name=self.header_name, camera_no=self.camera_no, param_cmd=2),
 										transitions={'continue': 'failed', 'failed': 'failed'},

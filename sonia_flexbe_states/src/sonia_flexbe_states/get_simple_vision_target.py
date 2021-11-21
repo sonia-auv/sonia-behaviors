@@ -32,7 +32,7 @@ class get_simple_vision_target(EventState):
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=20):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain', 'camera_no', 'header_name'],
@@ -45,6 +45,7 @@ class get_simple_vision_target(EventState):
         self.param_noa = number_of_average
         self.param_mm = max_mouvement
         self.param_alignement_distance = alignement_distance
+        self.param_rotation = rotation
         self.param_timeout = timeout
         
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
@@ -66,6 +67,7 @@ class get_simple_vision_target(EventState):
             len(self.vision_width_pixel) == self.param_noa and \
             len(self.vision_height_pixel) == self.param_noa and \
             len(self.vision_angle) == self.param_noa:
+            self.get_vision_data.unregister()
             self.parse_vision_data()
             self.parse_data = True
 
@@ -156,6 +158,12 @@ class get_simple_vision_target(EventState):
         pose.rotation = True
         return pose
 
+    def rotate(self):
+        new_x = -self.y
+        new_y = self.x
+        self.x = new_x
+        self.y = new_y
+
     def on_enter(self, userdata):
 
         self.vision_x_pixel.clear()
@@ -187,6 +195,9 @@ class get_simple_vision_target(EventState):
         actual = time() - self.start_time
         if self.parse_data == True:
             self.parse_data = False
+            if self.param_rotation == True:
+                Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)
+                self.rotate()
             Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
@@ -205,4 +216,4 @@ class get_simple_vision_target(EventState):
             return 'search'
 
     def on_exit(self, userdata):
-        self.get_vision_data.unregister()
+        pass
