@@ -57,9 +57,10 @@ class AligmentwithstoppingSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:703 y:332, x:537 y:129, x:569 y:42, x:397 y:168, x:794 y:118, x:654 y:243, x:733 y:190
+		# x:703 y:332, x:537 y:129, x:569 y:42, x:523 y:181, x:794 y:118, x:654 y:243, x:630 y:365
 		_sm_alignement_with_stop_0 = ConcurrencyContainer(outcomes=['failed', 'lost_target', 'success'], input_keys=['target', 'filterchain', 'bounding_box', 'header_name'], conditions=[
-										('success', [('move', 'continue'), ('centroid', 'align_complete')]),
+										('success', [('move', 'continue')]),
+										('success', [('centroid', 'align_complete')]),
 										('failed', [('move', 'failed')]),
 										('lost_target', [('centroid', 'timeout_reached')])
 										])
