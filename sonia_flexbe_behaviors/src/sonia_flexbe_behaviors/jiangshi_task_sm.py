@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.chaaaaaaaarge____sm import CHAAAAAAAARGESM
 from sonia_flexbe_behaviors.vision_jiangshi_sm import vision_jiangshiSM
 from sonia_flexbe_states.create_absolute_depth import create_absolute_depth
+from sonia_flexbe_states.create_pose import create_pose
 from sonia_flexbe_states.move_to_target import move_to_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -33,6 +34,7 @@ class jiangshi_taskSM(Behavior):
 		self.name = 'jiangshi_task'
 
 		# parameters of this behavior
+		self.add_parameter('after_charge_distance', 3)
 
 		# references to used behaviors
 		self.add_behavior(CHAAAAAAAARGESM, 'CHAAAAAAAARGE!!!')
@@ -58,12 +60,19 @@ class jiangshi_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:256 y:16
+			# x:181 y:20
 			OperatableStateMachine.add('depth_jiangshi',
 										create_absolute_depth(positionZ=2),
-										transitions={'continue': 'move_buffer'},
+										transitions={'continue': 'pose_after_charge'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'depth_pose'})
+
+			# x:730 y:232
+			OperatableStateMachine.add('move_after_charge',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'after_charge_pose'})
 
 			# x:33 y:112
 			OperatableStateMachine.add('move_buffer',
@@ -72,16 +81,23 @@ class jiangshi_taskSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'depth_pose'})
 
+			# x:485 y:22
+			OperatableStateMachine.add('pose_after_charge',
+										create_pose(positionX=self.after_charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=15, precision=0, rotation=True),
+										transitions={'continue': 'move_buffer'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'after_charge_pose'})
+
 			# x:193 y:183
 			OperatableStateMachine.add('vision_jiangshi',
 										self.use_behavior(vision_jiangshiSM, 'vision_jiangshi'),
 										transitions={'finished': 'CHAAAAAAAARGE!!!', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:469 y:222
+			# x:457 y:188
 			OperatableStateMachine.add('CHAAAAAAAARGE!!!',
 										self.use_behavior(CHAAAAAAAARGESM, 'CHAAAAAAAARGE!!!'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'move_after_charge', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
