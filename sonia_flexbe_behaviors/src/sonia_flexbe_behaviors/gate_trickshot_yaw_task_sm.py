@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
 from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
+from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
 from sonia_flexbe_behaviors.trickshot_yaw_sm import trickshotyawSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -36,6 +37,7 @@ class gate_trickshot_yaw_taskSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(coin_flipSM, 'coin_flip')
 		self.add_behavior(init_submarineSM, 'init_submarine')
+		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
 		self.add_behavior(trickshotyawSM, 'trickshot yaw')
 
 		# Additional initialization code can be added inside the following tags
@@ -64,7 +66,13 @@ class gate_trickshot_yaw_taskSM(Behavior):
 										transitions={'finished': 'coin_flip', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:693 y:144
+			# x:727 y:127
+			OperatableStateMachine.add('move_to_gate_no_trickshot',
+										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
+										transitions={'finished': 'trickshot yaw', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:650 y:253
 			OperatableStateMachine.add('trickshot yaw',
 										self.use_behavior(trickshotyawSM, 'trickshot yaw'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
@@ -73,7 +81,7 @@ class gate_trickshot_yaw_taskSM(Behavior):
 			# x:446 y:90
 			OperatableStateMachine.add('coin_flip',
 										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'trickshot yaw', 'failed': 'failed'},
+										transitions={'finished': 'move_to_gate_no_trickshot', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 

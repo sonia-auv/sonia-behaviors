@@ -13,6 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="init_submarine" />
+	<contains name="move_to_gate_no_trickshot" />
 	<contains name="trickshot yaw" />
 	<contains name="coin_flip" />
 
