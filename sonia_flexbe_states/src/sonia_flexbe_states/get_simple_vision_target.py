@@ -47,6 +47,8 @@ class get_simple_vision_target(EventState):
         self.param_alignement_distance = alignement_distance
         self.param_rotation = rotation
         self.param_timeout = timeout
+
+        self.nombre_enter = 0
         
         self.vision_x_pixel = deque([], maxlen=self.param_noa)
         self.vision_y_pixel = deque([], maxlen=self.param_noa)
@@ -189,7 +191,8 @@ class get_simple_vision_target(EventState):
         self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
         self.start_time = time()
 
-        Logger.log('Starting to gather data', Logger.REPORT_HINT) 
+        self.nombre_enter += 1
+        Logger.log('Starting to gather data for the ' +str(self.nombre_enter), Logger.REPORT_HINT) 
 
     def execute(self, userdata):
         actual = time() - self.start_time
