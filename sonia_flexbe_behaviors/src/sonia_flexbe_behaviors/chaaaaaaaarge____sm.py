@@ -32,7 +32,6 @@ class CHAAAAAAAARGESM(Behavior):
 		self.name = 'CHAAAAAAAARGE!!!'
 
 		# parameters of this behavior
-		self.add_parameter('charge_distance', 3)
 
 		# references to used behaviors
 
@@ -58,7 +57,7 @@ class CHAAAAAAAARGESM(Behavior):
 		with _state_machine:
 			# x:75 y:34
 			OperatableStateMachine.add('pose_charge',
-										create_pose(positionX=self.charge_distance, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.charge_distance*5, precision=0, rotation=True),
+										create_pose(positionX=3.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.charge_distance*5, precision=0, rotation=True),
 										transitions={'continue': 'pose_backoff'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'charge_pose'})

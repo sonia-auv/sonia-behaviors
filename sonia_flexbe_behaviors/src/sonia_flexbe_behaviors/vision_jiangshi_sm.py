@@ -79,14 +79,14 @@ class vision_jiangshiSM(Behavior):
 
 			# x:489 y:32
 			OperatableStateMachine.add('get target',
-										get_simple_vision_target(bounding_box_pixel=200, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
+										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.75, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_front'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
 			# x:947 y:523
 			OperatableStateMachine.add('get_vision_2',
-										get_simple_vision_target(bounding_box_pixel=200, image_height=400, image_width=600, ratio_victory=0.85, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
+										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.85, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=30),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping_2', 'move': 'move_target', 'failed': 'stop_filter_fail', 'search': 'Aligment with stopping_2'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose_2', 'bounding_box': 'bounding_box'})

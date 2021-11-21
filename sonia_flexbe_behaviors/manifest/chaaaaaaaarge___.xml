@@ -14,14 +14,5 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
-	<params>
-
-		<param type="numeric" name="charge_distance" default="3" label="charge_distance" hint="Sets the charge_distance">
-			<min value="0" />
-			<max value="5" />
-		</param>
-
-	</params>
-
 
 </behavior>
