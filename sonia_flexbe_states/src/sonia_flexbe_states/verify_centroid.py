@@ -56,7 +56,7 @@ class verify_centroid(EventState):
             average_y_pixel += i
         average_y_pixel /= len(self.vision_y_pixel)
 
-        if average_x_pixel <= self.bounding_box and average_y_pixel <= self.bounding_box:
+        if abs(average_x_pixel) <= self.bounding_box and abs(average_y_pixel) <= self.bounding_box:
             self.at_centroid = True
 
     def on_enter(self, userdata):
