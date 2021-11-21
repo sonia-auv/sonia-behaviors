@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trickshot yaw">
+
+	<executable package_path="sonia_flexbe_behaviors.trickshot_yaw_sm" class="trickshotyawSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Sun Nov 21 2021</date>
+	<description>
+		Yaw trickshot for the gate
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
