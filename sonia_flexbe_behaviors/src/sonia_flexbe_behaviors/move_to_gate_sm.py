@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.create_pose import create_pose
-from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
 from sonia_flexbe_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -32,9 +31,10 @@ class move_to_gateSM(Behavior):
 		self.name = 'move_to_gate'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 4)
+		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
+		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -56,25 +56,17 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:111 y:68
-			OperatableStateMachine.add('pose gate',
-										create_pose(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
-										transitions={'continue': 'move gate'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'gate_pose'})
+			# x:191 y:53
+			OperatableStateMachine.add('move_to_gate_no_trickshot',
+										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
+										transitions={'finished': 'trickshot', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:597 y:74
+			# x:575 y:69
 			OperatableStateMachine.add('trickshot',
 										trick_shot(delay=3),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
-
-			# x:354 y:71
-			OperatableStateMachine.add('move gate',
-										move_to_target(),
-										transitions={'continue': 'trickshot', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'gate_pose'})
 
 
 		return _state_machine

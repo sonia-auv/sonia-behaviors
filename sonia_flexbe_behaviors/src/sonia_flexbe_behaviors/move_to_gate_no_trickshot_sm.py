@@ -31,7 +31,7 @@ class move_to_gate_no_trickshotSM(Behavior):
 		self.name = 'move_to_gate_no_trickshot'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 4)
+		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
 
@@ -57,7 +57,7 @@ class move_to_gate_no_trickshotSM(Behavior):
 		with _state_machine:
 			# x:111 y:68
 			OperatableStateMachine.add('pose gate',
-										create_pose(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=25, precision=0, rotation=True),
+										create_pose(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.distance_to_gate*5, precision=0, rotation=True),
 										transitions={'continue': 'move gate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'gate_pose'})
