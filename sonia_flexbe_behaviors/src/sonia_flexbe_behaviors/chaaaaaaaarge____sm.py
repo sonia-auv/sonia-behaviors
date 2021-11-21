@@ -57,7 +57,11 @@ class CHAAAAAAAARGESM(Behavior):
 		with _state_machine:
 			# x:75 y:34
 			OperatableStateMachine.add('pose_charge',
+<<<<<<< HEAD
 										create_pose(positionX=3.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=3.5*10, precision=0, rotation=True),
+=======
+										create_pose(positionX=3.5, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=35, precision=0, rotation=True),
+>>>>>>> 1ec17fb8a22588d37eee78eae467ac8f1c9fe010
 										transitions={'continue': 'pose_backoff'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'pose': 'charge_pose'})
