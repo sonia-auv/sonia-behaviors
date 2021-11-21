@@ -36,7 +36,7 @@ class verify_centroid(EventState):
         self.vision_y_pixel = deque([], maxlen=self.param_number_sample)
 
     def vision_cb(self, vision_data):
-        if vision_data.header == self.header_name:
+        if vision_data.header == self.header_name or vision_data.desc_1 == self.header_name:
             self.vision_x_pixel.append(vision_data.x)
             self.vision_y_pixel.append(vision_data.y)
         if len(self.vision_x_pixel) == self.param_number_sample and \

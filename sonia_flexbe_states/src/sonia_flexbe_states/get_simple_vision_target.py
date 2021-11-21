@@ -35,7 +35,7 @@ class get_simple_vision_target(EventState):
     def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no'],
+                                                input_keys = ['filterchain', 'camera_no', 'header_name'],
                                                 output_keys = ['pose', 'bounding_box'])
 
         self.param_bbp = bounding_box_pixel
@@ -54,11 +54,12 @@ class get_simple_vision_target(EventState):
         self.vision_angle = deque([], maxlen=self.param_noa)
 
     def vision_cb(self, vision_data):
-        self.vision_x_pixel.append(vision_data.x)
-        self.vision_y_pixel.append(vision_data.y)
-        self.vision_width_pixel.append(vision_data.width)
-        self.vision_height_pixel.append(vision_data.height)
-        self.vision_angle.append(vision_data.angle)
+        if vision_data.header == self.header_name or vision_data.desc_1 == self.header_name:
+            self.vision_x_pixel.append(vision_data.x)
+            self.vision_y_pixel.append(vision_data.y)
+            self.vision_width_pixel.append(vision_data.width)
+            self.vision_height_pixel.append(vision_data.height)
+            self.vision_angle.append(vision_data.angle)
 
         if  len(self.vision_x_pixel) == self.param_noa and \
             len(self.vision_y_pixel) == self.param_noa and \
@@ -170,6 +171,7 @@ class get_simple_vision_target(EventState):
         self.y = 0.
         self.angle = 0.
         self.param_cam = userdata.camera_no
+        self.header_name = userdata.header_name
 
         if self.param_cam == 2 or self.param_cam == 4 :
             self.param_ra = True

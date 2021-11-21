@@ -35,7 +35,7 @@ class get_simple_vision_target(EventState):
     def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, timeout=20):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain_target', 'filterchain_obstacle' 'camera_no'],
+                                                input_keys = ['filterchain_target', 'header_target', 'filterchain_obstacle', 'header_obstacle', 'camera_no'],
                                                 output_keys = ['pose', 'bounding_box'])
 
         self.param_bbp = bounding_box_pixel
@@ -61,11 +61,12 @@ class get_simple_vision_target(EventState):
         self.vision_angle = deque([], maxlen=self.param_noa)
 
     def vision_target_cb(self, vision_data):
-        self.x_pixel_1.append(vision_data.x)
-        self.y_pixel_1.append(vision_data.y)
-        self.width_pixel_1.append(vision_data.width)
-        self.height_pixel_1.append(vision_data.height)
-        self.vision_angle.append(vision_data.angle)
+        if vision_data.header == self.header_target or vision_data.desc_1 == self.header_target:
+            self.x_pixel_1.append(vision_data.x)
+            self.y_pixel_1.append(vision_data.y)
+            self.width_pixel_1.append(vision_data.width)
+            self.height_pixel_1.append(vision_data.height)
+            self.vision_angle.append(vision_data.angle)
 
         if  len(self.x_pixel_1) == self.param_noa and \
             len(self.y_pixel_1) == self.param_noa and \
@@ -77,11 +78,12 @@ class get_simple_vision_target(EventState):
             self.parse_data_1 = True
 
     def vision_obstacle_cb(self, vision_data):
-        self.x_pixel_2.append(vision_data.x)
-        self.y_pixel_2.append(vision_data.y)
-        self.width_pixel_2.append(vision_data.width)
-        self.height_pixel_2.append(vision_data.height)
-        self.vision_angle.append(vision_data.angle)
+        if vision_data.header == self.header_obstacle or vision_data.desc_1 == self.header_obstacle:
+            self.x_pixel_2.append(vision_data.x)
+            self.y_pixel_2.append(vision_data.y)
+            self.width_pixel_2.append(vision_data.width)
+            self.height_pixel_2.append(vision_data.height)
+            self.vision_angle.append(vision_data.angle)
 
         if  len(self.x_pixel_2) == self.param_noa and \
             len(self.y_pixel_2) == self.param_noa and \
@@ -182,7 +184,7 @@ class get_simple_vision_target(EventState):
         topic.unregister()
 
     def verify_data(self):
-        if sqrt((self.x2-self.x1)**2-(self.y2-self.y1)**2) < self.param_distance_to_confirm_data:
+        if sqrt((self.x2-self.x1)**2-(self.y2-self.y1)**2) <= self.param_distance_to_confirm_data:
             Logger.log('Sample are at less than'+ str(self.param_distance_to_confirm_data) + 'pixels', Logger.REPORT_HINT)
             self.x_merge = (self.x2+self.x1)/2
             self.y_merge = (self.y2+self.y1)/2
@@ -224,6 +226,8 @@ class get_simple_vision_target(EventState):
         self.height_merge = 0.
         self.angle = 0.
         self.param_cam = userdata.camera_no
+        self.header_target = userdata.header_target
+        self.header_obstacle = userdata.header_obstacle
 
         if self.param_cam == 2 or self.param_cam == 4 :
             self.param_ra = True
