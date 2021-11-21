@@ -19,7 +19,7 @@ Dropper task
 	<contains name="gate_trickshot_yaw_task" />
 	<contains name="jiangshi_task" />
 	<contains name="path_task" />
-	<contains name="vision_droppers" />
+	<contains name="droppers_task" />
 
 	<!-- Available Parameters -->
 

@@ -74,12 +74,12 @@ class vision_droppersSM(Behavior):
 										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, timeout=60),
 										transitions={'success': 'stop_filter_success', 'align': 'Aligment with stopping', 'move': 'move_to_target', 'failed': 'stop_filter_fail', 'search': 'search_circle'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'pose': 'pose', 'bounding_box': 'bounding_box'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'pose': 'pose', 'bounding_box': 'bounding_box'})
 
 			# x:530 y:165
 			OperatableStateMachine.add('move_to_target',
 										move_to_target(),
-										transitions={'continue': 'lost_target', 'failed': 'stop_filter_fail'},
+										transitions={'continue': 'get target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'pose'})
 
@@ -114,7 +114,7 @@ class vision_droppersSM(Behavior):
 			# x:721 y:198
 			OperatableStateMachine.add('Aligment with stopping',
 										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
-										transitions={'lost_target': 'lost_target', 'failed': 'stop_filter_fail', 'success': 'get target'},
+										transitions={'lost_target': 'stop_filter_lost', 'failed': 'stop_filter_fail', 'success': 'get target'},
 										autonomy={'lost_target': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'success': Autonomy.Inherit},
 										remapping={'target': 'pose', 'filterchain': 'filterchain', 'header_name': 'header_name', 'bounding_box': 'bounding_box'})
 

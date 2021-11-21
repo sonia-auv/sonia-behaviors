@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="droppers_task">
+<behavior name="droppers_no_ai_task">
 
-	<executable package_path="sonia_flexbe_behaviors.droppers_task_sm" class="droppers_taskSM" />
+	<executable package_path="sonia_flexbe_behaviors.droppers_no_ai_task_sm" class="droppers_no_ai_taskSM" />
 	<tagstring>task</tagstring>
 	<author>William Brouillard</author>
 	<date>Wed Nov 17 2021</date>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Competition run D">
+<behavior name="Competition run F">
 
-	<executable package_path="sonia_flexbe_behaviors.competition_run_d_sm" class="CompetitionrunDSM" />
+	<executable package_path="sonia_flexbe_behaviors.competition_run_f_sm" class="CompetitionrunFSM" />
 	<tagstring>compe</tagstring>
 	<author>William FA</author>
 	<date>Wed Nov 17 2021</date>
@@ -11,7 +11,7 @@
 Path task
 Jiangshi task
 Path task
-Dropper no ai task
+Dropper double vision task
 	</description>
 
 

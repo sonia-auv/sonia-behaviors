@@ -9,7 +9,7 @@ from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget, AddPose
 from geometry_msgs.msg import Point, Vector3
 
-class get_simple_vision_target(EventState):
+class get_double_vision_target(EventState):
 
     '''
         Get the movement target from vision filterchain (to moddify)
@@ -34,7 +34,7 @@ class get_simple_vision_target(EventState):
 
     def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, distance_to_confirm_data=50, timeout=20):
         
-        super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
+        super(get_double_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain_target', 'header_target', 'filterchain_obstacle', 'header_obstacle', 'camera_no'],
                                                 output_keys = ['pose', 'bounding_box'])
 

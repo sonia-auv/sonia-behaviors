@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.droppers_task_sm import droppers_taskSM
+from sonia_flexbe_behaviors.droppers_no_ai_task_sm import droppers_no_ai_taskSM
 from sonia_flexbe_behaviors.gate_trickshot_yaw_task_sm import gate_trickshot_yaw_taskSM
 from sonia_flexbe_behaviors.jiangshi_task_sm import jiangshi_taskSM
 from sonia_flexbe_behaviors.path_task_sm import path_taskSM
@@ -23,24 +23,24 @@ from sonia_flexbe_states.set_control_mode import set_control_mode
 Created on Wed Nov 17 2021
 @author: William FA
 '''
-class CompetitionrunBSM(Behavior):
+class CompetitionrunFSM(Behavior):
 	'''
 	Gate yaw trickshot task
 Path task
 Jiangshi task
 Path task
-Dropper task
+Dropper double vision task
 	'''
 
 
 	def __init__(self):
-		super(CompetitionrunBSM, self).__init__()
-		self.name = 'Competition run B'
+		super(CompetitionrunFSM, self).__init__()
+		self.name = 'Competition run F'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(droppers_taskSM, 'droppers_task')
+		self.add_behavior(droppers_no_ai_taskSM, 'droppers_no_ai_task')
 		self.add_behavior(gate_trickshot_yaw_taskSM, 'gate_trickshot_yaw_task')
 		self.add_behavior(jiangshi_taskSM, 'jiangshi_task')
 		self.add_behavior(path_taskSM, 'path_task')
@@ -87,7 +87,7 @@ Dropper task
 			# x:462 y:328
 			OperatableStateMachine.add('path_task_2',
 										self.use_behavior(path_taskSM, 'path_task_2'),
-										transitions={'finished': 'droppers_task', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
+										transitions={'finished': 'droppers_no_ai_task', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:627 y:571
@@ -102,9 +102,9 @@ Dropper task
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:478 y:427
-			OperatableStateMachine.add('droppers_task',
-										self.use_behavior(droppers_taskSM, 'droppers_task'),
+			# x:416 y:455
+			OperatableStateMachine.add('droppers_no_ai_task',
+										self.use_behavior(droppers_no_ai_taskSM, 'droppers_no_ai_task'),
 										transitions={'finished': 'stop control 1', 'failed': 'stop control 2', 'lost_target': 'stop control 2'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 

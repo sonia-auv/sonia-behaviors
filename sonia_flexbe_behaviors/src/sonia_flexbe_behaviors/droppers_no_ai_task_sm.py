@@ -22,15 +22,15 @@ from sonia_flexbe_states.move_to_target import move_to_target
 Created on Wed Nov 17 2021
 @author: William Brouillard
 '''
-class droppers_taskSM(Behavior):
+class droppers_no_ai_taskSM(Behavior):
 	'''
 	Find the bin with the right filter chain, then drop the markers in the bin.
 	'''
 
 
 	def __init__(self):
-		super(droppers_taskSM, self).__init__()
-		self.name = 'droppers_task'
+		super(droppers_no_ai_taskSM, self).__init__()
+		self.name = 'droppers_no_ai_task'
 
 		# parameters of this behavior
 
@@ -80,7 +80,8 @@ class droppers_taskSM(Behavior):
 
 			# x:580 y:133
 			OperatableStateMachine.add('vision_droppers',
-										self.use_behavior(vision_droppersSM, 'vision_droppers'),
+										self.use_behavior(vision_droppersSM, 'vision_droppers',
+											parameters={'filterchain': "simple_bottom_obstacle", 'header_name': "obstacle"}),
 										transitions={'finished': 'droppers', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
