@@ -59,16 +59,15 @@ class AligmentwithstoppingSM(Behavior):
 
 		# x:703 y:332, x:537 y:129, x:569 y:42, x:397 y:168, x:794 y:118, x:654 y:243, x:733 y:190
 		_sm_alignement_with_stop_0 = ConcurrencyContainer(outcomes=['failed', 'lost_target', 'success'], input_keys=['target', 'filterchain', 'bounding_box', 'header_name'], conditions=[
-										('lost_target', [('move', 'continue')]),
+										('success', [('move', 'continue'), ('centroid', 'align_complete')]),
 										('failed', [('move', 'failed')]),
-										('success', [('centroid', 'align_complete')]),
 										('lost_target', [('centroid', 'timeout_reached')])
 										])
 
 		with _sm_alignement_with_stop_0:
 			# x:160 y:48
 			OperatableStateMachine.add('centroid',
-										verify_centroid(number_sample=10, timeout=30),
+										verify_centroid(number_sample=10, timeout=60),
 										transitions={'align_complete': 'success', 'timeout_reached': 'lost_target'},
 										autonomy={'align_complete': Autonomy.Off, 'timeout_reached': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
@@ -76,7 +75,7 @@ class AligmentwithstoppingSM(Behavior):
 			# x:106 y:156
 			OperatableStateMachine.add('move',
 										move_to_target(),
-										transitions={'continue': 'lost_target', 'failed': 'failed'},
+										transitions={'continue': 'success', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target'})
 
