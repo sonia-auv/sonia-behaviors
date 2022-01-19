@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Test_gate_path_jiangshi_task">
+
+	<executable package_path="sonia_flexbe_behaviors.test_gate_path_jiangshi_task_sm" class="Test_gate_path_jiangshi_taskSM" />
+	<tagstring>test</tagstring>
+	<author>William Brouillard</author>
+	<date>Sat Nov 20 2021</date>
+	<description>
+		Test the gate quick task with the path_task and jiangshi
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="gate_quick_task" />
+	<contains name="jiangshi_task" />
+	<contains name="path_task" />
+
+	<!-- Available Parameters -->
+
+</behavior>

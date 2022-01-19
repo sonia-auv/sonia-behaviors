@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Competition_run">
+
+	<executable package_path="sonia_flexbe_behaviors.competition_run_sm" class="Competition_runSM" />
+	<tagstring>compe</tagstring>
+	<author>William Brouillard</author>
+	<date>Wed Nov 17 2021</date>
+	<description>
+		Task executed in the 2021 QC competition. 
+Gate, path, Jiangshi, path, droppers.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="gate_task" />
+	<contains name="jiangshi_task" />
+	<contains name="path_task" />
+	<contains name="droppers_task" />
+
+	<!-- Available Parameters -->
+
+</behavior>

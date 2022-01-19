@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_start_stop_filter_chain">
+
+	<executable package_path="sonia_flexbe_behaviors.test_start_stop_filter_chain_sm" class="test_start_stop_filter_chainSM" />
+	<tagstring>test</tagstring>
+	<author>William Brouillard</author>
+	<date>Sat Nov 13 2021</date>
+	<description>
+		Start the filter chain, move for 1 min then stop the filter chain.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

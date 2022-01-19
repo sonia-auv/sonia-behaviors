@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="coin_flip">
+
+	<executable package_path="sonia_flexbe_behaviors.coin_flip_sm" class="coin_flipSM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard</author>
+	<date>Fri Nov 12 2021</date>
+	<description>
+		Orient to gate for coin flip task.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="orientation_to_gate" default="0" label="orientation_to_gate" hint="Sets the orientation_to_gate">
+			<min value="0" />
+			<max value="360" />
+		</param>
+
+	</params>
+
+
+</behavior>

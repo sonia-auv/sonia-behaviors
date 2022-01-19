@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_stop_move">
+
+	<executable package_path="sonia_flexbe_behaviors.test_stop_move_sm" class="test_stop_moveSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Tue Nov 16 2021</date>
+	<description>
+		Test in simulation to stop a mouvement
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="timeout" default="2" label="timeout" hint="Sets the timeout">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+	</params>
+
+
+</behavior>

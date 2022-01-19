@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="gate_trickshot_yaw_task">
+
+	<executable package_path="sonia_flexbe_behaviors.gate_trickshot_yaw_task_sm" class="gate_trickshot_yaw_taskSM" />
+	<tagstring>task</tagstring>
+	<author>FA</author>
+	<date>Sun Nov 21 2021</date>
+	<description>
+		Init the sub, coin filp and gate with a yaw trickshot only.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_submarine" />
+	<contains name="move_to_gate_no_trickshot" />
+	<contains name="trickshot yaw" />
+	<contains name="coin_flip" />
+
+	<!-- Available Parameters -->
+
+</behavior>

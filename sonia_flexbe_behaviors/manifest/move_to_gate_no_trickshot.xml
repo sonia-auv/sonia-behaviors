@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_to_gate_no_trickshot">
+
+	<executable package_path="sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm" class="move_to_gate_no_trickshotSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Mouvement to gate with trickshot
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance_to_gate" default="5" label="distance_to_gate" hint="Sets the distance_to_gate">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+	</params>
+
+
+</behavior>
