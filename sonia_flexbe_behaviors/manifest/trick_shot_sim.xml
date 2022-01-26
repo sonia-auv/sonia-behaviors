@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trick_shot_sim">
+
+	<executable package_path="sonia_flexbe_behaviors.trick_shot_sim_sm" class="trick_shot_simSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Sat Nov 13 2021</date>
+	<description>
+		Testing the trick shot for the simulation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

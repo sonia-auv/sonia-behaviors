@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="snake_mouvement">
+
+	<executable package_path="sonia_flexbe_behaviors.snake_mouvement_sm" class="snake_mouvementSM" />
+	<tagstring>mouvement</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Search mouvement in a snake partern. Includes 7 moves with a time entered in parameter
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance_y" default="2" label="distance_y" hint="Sets the distance to move right (m)">
+			<min value="0" />
+			<max value="4" />
+		</param>
+
+		<param type="numeric" name="timeout" default="25" label="timeout" hint="Sets the time for each move in the patern">
+			<min value="0" />
+			<max value="60" />
+		</param>
+
+	</params>
+
+
+</behavior>

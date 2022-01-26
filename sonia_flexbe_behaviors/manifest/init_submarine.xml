@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="init_submarine">
+
+	<executable package_path="sonia_flexbe_behaviors.init_submarine_sm" class="init_submarineSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Thu Nov 11 2021</date>
+	<description>
+		Behavior to start the submarine. Set mode of the control and wait for the mission switch
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
+
+		<param type="numeric" name="mode" default="32" label="mode" hint="Sets the mode of the control">
+			<min value="0" />
+			<max value="99" />
+		</param>
+
+	</params>
+
+
+</behavior>
