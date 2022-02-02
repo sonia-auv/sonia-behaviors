@@ -5,14 +5,16 @@ from time import time
 import rospy
 
 from flexbe_core import EventState, Logger
-from sonia_common import MultiAddPose
+from sonia_common.msg import MultiAddPose
 
 class init_trajectory(EventState):
 
     '''
         Create the object for the trajectory
 
-        <= continue             Indicates completion.
+        #> trajectory           The object for the trajectory (MultiAddPose)           
+
+        <= continue             Indicates that the object is created
     '''
 
     def __init__(self):
