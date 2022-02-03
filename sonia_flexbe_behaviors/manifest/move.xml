@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move">
+
+	<executable package_path="sonia_flexbe_behaviors.move_sm" class="moveSM" />
+	<tagstring>movement</tagstring>
+	<author>FA</author>
+	<date>Wed Feb 02 2022</date>
+	<description>
+		Behavior to move the submarine with a single pose
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="positionX" default="0" label="positionX" hint="Sets the positionX">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="positionY" default="0" label="positionY" hint="Sets the positionY">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="positionZ" default="0" label="positionZ" hint="Sets the positionZ">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationX" default="0" label="orientationX" hint="Sets the orientationX">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationY" default="0" label="orientationY" hint="Sets the orientationY">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationZ" default="0" label="orientationZ" hint="Sets the orientationZ">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="frame" default="1" label="frame" hint="Sets the frame">
+			<min value="0" />
+			<max value="3" />
+		</param>
+
+		<param type="numeric" name="speed" default="1" label="speed" hint="Sets the speed">
+			<min value="1" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="precision" default="0" label="precision" hint="Sets the precision">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="boolean" name="rotation" default="True" label="rotation" hint="Sets the rotation" />
+
+	</params>
+
+
+</behavior>
