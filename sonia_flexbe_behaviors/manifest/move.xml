@@ -16,47 +16,47 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="positionX" default="0" label="positionX" hint="Sets the positionX">
+		<param type="numeric" name="positionX" default="0" label="positionX" hint="Mouvement in X axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="positionY" default="0" label="positionY" hint="Sets the positionY">
+		<param type="numeric" name="positionY" default="0" label="positionY" hint="Mouvement in Y axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="positionZ" default="0" label="positionZ" hint="Sets the positionZ">
+		<param type="numeric" name="positionZ" default="0" label="positionZ" hint="Mouvement in Z axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="orientationX" default="0" label="orientationX" hint="Sets the orientationX">
+		<param type="numeric" name="orientationX" default="0" label="orientationX" hint="Mouvement in roll axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="orientationY" default="0" label="orientationY" hint="Sets the orientationY">
+		<param type="numeric" name="orientationY" default="0" label="orientationY" hint="Roration in pitch axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="orientationZ" default="0" label="orientationZ" hint="Sets the orientationZ">
+		<param type="numeric" name="orientationZ" default="0" label="orientationZ" hint="Rotation in yaw axis">
 			<min value="0" />
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="frame" default="1" label="frame" hint="Sets the frame">
+		<param type="numeric" name="frame" default="1" label="frame" hint="Sets the submarine frame (0 : abs,abs 1: rel,rel 2: rel,abs 3: abs,rel)">
 			<min value="0" />
 			<max value="3" />
 		</param>
 
-		<param type="numeric" name="speed" default="1" label="speed" hint="Sets the speed">
+		<param type="numeric" name="speed" default="1" label="speed" hint="1: Fast Speed 2: Low Speed">
 			<min value="1" />
 			<max value="2" />
 		</param>
 
-		<param type="numeric" name="precision" default="0" label="precision" hint="Sets the precision">
+		<param type="numeric" name="precision" default="0" label="precision" hint="Precision of mouvement">
 			<min value="0" />
 			<max value="100" />
 		</param>
