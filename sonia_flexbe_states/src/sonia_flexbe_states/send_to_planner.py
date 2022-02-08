@@ -37,7 +37,7 @@ class send_to_planner(EventState):
         trajectory.pose = userdata.input_traj.pose
         self.send_to_planner.publish(trajectory)
         self.time_launch = time()
-        self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Bool, self.is_waypoints_valid_cb)
+        self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoint_valid', Bool, self.is_waypoints_valid_cb)
 
     def execute(self, userdata):
         time_dif = time() - self.time_launch

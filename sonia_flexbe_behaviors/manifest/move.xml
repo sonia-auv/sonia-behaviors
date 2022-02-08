@@ -3,7 +3,7 @@
 <behavior name="move">
 
 	<executable package_path="sonia_flexbe_behaviors.move_sm" class="moveSM" />
-	<tagstring>movement</tagstring>
+	<tagstring>mouvement</tagstring>
 	<author>FA</author>
 	<date>Wed Feb 02 2022</date>
 	<description>

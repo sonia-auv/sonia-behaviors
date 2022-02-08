@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.move_sm import moveSM
+from sonia_flexbe_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -44,7 +45,7 @@ class test_moveSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:294, x:229 y:298
+		# x:685 y:211, x:521 y:316
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -54,12 +55,18 @@ class test_moveSM(Behavior):
 
 
 		with _state_machine:
-			# x:100 y:82
+			# x:115 y:74
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionX': 9, 'positionY': 16, 'positionZ': 34, 'orientationX': 3, 'orientationY': 7, 'orientationZ': 12, 'frame': 3, 'speed': 1, 'precision': 4, 'rotation': True}),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 2, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 1, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'wait_for_target_reached', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:445 y:74
+			OperatableStateMachine.add('wait_for_target_reached',
+										wait_target_reached(),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine
