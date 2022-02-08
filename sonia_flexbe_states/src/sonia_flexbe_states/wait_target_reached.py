@@ -19,6 +19,11 @@ class wait_target_reached(EventState):
         
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 
+        self.rising_edge = 0
+        self.launch_time = 0
+        self.time_diff = 0
+        self.error = False
+        
         self.get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.get_controller_info_cb)
 
     def get_controller_info_cb(self, data):
@@ -27,8 +32,7 @@ class wait_target_reached(EventState):
         self.mpc_status = data.mpc_status
 
         if self.mpc_status <= 0:
-            Logger.log("Problem with the controller", Logger.REPORT_HINT)
-            return 'error'
+            self.error = True
 
         if self.trajectory_done == True & self.rising_edge == 0:
             self.launch_time = time()
@@ -39,11 +43,9 @@ class wait_target_reached(EventState):
         self.target_reached = False
         self.trajectory_done = False
         self.mpc_status = 1
-        self.rising_edge = 0
-        self.launch_time = 0
-        self.time_diff = 0
 
     def execute(self, userdata):
+        if self.error == False:
             if self.trajectory_done == True:
                 self.time_diff = time() - self.launch_time
             if self.time_diff > 5:
@@ -53,6 +55,9 @@ class wait_target_reached(EventState):
                 else:
                     Logger.log("Target couldn't be reached", Logger.REPORT_HINT)
                     return 'target_not_reached'
+        else:
+            Logger.log("Problem with the controller", Logger.REPORT_HINT)
+            return 'error'
 
     def on_exit(self, userdata):
         self.get_controller_info_sub.unregister()
