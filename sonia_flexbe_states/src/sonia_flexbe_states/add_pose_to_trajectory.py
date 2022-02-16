@@ -61,6 +61,11 @@ class add_pose_to_trajectory(EventState):
         else:
             Logger.log('Adding a pose to the trajectory', Logger.REPORT_HINT)            
             new_traj.pose = list(traj.pose)
+
+        Logger.log('Pose : x = '+ str(self.pose.position.x) + ', y = ' + str(self.pose.position.y) + ' z = ' + str(self.pose.position.z) + \
+            ' roll = ' + str(self.pose.orientation.x) + ' pitch = ' + str(self.pose.orientation.y) + ' yaw = ' + str(self.pose.orientation.z) + \
+            ' frame = ' + str(self.pose.frame), Logger.REPORT_HINT)
+
         new_traj.pose.append(self.pose)
         userdata.trajectory = new_traj
         return 'continue'

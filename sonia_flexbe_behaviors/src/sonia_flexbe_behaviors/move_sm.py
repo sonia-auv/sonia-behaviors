@@ -39,7 +39,7 @@ class moveSM(Behavior):
 		self.add_parameter('orientationY', 0)
 		self.add_parameter('orientationZ', 0)
 		self.add_parameter('frame', 1)
-		self.add_parameter('speed', 1)
+		self.add_parameter('speed', 0)
 		self.add_parameter('precision', 0)
 		self.add_parameter('rotation', True)
 

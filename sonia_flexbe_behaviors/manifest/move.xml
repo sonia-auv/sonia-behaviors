@@ -46,13 +46,13 @@
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="frame" default="1" label="frame" hint="Sets the submarine frame (0 : abs,abs 1: rel,rel 2: rel,abs 3: abs,rel)">
+		<param type="numeric" name="frame" default="1" label="frame" hint="0 : Absolute position and absolute angle  1 : Relative position and relative angle 2 : Relative position and absolute angle 3 : Absolute position and relative angle">
 			<min value="0" />
 			<max value="3" />
 		</param>
 
-		<param type="numeric" name="speed" default="1" label="speed" hint="1: Fast Speed 2: Low Speed">
-			<min value="1" />
+		<param type="numeric" name="speed" default="0" label="speed" hint="0 : Normal 1: Fast Speed 2: Low Speed">
+			<min value="0" />
 			<max value="2" />
 		</param>
 

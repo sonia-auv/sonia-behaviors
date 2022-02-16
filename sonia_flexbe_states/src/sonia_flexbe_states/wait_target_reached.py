@@ -19,34 +19,41 @@ class wait_target_reached(EventState):
         
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 
-        self.rising_edge = 0
         self.launch_time = 0
         self.time_diff = 0
-        self.error = False
+        self.trajectory_done_prev = True
+        self.traj_complete = False
         
-        self.get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.get_controller_info_cb)
-
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
         self.trajectory_done = data.is_trajectory_done
-        self.mpc_status = data.mpc_status
+        self.is_alive = data.is_mpc_alive
 
-        if self.mpc_status <= 0:
-            self.error = True
+        Logger.log("Controller => Target Reached :" + str(self.target_reached) + \
+            " Trajectory Done :"+ str(self.trajectory_done) + \
+            " Previous TD :" + str(self.trajectory_done_prev) + \
+            " MPC Alive :" + str(self.is_alive), Logger.REPORT_HINT)
 
-        if self.trajectory_done == True & self.rising_edge == 0:
-            self.launch_time = time()
-            self.rising_edge = 1
-            Logger.log("Trajectory Completed", Logger.REPORT_HINT)
+        if self.trajectory_done != self.trajectory_done_prev:
+            if self.trajectory_done == False:
+                Logger.log("Trajectory has been received", Logger.REPORT_HINT)
+            elif self.trajectory_done == True:
+                self.launch_time = time()
+                self.traj_complete = True
+                Logger.log("Trajectory Completed", Logger.REPORT_HINT)
+
+        self.trajectory_done_prev = self.trajectory_done
 
     def on_enter(self, userdata):
         self.target_reached = False
-        self.trajectory_done = False
-        self.mpc_status = 1
+        self.trajectory_done = True
+        self.is_alive = True
+
+        self.get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.get_controller_info_cb)
 
     def execute(self, userdata):
-        if self.error == False:
-            if self.trajectory_done == True:
+        if self.is_alive == True:
+            if self.traj_complete == True:
                 self.time_diff = time() - self.launch_time
             if self.time_diff > 15 or self.target_reached == True:
                 if self.target_reached == True:

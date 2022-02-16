@@ -58,7 +58,7 @@ class test_moveSM(Behavior):
 			# x:115 y:74
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 2, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 1, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 10, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 1, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'wait_for_target_reached', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
