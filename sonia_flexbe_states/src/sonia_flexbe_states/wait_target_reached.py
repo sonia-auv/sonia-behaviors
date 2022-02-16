@@ -29,10 +29,10 @@ class wait_target_reached(EventState):
         self.trajectory_done = data.is_trajectory_done
         self.is_alive = data.is_mpc_alive
 
-        Logger.log("Controller => Target Reached :" + str(self.target_reached) + \
-            " Trajectory Done :"+ str(self.trajectory_done) + \
-            " Previous TD :" + str(self.trajectory_done_prev) + \
-            " MPC Alive :" + str(self.is_alive), Logger.REPORT_HINT)
+        # Logger.log("Controller => Target Reached :" + str(self.target_reached) + \
+        #     " Trajectory Done :"+ str(self.trajectory_done) + \
+        #     " Previous TD :" + str(self.trajectory_done_prev) + \
+        #     " MPC Alive :" + str(self.is_alive), Logger.REPORT_HINT)
 
         if self.trajectory_done != self.trajectory_done_prev:
             if self.trajectory_done == False:
