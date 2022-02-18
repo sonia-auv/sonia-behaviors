@@ -4,7 +4,7 @@
 import rospy
 
 from flexbe_core import EventState, Logger
-from sonia_common.msg import MissionSwitchMsg
+from std_msgs.msg import Bool
 
 class wait_mission(EventState):
 
@@ -17,10 +17,10 @@ class wait_mission(EventState):
         
         super(wait_mission, self).__init__(outcomes=['continue', 'failed'])
 
-        self.get_mission_state_sub = rospy.Subscriber('/provider_kill_mission/mission_switch_msg', MissionSwitchMsg, self.get_mission_state_cb)
+        self.get_mission_state_sub = rospy.Subscriber('/provider_kill_mission/mission_switch_msg', Bool, self.get_mission_state_cb)
 
     def get_mission_state_cb(self, data):
-        self.mission_state = data.state
+        self.mission_state = data.data
 
     def on_enter(self, userdata):
         self.mission_state = False
