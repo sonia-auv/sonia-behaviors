@@ -35,7 +35,7 @@ class add_pose_to_trajectory(EventState):
         <= continue                         Indicates completion.
         '''
 
-    def __init__(self, positionX, positionY, positionZ, orientationX, orientationY, orientationZ, frame, speed=1, precision=0, rotation=True):
+    def __init__(self, positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, rotation=True):
         
         super(add_pose_to_trajectory, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
