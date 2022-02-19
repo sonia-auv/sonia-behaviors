@@ -18,7 +18,12 @@
 
 		<param type="numeric" name="angle_gate" default="0" label="angle_gate" hint="Sets the angle_gate">
 			<min value="0" />
-			<max value="360" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="distance_start_loop" default="7.572" label="distance_start_loop" hint="Sets the distance_start_loop">
+			<min value="0" />
+			<max value="200" />
 		</param>
 
 	</params>
