@@ -43,10 +43,13 @@ class send_to_planner(EventState):
         time_dif = time() - self.time_launch
         # Time has to experimental values
         if time_dif > 5:
-            if self.valid == True:
+            if self.valid == 0:
                 return 'continue'
             else:
+                Logger.log('Trajectory is invalid. Error code : ' + self.valid, Logger.REPORT_HINT)
                 return 'failed'
 
     def on_exit(self, userdata):
-        pass
+
+        self.trajectory_compiled.unregister()   
+        
