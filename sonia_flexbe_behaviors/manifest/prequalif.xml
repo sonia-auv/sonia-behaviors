@@ -26,6 +26,11 @@
 			<max value="200" />
 		</param>
 
+		<param type="numeric" name="interpolation_method" default="0" label="interpolation_method" hint="Sets the interpolation_method">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 

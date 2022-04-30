@@ -27,7 +27,7 @@ class init_trajectory(EventState):
     def execute(self, userdata):
         Logger.log('Creating a message for the trajectory', Logger.REPORT_HINT)
         userdata.trajectory = MultiAddPose()
-        userdata.trajectory.InterpolationMethod = self.InterpolationMethod 
+        userdata.trajectory.interpolation_method = self.InterpolationMethod 
         return 'continue'
 
     def on_exit(self, userdata):
