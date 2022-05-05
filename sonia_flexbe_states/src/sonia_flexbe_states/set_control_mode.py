@@ -23,29 +23,29 @@ class set_control_mode(EventState):
     def __init__(self, mode, timeout=5):
         super(set_control_mode, self).__init__(outcomes=['continue', 'failed'])
         self.param_mode = mode
-        self.mpc_status = 0
+        self.mpc_mode = 0
         self.param_timeout = timeout
 
         self.set_mode = rospy.Publisher('proc_control/set_mode', UInt8, queue_size=1)
 
-    def mpc_status_cb(self, data):
-        self.mpc_status = data.mpc_mode
+    def mpc_mode_cb(self, data):
+        self.mpc_mode = data.mpc_mode
 
     def on_enter(self, userdata):
         Logger.log('starting',Logger.REPORT_HINT)
-        self.mpc_status_sub = rospy.Subscriber('proc_control/controller_info', MpcInfo, self.mpc_status_cb)
+        self.mpc_mode_sub = rospy.Subscriber('proc_control/controller_info', MpcInfo, self.mpc_mode_cb)
         self.set_mode.publish(UInt8(self.param_mode))
         self.launch_time = time()
 
     def execute(self, userdata):
         time_dif = time() - self.launch_time
         if time_dif > self.param_timeout:
-            if self.mpc_status == self.param_mode:
+            if self.mpc_mode == self.param_mode:
                 Logger.log('MPC mode has been set',Logger.REPORT_HINT)
                 return 'continue'
             else:
-                Logger.log('MPC mode hasnt been set. Present mode is ' + str(self.mpc_status),Logger.REPORT_HINT)
+                Logger.log('MPC mode hasnt been set. Present mode is ' + str(self.mpc_mode),Logger.REPORT_HINT)
                 return 'failed'
 
     def on_exit(self, userdata):
-        self.mpc_status_sub.unregister()
+        self.mpc_mode_sub.unregister()
