@@ -80,7 +80,8 @@ class path_taskSM(Behavior):
 
 			# x:572 y:67
 			OperatableStateMachine.add('vision_path_new_algo',
-										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo'),
+										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo',
+											parameters={'filterchain_name': "simple_pipe45", 'header_name': "pipe", 'camera_no': 2}),
 										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 

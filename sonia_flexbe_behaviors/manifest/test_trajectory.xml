@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_trajectory">
+
+	<executable package_path="sonia_flexbe_behaviors.test_trajectory_sm" class="test_trajectorySM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Wed Feb 02 2022</date>
+	<description>
+		Test the proc planner with this engine
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

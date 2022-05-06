@@ -11,13 +11,13 @@ from nav_msgs.msg import Odometry
 class create_absolute_depth(EventState):
 
     '''
-        Move the submarine by defining every parameter.
+       (!!!! DEPRECATED !!!!!) Move the submarine by defining every parameter.
 
         -- positionZ        uint8       The absolute depth desired to reach
 
         <= continue                     Indicates that the pose has been created
 
-        '''
+    '''
 
     def __init__(self, positionZ):
         
