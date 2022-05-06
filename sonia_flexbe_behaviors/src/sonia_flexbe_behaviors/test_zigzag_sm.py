@@ -8,11 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.init_trajectory import init_trajectory
-from sonia_flexbe_states.send_to_planner import send_to_planner
-from sonia_flexbe_states.set_control_mode import set_control_mode
-from sonia_flexbe_states.wait_target_reached import wait_target_reached
-from sonia_flexbe_states.zigzag_search import zizag_search
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.search_zigzag import search_zigzag
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.set_control_mode import set_control_mode
+from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -47,7 +47,7 @@ class test_zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:1173 y:53, x:1160 y:240
+		# x:1225 y:49, x:1232 y:226
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,36 +57,36 @@ class test_zigzagSM(Behavior):
 
 
 		with _state_machine:
-			# x:90 y:45
+			# x:63 y:27
 			OperatableStateMachine.add('mode',
-										set_control_mode(mode=10, timeout=5),
-										transitions={'continue': 'init_traj', 'failed': 'failed'},
+										set_control_mode(mode=10, timeout=2),
+										transitions={'continue': 'init', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:672 y:57
+			# x:723 y:32
 			OperatableStateMachine.add('send',
 										send_to_planner(),
-										transitions={'continue': 'target', 'failed': 'failed'},
+										transitions={'continue': 'tr', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:947 y:59
-			OperatableStateMachine.add('target',
+			# x:946 y:34
+			OperatableStateMachine.add('tr',
 										wait_target_reached(),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:464 y:53
-			OperatableStateMachine.add('zigzag',
-										zizag_search(boxX=5, boxY=5, stroke=1, radius=0.4, side=True),
+			# x:509 y:31
+			OperatableStateMachine.add('zig',
+										search_zigzag(boxX=5, boxY=5, stroke=1, radius=0.4, side=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:279 y:54
-			OperatableStateMachine.add('init_traj',
+			# x:286 y:31
+			OperatableStateMachine.add('init',
 										init_trajectory(InterpolationMethod=0),
-										transitions={'continue': 'zigzag'},
+										transitions={'continue': 'zig'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 

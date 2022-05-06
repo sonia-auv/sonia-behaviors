@@ -10,7 +10,7 @@ from std_msgs.msg import Bool
 class stop_move(EventState):
 
     '''
-        Stop an ongoing mouvement
+        Stop an ongoing mouvement (hand break)
     '''
 
     def __init__(self, timeout=3):
