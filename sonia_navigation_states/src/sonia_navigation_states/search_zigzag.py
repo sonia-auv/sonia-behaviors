@@ -9,7 +9,7 @@ import math
 # Custom includes
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 
-# flexbee includes
+# flexbe includes
 from flexbe_core import EventState, Logger
 from sonia_common.msg import AddPose, MultiAddPose
 

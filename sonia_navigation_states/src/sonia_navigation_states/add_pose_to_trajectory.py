@@ -1,8 +1,12 @@
 #!/usr/bin/env python 
 #-*- coding: utf-8 -*-
 
+# standars includes
 from time import time
 import rospy
+
+# Custom includes
+import sonia_navigation_states.modules.navigation_utilities as navUtils
 
 from flexbe_core import EventState, Logger
 from sonia_common.msg import AddPose, MultiAddPose
@@ -40,18 +44,8 @@ class add_pose_to_trajectory(EventState):
         super(add_pose_to_trajectory, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
                                                      output_keys=['trajectory'])
-
-        self.pose = AddPose()
-        self.pose.position.x = positionX
-        self.pose.position.y = positionY
-        self.pose.position.z = positionZ
-        self.pose.orientation.x = orientationX
-        self.pose.orientation.y = orientationY
-        self.pose.orientation.z = orientationZ
-        self.pose.frame = frame
-        self.pose.speed = speed
-        self.pose.fine = precision
-        self.pose.rotation = rotation
+        # create addpose object
+        self.pose = navUtils.addpose(positionX, positionY, positionZ, orientationX, orientationY, orientationZ,frame, speed, precision, rotation)
 
     def execute(self, userdata):
         traj = userdata.input_traj

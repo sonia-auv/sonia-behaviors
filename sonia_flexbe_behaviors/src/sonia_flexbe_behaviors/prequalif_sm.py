@@ -8,11 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.add_pose_to_trajectory import add_pose_to_trajectory
-from sonia_flexbe_states.init_trajectory import init_trajectory
-from sonia_flexbe_states.send_to_planner import send_to_planner
-from sonia_flexbe_states.wait_mission import wait_mission
-from sonia_flexbe_states.wait_target_reached import wait_target_reached
+from sonia_hardware_states.wait_mission import wait_mission
+from sonia_navigation_states.add_pose_to_trajectory import add_pose_to_trajectory
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
