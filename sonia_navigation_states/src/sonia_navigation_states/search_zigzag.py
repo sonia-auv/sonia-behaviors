@@ -30,8 +30,8 @@ class search_zigzag(EventState):
             |  |
             |  |
            _v_ |___________________
-                                 _|_        ^ x
-                                |   |       |
+                                 ___        ^ x
+                                | ^ |       |
                                _|   |_      |
                               |_ sub _|     -----> y
                                 |   |       body frame
