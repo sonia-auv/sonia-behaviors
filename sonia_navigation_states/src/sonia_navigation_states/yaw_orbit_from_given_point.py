@@ -21,7 +21,8 @@ class yaw_orbit_from_given_point(EventState):
 
     Parameters:
         pointX and pointY : orbit point expressed in body frame (geometric center of the sub).
-        side : False = orbit clockwise, True = orbit counter clockwise.
+        Rotation : amount in degrees to turn arround the point. Positive value turn clockwise and negative value turn counterclockwise
+        Speed : Speed profile 
 
     Essential orbit point.
         bottom AUV8 : [0.2415, 0]
@@ -43,7 +44,7 @@ class yaw_orbit_from_given_point(EventState):
      
         '''
 
-    def __init__(self, pointX=5, pointY=5, speed =1, side = False ):
+    def __init__(self, pointX=5, pointY=5, rotation = 360, speed =1 ):
         
         super(yaw_orbit_from_given_point, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
@@ -51,7 +52,7 @@ class yaw_orbit_from_given_point(EventState):
 
         self.px = pointX
         self.py = pointY
-        self.side = side
+        self.rotation = rotation
         self.speed = speed
 
 
@@ -70,11 +71,15 @@ class yaw_orbit_from_given_point(EventState):
 
         # compute parameter
         ppt = 8 # point per turn
-        radstep = (2*math.pi)/ppt
+        radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 
+        nFullPoints = abs(math.floor(self.rotation / degstep))
+        residueDegStep = abs(self.rotation % degstep)
+        residueRadStep = (residueDegStep*2*math.pi) / 360.0 
+
         # get direction (cw vs ccw)
-        if self.side:
+        if self.rotation < 0:
             signe = -1
         else:
             signe =  1
@@ -84,13 +89,23 @@ class yaw_orbit_from_given_point(EventState):
 
         p0 = complex(-self.px, -self.py) # initial position of the sub according to the orbit point
 
+        # Full step transformation
         trans = complex( math.cos(radstep), signe * math.sin(radstep)) # rotation of radstep radians
         pTrans = (p0 * trans) - p0 # turn p0 of radstep radians and express the rotation in the body frame
 
         # Generate the require amount of addpose msg
-        for i in range(ppt):
+        for i in range(nFullPoints):
 
             new_traj.pose.append(navUtils.addpose(pTrans.real, pTrans.imag, 0, 0, 0, signe * degstep, 1, 0, 0,False))
+
+        # add residue point if needed,
+        if residueDegStep > 0 :
+            residueTrans= complex( math.cos(residueRadStep), signe * math.sin(residueRadStep))
+            residuePoint = (p0 * residueTrans) - p0 # turn p0 of radstep radians and express the rotation in the body frame
+
+            new_traj.pose.append(navUtils.addpose(residuePoint.real, residuePoint.imag, 0, 0, 0, signe * residueDegStep , 1, 0, 0,False))
+
+
 
         # print debug
         Logger.log('Yaw orbit as been succesfully generated ', Logger.REPORT_HINT)

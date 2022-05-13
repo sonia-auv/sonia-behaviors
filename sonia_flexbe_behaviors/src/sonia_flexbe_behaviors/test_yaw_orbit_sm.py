@@ -58,14 +58,14 @@ class test_yaw_orbitSM(Behavior):
 		with _state_machine:
 			# x:300 y:58
 			OperatableStateMachine.add('itraj',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(InterpolationMethod=2),
 										transitions={'continue': 'orbit'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
 			# x:298 y:163
 			OperatableStateMachine.add('orbit',
-										yaw_orbit_from_given_point(pointX=0.2415, pointY=0, speed=1, side=True),
+										yaw_orbit_from_given_point(pointX=0.2415, pointY=0, rotation=360, speed=1),
 										transitions={'continue': 'sp'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
