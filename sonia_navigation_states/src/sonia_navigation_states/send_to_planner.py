@@ -2,11 +2,13 @@
 #-*- coding: utf-8 -*-
 
 from time import time
+
+from numpy import int8
 import rospy
 
 from flexbe_core import EventState, Logger
 from sonia_common.msg import MultiAddPose
-from std_msgs.msg import Bool
+from std_msgs.msg import Int8
 
 class send_to_planner(EventState):
 
@@ -37,7 +39,7 @@ class send_to_planner(EventState):
         trajectory.pose = userdata.input_traj.pose
         self.send_to_planner.publish(trajectory)
         self.time_launch = time()
-        self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Bool, self.is_waypoints_valid_cb)
+        self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Int8, self.is_waypoints_valid_cb)
 
     def execute(self, userdata):
         time_dif = time() - self.time_launch
