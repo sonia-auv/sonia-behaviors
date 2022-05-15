@@ -74,7 +74,7 @@ class yaw_orbit_from_given_point(EventState):
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 
-        nFullPoints = abs(math.floor(self.rotation / degstep))
+        nFullPoints = int(abs(math.floor(self.rotation / degstep)))
         residueDegStep = abs(self.rotation % degstep)
         residueRadStep = (residueDegStep*2*math.pi) / 360.0 
 
