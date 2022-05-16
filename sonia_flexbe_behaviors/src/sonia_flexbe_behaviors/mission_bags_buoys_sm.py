@@ -23,7 +23,7 @@ from sonia_navigation_states.yaw_orbit_from_given_point import yaw_orbit_from_gi
 
 '''
 Created on Sun May 15 2022
-@author: Willy Kao, Lucas Mongrain
+@author: Willy Kao
 '''
 class mission_bags_buoysSM(Behavior):
 	'''
@@ -76,6 +76,27 @@ class mission_bags_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_right_orbit_1', 'trajectory': 'traj_backward_2'})
 
+			# x:528 y:400
+			OperatableStateMachine.add('go_backward_3',
+										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'go_right_in_orbit_2'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_left_orbit_2', 'trajectory': 'traj_backward_3'})
+
+			# x:751 y:33
+			OperatableStateMachine.add('go_backward_4',
+										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'go_left_in_orbit_3'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_right_orbit_2', 'trajectory': 'traj_backward_4'})
+
+			# x:754 y:226
+			OperatableStateMachine.add('go_backward_5',
+										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'go_right_in_orbit_3'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_left_orbit_3', 'trajectory': 'traj_backward_5'})
+
 			# x:316 y:115
 			OperatableStateMachine.add('go_down',
 										add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.initial_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
@@ -93,9 +114,16 @@ class mission_bags_buoysSM(Behavior):
 			# x:521 y:308
 			OperatableStateMachine.add('go_left_in_orbit_2',
 										yaw_orbit_from_given_point(pointX=self.initial_backward_length+self.backward_length_in_between_arcs, pointY=0, rotation=self.arc_angle, speed=1),
-										transitions={'continue': 'send_to_planner_2'},
+										transitions={'continue': 'go_backward_3'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_backward_2', 'trajectory': 'traj_left_orbit_2'})
+
+			# x:746 y:128
+			OperatableStateMachine.add('go_left_in_orbit_3',
+										yaw_orbit_from_given_point(pointX=self.initial_backward_length+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs, pointY=0, rotation=self.arc_angle, speed=1),
+										transitions={'continue': 'go_backward_5'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_backward_4', 'trajectory': 'traj_left_orbit_3'})
 
 			# x:522 y:122
 			OperatableStateMachine.add('go_right_in_orbit_1',
@@ -103,6 +131,20 @@ class mission_bags_buoysSM(Behavior):
 										transitions={'continue': 'go_backward_2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_2', 'trajectory': 'traj_right_orbit_1'})
+
+			# x:519 y:492
+			OperatableStateMachine.add('go_right_in_orbit_2',
+										yaw_orbit_from_given_point(pointX=self.initial_backward_length+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs, pointY=0, rotation=-self.arc_angle, speed=1),
+										transitions={'continue': 'go_backward_4'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_backward_3', 'trajectory': 'traj_right_orbit_2'})
+
+			# x:738 y:333
+			OperatableStateMachine.add('go_right_in_orbit_3',
+										yaw_orbit_from_given_point(pointX=self.initial_backward_length+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs+self.backward_length_in_between_arcs, pointY=0, rotation=-self.arc_angle, speed=1),
+										transitions={'continue': 'send_to_planner_final'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'traj_backward_5', 'trajectory': 'traj_right_orbit_3'})
 
 			# x:310 y:33
 			OperatableStateMachine.add('init_traj',
@@ -125,12 +167,12 @@ class mission_bags_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'traj_left_orbit_1'})
 
-			# x:533 y:386
-			OperatableStateMachine.add('send_to_planner_2',
+			# x:745 y:431
+			OperatableStateMachine.add('send_to_planner_final',
 										send_to_planner(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'wait_target_reached_final', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'traj_left_orbit_2'})
+										remapping={'input_traj': 'traj_right_orbit_3'})
 
 			# x:91 y:117
 			OperatableStateMachine.add('set_planner_mode',
@@ -142,6 +184,12 @@ class mission_bags_buoysSM(Behavior):
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(),
 										transitions={'target_reached': 'init_traj_2', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:740 y:522
+			OperatableStateMachine.add('wait_target_reached_final',
+										wait_target_reached(),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:312 y:206

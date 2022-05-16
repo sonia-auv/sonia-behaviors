@@ -4,7 +4,7 @@
 
 	<executable package_path="sonia_flexbe_behaviors.mission_bags_buoys_sm" class="mission_bags_buoysSM" />
 	<tagstring>deep_learning</tagstring>
-	<author>Willy Kao, Lucas Mongrain</author>
+	<author>Willy Kao</author>
 	<date>Sun May 15 2022</date>
 	<description>
 		Mission to create bags for the buoys
