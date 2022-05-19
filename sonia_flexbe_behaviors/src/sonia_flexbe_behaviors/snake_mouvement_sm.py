@@ -8,8 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.create_pose import create_pose
-from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.search_zigzag import search_zigzag
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.set_control_mode import set_control_mode
+from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -46,7 +49,7 @@ class snake_mouvementSM(Behavior):
 
 
 	def create(self):
-		# x:633 y:64, x:596 y:201
+		# x:1090 y:64, x:1201 y:206
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,75 +59,38 @@ class snake_mouvementSM(Behavior):
 
 
 		with _state_machine:
-			# x:67 y:67
-			OperatableStateMachine.add('slide left half pose',
-										create_pose(positionX=0.25, positionY=-self.distance_y/2, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout/2, precision=0, rotation=True),
-										transitions={'continue': 'slide right pose'},
+			# x:19 y:206
+			OperatableStateMachine.add('control mode',
+										set_control_mode(mode=10, timeout=2),
+										transitions={'continue': 'init', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:186 y:135
+			OperatableStateMachine.add('init',
+										init_trajectory(InterpolationMethod=0),
+										transitions={'continue': 'zigzag'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'slide_left_half'})
+										remapping={'trajectory': 'trajectory'})
 
-			# x:773 y:195
-			OperatableStateMachine.add('half slide left 2',
-										move_to_target(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+			# x:471 y:90
+			OperatableStateMachine.add('send_planner',
+										send_to_planner(),
+										transitions={'continue': 'wait target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_left_half'})
+										remapping={'input_traj': 'trajectory'})
 
-			# x:290 y:289
-			OperatableStateMachine.add('slide left',
-										move_to_target(),
-										transitions={'continue': 'slide right 2', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_left'})
+			# x:665 y:100
+			OperatableStateMachine.add('wait target',
+										wait_target_reached(),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:550 y:388
-			OperatableStateMachine.add('slide left 2',
-										move_to_target(),
-										transitions={'continue': 'slide right 3', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_left'})
-
-			# x:69 y:283
-			OperatableStateMachine.add('slide left pose',
-										create_pose(positionX=0.5, positionY=-self.distance_y, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
-										transitions={'continue': 'half slide left'},
+			# x:294 y:43
+			OperatableStateMachine.add('zigzag',
+										search_zigzag(boxX=5, boxY=5, stroke=1, radius=0.4, side=False),
+										transitions={'continue': 'send_planner'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'slide_left'})
-
-			# x:287 y:180
-			OperatableStateMachine.add('slide right',
-										move_to_target(),
-										transitions={'continue': 'slide left', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_right'})
-
-			# x:290 y:399
-			OperatableStateMachine.add('slide right 2',
-										move_to_target(),
-										transitions={'continue': 'slide left 2', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_right'})
-
-			# x:781 y:379
-			OperatableStateMachine.add('slide right 3',
-										move_to_target(),
-										transitions={'continue': 'half slide left 2', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_right'})
-
-			# x:67 y:175
-			OperatableStateMachine.add('slide right pose',
-										create_pose(positionX=0.5, positionY=self.distance_y, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=self.timeout, precision=0, rotation=True),
-										transitions={'continue': 'slide left pose'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'pose': 'slide_right'})
-
-			# x:291 y:56
-			OperatableStateMachine.add('half slide left',
-										move_to_target(),
-										transitions={'continue': 'slide right', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'slide_left_half'})
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 
 		return _state_machine
