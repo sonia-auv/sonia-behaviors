@@ -43,9 +43,9 @@ class start_filter_chain(EventState):
             elif self.camera_no == 2:
                 self.param_media_name = '/camera_array/bottom/image_raw/compressed'
             elif self.camera_no == 3:
-                self.param_media_name = '/front_simulation'
+                self.param_media_name = '/proc_simulation/front'
             else:
-                self.param_media_name = '/bottom_simulation'
+                self.param_media_name = '/proc_simulation/bottom'
 
             self.execute_vision_cmd(self.param_node_name,
                                     self.param_node_name,

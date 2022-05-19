@@ -10,9 +10,11 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
 from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
-from sonia_flexbe_states.get_simple_vision_target import get_simple_vision_target
 from sonia_flexbe_states.move_to_target import move_to_target
-from sonia_flexbe_states.start_filter_chain import start_filter_chain
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
+from sonia_vision_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,9 +36,9 @@ class vision_path_new_algoSM(Behavior):
 		self.name = 'vision_path_new_algo'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain_name', 'simple_pipe45')
-		self.add_parameter('header_name', 'pipe')
-		self.add_parameter('camera_no', 2)
+		self.add_parameter('filterchain_name', 'simple_pipe_straight')
+		self.add_parameter('header_name', 'pipe straight')
+		self.add_parameter('camera_no', 4)
 
 		# references to used behaviors
 		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
@@ -65,23 +67,30 @@ class vision_path_new_algoSM(Behavior):
 			# x:51 y:243
 			OperatableStateMachine.add('start path filter',
 										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
+										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=20),
-										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'move to target', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
+										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, long_rotation=False, timeout=20, speed_profile=0),
+										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'planner', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'input_traj': 'trajectory', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
 
-			# x:582 y:217
-			OperatableStateMachine.add('move to target',
-										move_to_target(),
+			# x:253 y:45
+			OperatableStateMachine.add('init_traj',
+										init_trajectory(interpolation_method=0),
+										transitions={'continue': 'get_target'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'trajectory'})
+
+			# x:561 y:186
+			OperatableStateMachine.add('planner',
+										send_to_planner(),
 										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'target_pose'})
+										remapping={'input_traj': 'target_pose'})
 
 			# x:1100 y:240
 			OperatableStateMachine.add('rotate to path',

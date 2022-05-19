@@ -14,6 +14,8 @@ class find_vision_target(EventState):
         -- number_samples       uint8       Number of samples to find the target
         -- timeout              uint8       Time to stop looking at this position
 
+        ># filterchain          string      Topic to listen for the target
+
         <= continue                         Target has been found
         <= failed                           Continue to search for the target
     
@@ -21,7 +23,8 @@ class find_vision_target(EventState):
 
     def __init__(self, number_samples, timeout):
 
-        super(find_vision_target, self).__init__(outcomes = ['continue', 'failed'], input_keys = ['filterchain'])
+        super(find_vision_target, self).__init__(outcomes = ['continue', 'failed'],
+                                                 input_keys = ['filterchain'])
         
         self.param_number_samples = number_samples
         self.param_timeout = timeout
@@ -36,7 +39,7 @@ class find_vision_target(EventState):
         Logger.log('Checking to find the target for %d seconds' %self.param_timeout, Logger.REPORT_HINT)
 
     def execute(self, userdata):
-        actual = time()-self.start_time       
+        actual = time()-self.start_time    
         if self.number_of_found > self.param_number_samples:
             Logger.log('Target found', Logger.REPORT_HINT)
             return 'continue'
