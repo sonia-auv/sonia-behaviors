@@ -34,6 +34,10 @@ class test_zigzagSM(Behavior):
 		self.name = 'test_zigzag'
 
 		# parameters of this behavior
+		self.add_parameter('boxX', 2)
+		self.add_parameter('boxY', 2)
+		self.add_parameter('stroke', 1)
+		self.add_parameter('radius', 0.4)
 
 		# references to used behaviors
 
@@ -78,7 +82,7 @@ class test_zigzagSM(Behavior):
 
 			# x:509 y:31
 			OperatableStateMachine.add('zig',
-										search_zigzag(boxX=5, boxY=5, stroke=1, radius=0.4, side=False),
+										search_zigzag(boxX=self.boxX, boxY=self.boxY, stroke=self.stroke, radius=self.radius, side=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})

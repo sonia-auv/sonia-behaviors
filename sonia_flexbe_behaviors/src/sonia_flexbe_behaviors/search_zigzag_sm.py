@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
-from sonia_vision_states.find_vision_target import find_vision_target
+from sonia_flexbe_behaviors.test_zigzag_sm import test_zigzagSM
 from sonia_navigation_states.stop_move import stop_move
+from sonia_vision_states.find_vision_target import find_vision_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -18,24 +18,23 @@ from sonia_navigation_states.stop_move import stop_move
 
 
 '''
-Created on Sun Nov 14 2021
-@author: FA
+Created on Wed May 18 2022
+@author: KY
 '''
-class search_snakeSM(Behavior):
+class search_zigzagSM(Behavior):
 	'''
-	Search in a snake pattern.
+	Search mouvement in a zigzag patern.
 	'''
 
 
 	def __init__(self):
-		super(search_snakeSM, self).__init__()
-		self.name = 'search_snake'
+		super(search_zigzagSM, self).__init__()
+		self.name = 'search_zigzag'
 
 		# parameters of this behavior
-		self.add_parameter('time_stop_search', 105)
 
 		# references to used behaviors
-		self.add_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement')
+		self.add_behavior(test_zigzagSM, 'Container/test_zigzag')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -47,33 +46,33 @@ class search_snakeSM(Behavior):
 
 
 	def create(self):
-		# x:642 y:64, x:389 y:239, x:209 y:246
+		# x:966 y:299, x:614 y:439, x:407 y:424
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
-		_state_machine.userdata.target = ' '
+		_state_machine.userdata.target = ''
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:349 y:161, x:437 y:28, x:414 y:120, x:322 y:249, x:598 y:122, x:641 y:62, x:543 y:252
-		_sm_snake_searching_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
-										('lost_target', [('snake_mouvement', 'finished')]),
-										('failed', [('snake_mouvement', 'failed')]),
-										('lost_target', [('find target', 'failed')]),
-										('finished', [('find target', 'continue')])
+		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266, x:736 y:185
+		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+										('lost_target', [('test_zigzag', 'finished')]),
+										('failed', [('test_zigzag', 'failed')]),
+										('finished', [('find_target', 'continue')]),
+										('lost_target', [('find_target', 'failed')])
 										])
 
-		with _sm_snake_searching_0:
-			# x:126 y:63
-			OperatableStateMachine.add('snake_mouvement',
-										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement'),
+		with _sm_container_0:
+			# x:286 y:59
+			OperatableStateMachine.add('test_zigzag',
+										self.use_behavior(test_zigzagSM, 'Container/test_zigzag'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:119 y:201
-			OperatableStateMachine.add('find target',
-										find_vision_target(number_samples=10, timeout=self.time_stop_search),
+			# x:277 y:203
+			OperatableStateMachine.add('find_target',
+										find_vision_target(number_samples=10, timeout=105),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
@@ -81,16 +80,16 @@ class search_snakeSM(Behavior):
 
 
 		with _state_machine:
-			# x:111 y:54
-			OperatableStateMachine.add('Snake searching',
-										_sm_snake_searching_0,
-										transitions={'finished': 'stop mouvement', 'failed': 'failed', 'lost_target': 'lost_target'},
+			# x:136 y:150
+			OperatableStateMachine.add('Container',
+										_sm_container_0,
+										transitions={'finished': 'stop_movement', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
-			# x:378 y:39
-			OperatableStateMachine.add('stop mouvement',
-										stop_move(timeout=20),
+			# x:655 y:203
+			OperatableStateMachine.add('stop_movement',
+										stop_move(timeout=3),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

@@ -9,8 +9,8 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.squarry_circle_sm import squarry_circleSM
-from sonia_flexbe_states.find_vision_target import find_vision_target
-from sonia_flexbe_states.stop_move import stop_move
+from sonia_navigation_states.stop_move import stop_move
+from sonia_vision_states.find_vision_target import find_vision_target
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
