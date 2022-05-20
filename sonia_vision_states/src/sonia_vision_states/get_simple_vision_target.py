@@ -8,7 +8,7 @@ from Queue import deque
 from flexbe_core import EventState, Logger
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 from sonia_common.msg import VisionTarget, MultiAddPose
-from geometry_msgs.msg import Point, Vector3
+from geometry_msgs.msg import Point
 
 class get_simple_vision_target(EventState):
 
@@ -203,6 +203,8 @@ class get_simple_vision_target(EventState):
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
+            traj = userdata.input_traj
+            new_traj = MultiAddPose()
             self.parse_data = False
             if self.param_rotation == True:
                 Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)
