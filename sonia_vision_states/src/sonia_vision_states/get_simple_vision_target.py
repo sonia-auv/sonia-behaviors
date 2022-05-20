@@ -6,36 +6,50 @@ import rospy
 
 from Queue import deque
 from flexbe_core import EventState, Logger
-from sonia_common.msg import VisionTarget, AddPose
-from geometry_msgs.msg import Point, Vector3
+import sonia_navigation_states.modules.navigation_utilities as navUtils
+from sonia_common.msg import VisionTarget, MultiAddPose
+from geometry_msgs.msg import Point
 
 class get_simple_vision_target(EventState):
 
     '''
         Get the movement target from vision filterchain (to moddify)
 
-        -- bounding_box_pixel       uint16      Side of square bounding box for alignement on target in pixel
-        -- target_width_meter       float       Width of the target in meters
-        -- target_height_meter      float       Height of the target in meters
-        -- ratio_victory            float       Ratio of the distance from the target for victory
-        -- number_of_average        uint8       Number of image to average before creating a pose
-        -- camera                   uint8       1 : front 
-                                                2 : bottom
-                                                3 : front simulation
-                                                4 : bottom simulation
-        -- max_mouvement            uint8       Maximum distance allowed to move
-        -- min_mouvement            uint8       Minimum distance for a mouvement
-        -- return_angle             bool        Return the angle obtained with vision filterchain
+        -- bounding_box_pixel       uint16          Side of square bounding box for alignement on target in pixel
+        -- target_width_meter       float           Width of the target in meters
+        -- target_height_meter      float           Height of the target in meters
+        -- ratio_victory            float           Ratio of the distance from the target for victory
+        -- number_of_average        uint8           Number of image to average before creating a pose
+        -- max_mouvement            uint8           Maximum distance allowed to move
+        -- alignement_distance      uint8           Minimum distance for a mouvement
+        -- long_rotation            bool            False : Quick path for rotation
+                                                    True : Long path for rotation
+        -- timeout                  uint8           Time to stop looking at this position
+        -- speed_profile            uint8           Speed profile to move
+                                                    0 : normal
+                                                    1 : slow
+                                                    2 : fast
+
+        ># filterchain              string          Topic to listen to get the target
+        ># camera_no                uint8           1 : front 
+                                                    2 : bottom
+                                                    3 : front simulation
+                                                    4 : bottom simulation       
+        ># header_name              string          Header name to filter result
+        ># input_traj               MultiAddPose    Input trajectory
+
+        #> pose                     MultiAddPose    Output trajectory
+        #> bounding_box             uint16
 
         <= success                              The target has been reached. Ready for action
         <= move                                 Movement ready to do with the pose calculated
         <= failed                               Error in the calculation and loop
     '''
 
-    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, rotation=False, timeout=20):
+    def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, long_rotation=False, timeout=20, speed_profile=0):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'header_name'],
+                                                input_keys = ['filterchain', 'camera_no', 'header_name', 'input_traj'],
                                                 output_keys = ['pose', 'bounding_box'])
 
         self.param_bbp = bounding_box_pixel
@@ -45,8 +59,9 @@ class get_simple_vision_target(EventState):
         self.param_noa = number_of_average
         self.param_mm = max_mouvement
         self.param_alignement_distance = alignement_distance
-        self.param_rotation = rotation
+        self.param_long_rotation = long_rotation
         self.param_timeout = timeout
+        self.param_speed_profile = speed_profile
 
         self.nombre_enter = 0
         
@@ -120,7 +135,7 @@ class get_simple_vision_target(EventState):
     def align_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
 
-        new_pose = AddPose()
+        new_pose = MultiAddPose()
         mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
         mouvement_y = self.param_alignement_distance * (self.y / self.param_image_height)
 
@@ -134,30 +149,21 @@ class get_simple_vision_target(EventState):
     def position_with_vision(self):
         Logger.log('Moving to target. Creating pose', Logger.REPORT_HINT)
 
-        new_pose = AddPose()        
+        new_pose = MultiAddPose()
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(0.,0.,self.param_mm)
         else :
             new_pose.position = Point(self.param_mm,0.,0.)
 
-        return self.fill_pose(new_pose, 10)
+        return self.fill_pose(new_pose)
     
-    def fill_pose(self, pose, speed):
-        pose.orientation = Vector3(0.,0.,0.)
-        pose.frame = 1
-        pose.speed = speed
-        pose.fine = 0.
-        pose.rotation = True
+    def fill_pose(self, pose):
+        pose = navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
         return pose
 
     def angle_obtained(self):
-        pose = AddPose()
-        pose.position = Point(0.,0.,0.)
-        pose.orientation = Vector3(0.,0.,self.angle)
-        pose.frame = 1
-        pose.speed = 5
-        pose.fine = 0.
-        pose.rotation = True
+        pose = MultiAddPose()
+        pose = navUtils.addpose(0., 0., 0., 0., 0., self.angle, 1, self.param_speed_profile, 0, self.param_long_rotation)
         return pose
 
     def rotate(self):
@@ -197,6 +203,8 @@ class get_simple_vision_target(EventState):
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
+            traj = userdata.input_traj
+            new_traj = MultiAddPose()
             self.parse_data = False
             if self.param_rotation == True:
                 Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)

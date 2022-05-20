@@ -6,25 +6,31 @@ import rospy
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget
 
-class find_vision_target(EventState):
+class cross_check_vision_target(EventState):
 
     '''
         Verify that the vision target has been found
 
-        -- number_samples       uint8       Number of samples to find the target
-        -- timeout              uint8       Time to stop looking at this position
+        -- number_target        uint8           Number of target to cross-check
+        -- timeout              uint8           Time to stop looking at this position
+        -- confidence_target    uint8           Confidence required to continue
 
-        ># filterchain          string      Topic to listen for the target
+        ># target1              Pose2D
+        ># target2              Pose2D
+        ># target3              Pose2D
+        #> confidence           uint8
+        #> target_position      MultiAddPose    
 
-        <= continue                         Target has been found
-        <= failed                           Continue to search for the target
+        <= continue                             Confidence reached a satsfying level
+        <= failed                               Continue to search for the target
     
     '''
 
     def __init__(self, number_samples, timeout):
 
-        super(find_vision_target, self).__init__(outcomes = ['continue', 'failed'],
-                                                 input_keys = ['filterchain'])
+        super(cross_check_vision_target, self).__init__(outcomes = ['continue', 'failed'],
+                                                        input_keys = ['target1', 'target2', 'target3'],
+                                                        output_key = ['confidence', 'target_position'])
         
         self.param_number_samples = number_samples
         self.param_timeout = timeout
@@ -39,7 +45,7 @@ class find_vision_target(EventState):
         Logger.log('Checking to find the target for %d seconds' %self.param_timeout, Logger.REPORT_HINT)
 
     def execute(self, userdata):
-        actual = time()-self.start_time    
+        actual = time()-self.start_time       
         if self.number_of_found > self.param_number_samples:
             Logger.log('Target found', Logger.REPORT_HINT)
             return 'continue'

@@ -2,7 +2,7 @@
 # Usefull for navigation states
 
 # includes
-from sonia_common.msg import AddPose, MultiAddPose
+from sonia_common.msg import AddPose
 
 # fill and return an addpose object 
 def addpose( x, y, z, rx, ry,rz, frame, speed, fine, rot):
