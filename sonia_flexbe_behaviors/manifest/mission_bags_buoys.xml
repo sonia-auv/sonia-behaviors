@@ -36,6 +36,11 @@
 			<max value="1" />
 		</param>
 
+		<param type="numeric" name="orbit_speed" default="0" label="orbit_speed" hint="Sets the orbit_speed">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 
