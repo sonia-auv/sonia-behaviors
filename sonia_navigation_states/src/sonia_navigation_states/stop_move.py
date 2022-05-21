@@ -16,7 +16,7 @@ class stop_move(EventState):
 
     def __init__(self, timeout=3):
 
-        super(stop_move, self).__init__(outcomes=['continue', 'failed'])
+        super(stop_move, self).__init__(outcomes=['continue', 'failed', 'error'])
 
         self.launch_time = 0
         self.time_diff = 0

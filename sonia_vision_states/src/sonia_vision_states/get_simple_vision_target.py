@@ -4,7 +4,7 @@ from math import sqrt
 from time import time
 import rospy
 
-from queue import deque
+from Queue import deque
 from flexbe_core import EventState, Logger
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 from sonia_common.msg import VisionTarget, MultiAddPose
