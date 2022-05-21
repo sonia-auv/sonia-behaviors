@@ -4,7 +4,7 @@ from math import sqrt
 from time import time
 import rospy
 
-from Queue import deque
+from queue import deque
 from flexbe_core import EventState, Logger
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 from sonia_common.msg import VisionTarget, MultiAddPose
@@ -205,6 +205,9 @@ class get_simple_vision_target(EventState):
         if self.parse_data == True:
             traj = userdata.input_traj
             new_traj = MultiAddPose()
+            if not traj.pose:
+                Logger.log('First position of the trajectory', Logger.REPORT_HINT)
+                
             self.parse_data = False
             if self.param_rotation == True:
                 Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)

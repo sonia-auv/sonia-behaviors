@@ -49,7 +49,7 @@ class snake_mouvementSM(Behavior):
 
 
 	def create(self):
-		# x:1090 y:64, x:1201 y:206
+		# x:820 y:307, x:524 y:372
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -59,36 +59,36 @@ class snake_mouvementSM(Behavior):
 
 
 		with _state_machine:
-			# x:19 y:206
+			# x:205 y:212
 			OperatableStateMachine.add('control mode',
 										set_control_mode(mode=10, timeout=2),
 										transitions={'continue': 'init', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:186 y:135
+			# x:114 y:40
 			OperatableStateMachine.add('init',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'zigzag'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:471 y:90
-			OperatableStateMachine.add('send_planner',
+			# x:592 y:37
+			OperatableStateMachine.add('planner',
 										send_to_planner(),
-										transitions={'continue': 'wait target', 'failed': 'failed'},
+										transitions={'continue': 'wait_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:665 y:100
-			OperatableStateMachine.add('wait target',
+			# x:779 y:104
+			OperatableStateMachine.add('wait_target',
 										wait_target_reached(),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:294 y:43
+			# x:370 y:40
 			OperatableStateMachine.add('zigzag',
 										search_zigzag(boxX=5, boxY=5, stroke=1, radius=0.4, side=False),
-										transitions={'continue': 'send_planner'},
+										transitions={'continue': 'planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 

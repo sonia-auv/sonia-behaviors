@@ -24,6 +24,7 @@ class stop_move(EventState):
         self.traj_complete = False
         self.param_timeout = timeout
         self.reset_trajectory = rospy.Publisher('/proc_control/reset_trajectory', Bool, queue_size=2)
+        self.is_alive = False
 
 
     def get_controller_info_cb(self, data):
