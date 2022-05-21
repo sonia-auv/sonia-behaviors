@@ -51,7 +51,7 @@ class test_zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:1225 y:49, x:1232 y:226
+		# x:1225 y:49, x:669 y:291
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -89,7 +89,7 @@ class test_zigzagSM(Behavior):
 
 			# x:286 y:31
 			OperatableStateMachine.add('init',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'zig'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})

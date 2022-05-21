@@ -4,10 +4,10 @@ from math import sqrt
 from time import time
 import rospy
 
-from Queue import deque
+from queue import deque
 from flexbe_core import EventState, Logger
 import sonia_navigation_states.modules.navigation_utilities as navUtils
-from sonia_common.msg import VisionTarget, MultiAddPose
+from sonia_common.msg import VisionTarget, MultiAddPose, AddPose
 from geometry_msgs.msg import Point, Vector3
 
 class get_simple_vision_target(EventState):
@@ -36,9 +36,9 @@ class get_simple_vision_target(EventState):
                                                     3 : front simulation
                                                     4 : bottom simulation       
         ># header_name              string          Header name to filter result
-        ># input_traj               MultiAddPose    Input trajectory
+        ># input_trajectory         MultiAddPose    Input trajectory
 
-        #> pose                     MultiAddPose    Output trajectory
+        #> output_trajectory        MultiAddPose    Output trajectory
         #> bounding_box             uint16
 
         <= success                              The target has been reached. Ready for action
@@ -49,8 +49,8 @@ class get_simple_vision_target(EventState):
     def __init__(self, bounding_box_pixel, image_height=400, image_width=600, ratio_victory=0.5, number_of_average=10, max_mouvement=1, alignement_distance=5, long_rotation=False, timeout=20, speed_profile=0):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'header_name', 'input_traj'],
-                                                output_keys = ['pose', 'bounding_box'])
+                                                input_keys = ['filterchain', 'camera_no', 'header_name', 'input_trajectory'],
+                                                output_keys = ['output_trajectory', 'bounding_box'])
 
         self.param_bbp = bounding_box_pixel
         self.param_image_height = image_height
@@ -135,7 +135,8 @@ class get_simple_vision_target(EventState):
     def align_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
 
-        new_pose = MultiAddPose()
+        new_traj = MultiAddPose()
+        new_pose = AddPose()
         mouvement_x = self.param_alignement_distance * (self.x / self.param_image_width)
         mouvement_y = self.param_alignement_distance * (self.y / self.param_image_height)
 
@@ -144,27 +145,29 @@ class get_simple_vision_target(EventState):
         else :
             new_pose.position = Point(0., mouvement_x, -mouvement_y/4)
 
-        return self.fill_pose(new_pose, 20)
+        new_traj.pose.append(self.fill_pose(new_pose))
+        return (new_traj)
         
     def position_with_vision(self):
         Logger.log('Moving to target. Creating pose', Logger.REPORT_HINT)
 
-        new_pose = MultiAddPose()
+        new_traj = MultiAddPose()
+        new_pose = AddPose()
         if self.param_cam == 2 or self.param_cam == 4 :
             new_pose.position = Point(0.,0.,self.param_mm)
         else :
             new_pose.position = Point(self.param_mm,0.,0.)
+        new_traj.pose.append(self.fill_pose(new_pose))
 
-        return self.fill_pose(new_pose)
-    
     def fill_pose(self, pose):
-        pose = navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
-        return pose
+        new_traj = MultiAddPose()
+        new_traj.pose.append(navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation))
+        return (new_traj)
 
     def angle_obtained(self):
-        pose = MultiAddPose()
-        pose = navUtils.addpose(0., 0., 0., 0., 0., self.angle, 1, self.param_speed_profile, 0, self.param_long_rotation)
-        return pose
+        new_traj = MultiAddPose()
+        new_traj.pose.append(navUtils.addpose(0., 0., 0., 0., 0., self.angle, 1, self.param_speed_profile, 0, self.param_long_rotation))
+        return (new_traj)
 
     def rotate(self):
         new_x = -self.y
@@ -203,21 +206,22 @@ class get_simple_vision_target(EventState):
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
+            
             self.parse_data = False
-            if self.param_rotation == True:
+            if self.param_ra == True:
                 Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)
                 self.rotate()
             Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
             if self.position_reached == True and self.alignement_reached == True:
                 if self.param_ra == True :
-                    userdata.pose = self.angle_obtained()
+                    userdata.output_trajectory = self.angle_obtained()
                 return 'success'
             elif self.alignement_reached == False:
-                userdata.pose = self.align_with_vision()
+                userdata.output_trajectory = self.align_with_vision()
                 userdata.bounding_box = self.param_bbp
                 return 'align'
             elif self.position_reached == False:
-                userdata.pose = self.position_with_vision()
+                userdata.output_trajectory = self.position_with_vision()
                 return 'move'
             else:
                 return 'failed'

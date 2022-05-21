@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.verify_centroid import verify_centroid
 # Additional imports can be added inside the following tags
@@ -21,15 +21,15 @@ from sonia_vision_states.verify_centroid import verify_centroid
 Created on Fri Nov 19 2021
 @author: FA
 '''
-class AligmentwithstoppingSM(Behavior):
+class AlignementwithstoppingSM(Behavior):
 	'''
 	Alignement on the target by stopping the mouvement when the target is in the centroid.
 	'''
 
 
 	def __init__(self):
-		super(AligmentwithstoppingSM, self).__init__()
-		self.name = 'Aligment with stopping'
+		super(AlignementwithstoppingSM, self).__init__()
+		self.name = 'Alignement with stopping'
 
 		# parameters of this behavior
 
@@ -59,10 +59,9 @@ class AligmentwithstoppingSM(Behavior):
 
 		# x:703 y:332, x:537 y:129, x:569 y:42, x:523 y:181, x:794 y:118, x:654 y:243, x:630 y:365
 		_sm_alignement_with_stop_0 = ConcurrencyContainer(outcomes=['failed', 'lost_target', 'success'], input_keys=['target', 'filterchain', 'bounding_box', 'header_name'], conditions=[
-										('success', [('move', 'continue')]),
 										('success', [('centroid', 'align_complete')]),
-										('failed', [('move', 'failed')]),
-										('lost_target', [('centroid', 'timeout_reached')])
+										('lost_target', [('centroid', 'timeout_reached'), ('move', 'failed')]),
+										('success', [('move', 'continue')])
 										])
 
 		with _sm_alignement_with_stop_0:
@@ -73,12 +72,12 @@ class AligmentwithstoppingSM(Behavior):
 										autonomy={'align_complete': Autonomy.Off, 'timeout_reached': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'bounding_box': 'bounding_box', 'header_name': 'header_name'})
 
-			# x:106 y:156
+			# x:89 y:154
 			OperatableStateMachine.add('move',
-										move_to_target(),
-										transitions={'continue': 'success', 'failed': 'failed'},
+										send_to_planner(),
+										transitions={'continue': 'success', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'target'})
+										remapping={'input_traj': 'target'})
 
 
 

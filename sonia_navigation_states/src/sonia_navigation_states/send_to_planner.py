@@ -26,7 +26,7 @@ class send_to_planner(EventState):
 
         self.valid = False
         self.time_launch = 0.0
-        self.send_to_planner = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
+        self.publish_to_planner = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
 
     def is_waypoints_valid_cb(self, data):
         self.valid = data.data
@@ -35,7 +35,7 @@ class send_to_planner(EventState):
         Logger.log('Sending trajectory to planner', Logger.REPORT_HINT)    
         trajectory = MultiAddPose()
         trajectory.pose = userdata.input_traj.pose
-        self.send_to_planner.publish(trajectory)
+        self.publish_to_planner.publish(trajectory)
         self.time_launch = time()
         self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Bool, self.is_waypoints_valid_cb)
 

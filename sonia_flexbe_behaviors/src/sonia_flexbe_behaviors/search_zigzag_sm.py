@@ -70,9 +70,9 @@ class search_zigzagSM(Behavior):
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:277 y:203
+			# x:192 y:232
 			OperatableStateMachine.add('find_target',
-										find_vision_target(number_samples=10, timeout=105),
+										find_vision_target(number_samples=10, timeout=50),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
@@ -83,15 +83,15 @@ class search_zigzagSM(Behavior):
 			# x:136 y:150
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
-										transitions={'finished': 'stop_movement', 'failed': 'failed', 'lost_target': 'lost_target'},
+										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
-			# x:655 y:203
-			OperatableStateMachine.add('stop_movement',
+			# x:646 y:189
+			OperatableStateMachine.add('stop',
 										stop_move(timeout=3),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine

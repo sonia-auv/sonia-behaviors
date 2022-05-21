@@ -12,8 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_snake" />
-	<contains name="Aligment with stopping" />
+	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
