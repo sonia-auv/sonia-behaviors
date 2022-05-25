@@ -26,10 +26,11 @@ class add_pose_to_trajectory(EventState):
                                                 1 : Relative position and relative angle
                                                 2 : Relative position and absolute angle
                                                 3 : Absolute position and relative angle 
-        -- speed            uint8           1 : Fast speed
+        -- speed            uint8           0 : Normal speed
+                                                1 : Fast speed
                                                 2 : Low speed
         -- precision        float64         Precision of the movement
-        -- path             bool            False : Quickest rotation
+        -- long_rotation    bool            False : Quickest rotation
                                                 True : Follow the rotation 
         
         ># input_traj       MultiAddPose    Input trajectory
@@ -39,13 +40,13 @@ class add_pose_to_trajectory(EventState):
         <= continue                         Indicates completion.
         '''
 
-    def __init__(self, positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, rotation=True):
+    def __init__(self, positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False):
         
         super(add_pose_to_trajectory, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
                                                      output_keys=['trajectory'])
         # create addpose object
-        self.pose = navUtils.addpose(positionX, positionY, positionZ, orientationX, orientationY, orientationZ,frame, speed, precision, rotation)
+        self.pose = navUtils.addpose(positionX, positionY, positionZ, orientationX, orientationY, orientationZ,frame, speed, precision, long_rotation)
 
     def execute(self, userdata):
         traj = userdata.input_traj
