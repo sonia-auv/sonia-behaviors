@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move">
+
+	<executable package_path="sonia_flexbe_behaviors.move_sm" class="moveSM" />
+	<tagstring>mouvement</tagstring>
+	<author>FA</author>
+	<date>Wed Feb 02 2022</date>
+	<description>
+		Behavior to move the submarine with a single pose
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="positionX" default="0" label="positionX" hint="Mouvement in X axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="positionY" default="0" label="positionY" hint="Mouvement in Y axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="positionZ" default="0" label="positionZ" hint="Mouvement in Z axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationX" default="0" label="orientationX" hint="Mouvement in roll axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationY" default="0" label="orientationY" hint="Roration in pitch axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="orientationZ" default="0" label="orientationZ" hint="Rotation in yaw axis">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="numeric" name="frame" default="1" label="frame" hint="0 : Absolute position and absolute angle  1 : Relative position and relative angle 2 : Relative position and absolute angle 3 : Absolute position and relative angle">
+			<min value="0" />
+			<max value="3" />
+		</param>
+
+		<param type="numeric" name="speed" default="0" label="speed" hint="0 : Normal 1: Fast Speed 2: Low Speed">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="precision" default="0" label="precision" hint="Precision of mouvement">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="boolean" name="rotation" default="True" label="rotation" hint="Sets the rotation" />
+
+	</params>
+
+
+</behavior>

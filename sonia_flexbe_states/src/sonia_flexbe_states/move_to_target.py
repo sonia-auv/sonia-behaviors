@@ -15,7 +15,7 @@ from nav_msgs.msg import Odometry
 class move_to_target(EventState):
 
     '''
-        Move the submarine by defining every parameter.
+        (!!!! DEPRECATED !!!!!) Move the submarine by defining every parameter.
 
         <= continue                         Indicates that the sub has moved to the target.
         <= failed                           Couldn't move to the desired pose

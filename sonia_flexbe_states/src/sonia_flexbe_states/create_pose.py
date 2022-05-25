@@ -15,7 +15,7 @@ from nav_msgs.msg import Odometry
 class create_pose(EventState):
 
     '''
-        Move the submarine by defining every parameter.
+        (!!!! DEPRECATED !!!!!) Move the submarine by defining every parameter.
         
         -- positionX        uint8       The function that performs [...]
         -- positionY        uint8       The function that performs [...]
