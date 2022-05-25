@@ -18,11 +18,11 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain_name" default="simple_pipe45" label="filterchain_name" hint="Sets the filterchain name to start the vision target" />
+		<param type="text" name="filterchain_name" default="simple_pipe_straight" label="filterchain_name" hint="Sets the filterchain name to start the vision target" />
 
-		<param type="text" name="header_name" default="pipe" label="header_name" hint="Sets the header name to filter the vision target message" />
+		<param type="text" name="header_name" default="pipe straight" label="header_name" hint="Sets the header name to filter the vision target message" />
 
-		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
+		<param type="numeric" name="camera_no" default="4" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>

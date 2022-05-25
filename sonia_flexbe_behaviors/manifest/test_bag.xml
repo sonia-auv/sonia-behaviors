@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_bag">
+
+	<executable package_path="sonia_flexbe_behaviors.test_bag_sm" class="test_bagSM" />
+	<tagstring>test</tagstring>
+	<author>Camille</author>
+	<date>Sun May 15 2022</date>
+	<description>
+		test record
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

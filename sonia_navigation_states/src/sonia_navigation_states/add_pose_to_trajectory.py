@@ -9,7 +9,7 @@ import rospy
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 
 from flexbe_core import EventState, Logger
-from sonia_common.msg import AddPose, MultiAddPose
+from sonia_common.msg import MultiAddPose
 
 class add_pose_to_trajectory(EventState):
 
