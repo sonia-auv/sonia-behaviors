@@ -16,7 +16,7 @@ class stop_move(EventState):
 
     def __init__(self, timeout=3):
 
-        super(stop_move, self).__init__(outcomes=['continue', 'failed'])
+        super(stop_move, self).__init__(outcomes=['continue', 'failed', 'error'])
 
         self.launch_time = 0
         self.time_diff = 0
@@ -24,6 +24,7 @@ class stop_move(EventState):
         self.traj_complete = False
         self.param_timeout = timeout
         self.reset_trajectory = rospy.Publisher('/proc_control/reset_trajectory', Bool, queue_size=2)
+        self.is_alive = False
 
 
     def get_controller_info_cb(self, data):

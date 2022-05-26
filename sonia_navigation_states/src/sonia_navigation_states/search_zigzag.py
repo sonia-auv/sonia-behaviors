@@ -30,8 +30,8 @@ class search_zigzag(EventState):
             |  |
             |  |
            _v_ |___________________
-                                 _|_        ^ x
-                                |   |       |
+                                 ___        ^ x
+                                | ^ |       |
                                _|   |_      |
                               |_ sub _|     -----> y
                                 |   |       body frame
@@ -55,7 +55,7 @@ class search_zigzag(EventState):
         self.side =side
 
         # Compute trajectory parameters
-        self.fullStep = math.floor(self.boxX/self.stroke)
+        self.fullStep = int(math.floor(self.boxX/self.stroke))
         self.residue = self.boxX % self.stroke
 
 

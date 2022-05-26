@@ -23,11 +23,13 @@ class wait_target_reached(EventState):
         self.time_diff = 0
         self.trajectory_done_prev = True
         self.traj_complete = False
+        self.mpc_mode = 0
         
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
         self.trajectory_done = data.is_trajectory_done
         self.is_alive = data.is_mpc_alive
+        self.mpc_mode = data.mpc_mode
 
         # Logger.log("Controller => Target Reached :" + str(self.target_reached) + \
         #     " Trajectory Done :"+ str(self.trajectory_done) + \
@@ -53,7 +55,10 @@ class wait_target_reached(EventState):
 
     def execute(self, userdata):
         if self.is_alive == True:
-            if self.traj_complete == True:
+            if self.mpc_mode == 10:
+                if self.traj_complete == True:
+                    self.time_diff = time() - self.launch_time
+            else:
                 self.time_diff = time() - self.launch_time
             if self.time_diff > 15 or self.target_reached == True:
                 if self.target_reached == True:
