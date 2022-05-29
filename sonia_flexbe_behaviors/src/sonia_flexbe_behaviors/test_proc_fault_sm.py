@@ -53,9 +53,9 @@ class testprocfaultSM(Behavior):
 
 
 		with _state_machine:
-			# x:198 y:89
-			OperatableStateMachine.add('module check',
-										module_check(navigation=True, vision=False, mapping=False, hydro=False, io=False, hardware=True),
+			# x:280 y:98
+			OperatableStateMachine.add('module',
+										module_check(navigation=True, vision=False, mapping=False, hydro=False, io=False, underwater_com=False, power=True, internal_com=True),
 										transitions={'continue': 'finished', 'reboot': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'reboot': Autonomy.Off, 'failed': Autonomy.Off})
 
