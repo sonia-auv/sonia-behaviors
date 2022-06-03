@@ -25,7 +25,8 @@ class yaw_orbit_from_given_point(EventState):
         Speed : Speed profile 
 
     Essential orbit point.
-        bottom AUV8 : [0.2415, 0]
+        bottom AUV8 : [0.285, 0]
+        bottom AUV7 : [0.16818, 0]
     '''
     '''
                                   |<--- pointY --->|
