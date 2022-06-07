@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 
 import rospy
+import sonia_com_states.modules.com_utilities as comUtils
 
 from flexbe_core import EventState, Logger
 from sonia_common.msg import ModemUpdateMissionList
@@ -26,12 +27,7 @@ class send_update(EventState):
 
     def on_enter(self, userdata):
         Logger.log('Updating mission ' + str(self.mission) + ' with the state ' + str(self.state), Logger.REPORT_HINT)
-        
-        msg = ModemUpdateMissionList()
-        msg.mission_id = self.mission
-        msg.mission_state = self.state
-
-        self.publisher.publish(msg)
+        self.publisher.publish(comUtils.update_mission_array(self.mission, self.state))
 
     def execute(self, userdata):
         return 'continue'

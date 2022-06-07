@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Takeover Mission">
+
+	<executable package_path="sonia_flexbe_behaviors.takeover_mission_sm" class="TakeoverMissionSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Tue Jun 07 2022</date>
+	<description>
+		Test the takeover mission for the submarine
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

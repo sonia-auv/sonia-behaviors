@@ -3,7 +3,7 @@
 <behavior name="Send Mission Update">
 
 	<executable package_path="sonia_flexbe_behaviors.send_mission_update_sm" class="SendMissionUpdateSM" />
-	<tagstring>com</tagstring>
+	<tagstring>test</tagstring>
 	<author>FA</author>
 	<date>Sun Jun 05 2022</date>
 	<description>
