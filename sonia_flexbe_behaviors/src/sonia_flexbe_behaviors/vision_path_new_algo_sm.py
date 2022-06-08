@@ -99,7 +99,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'pose': 'target_pose'})
 
-			# x:330 y:201
+			# x:296 y:186
 			OperatableStateMachine.add('search_snake',
 										self.use_behavior(search_snakeSM, 'search_snake'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},

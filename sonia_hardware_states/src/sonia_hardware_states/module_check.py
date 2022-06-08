@@ -46,7 +46,7 @@ class module_check(EventState):
         self.message_received = True
 
     def on_enter(self, userdata):
-        self.get_fault_state = rospy.Subscriber('/proc_fault/module_errors', FaultDetection, self.get_fault_state_cb)
+        self.get_fault_state = rospy.Subscriber('/proc_fault/fault_detection', FaultDetection, self.get_fault_state_cb)
 
     def execute(self, userdata):
         if self.message_received == True:
