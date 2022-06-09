@@ -34,10 +34,10 @@ class test_zigzagSM(Behavior):
 		self.name = 'test_zigzag'
 
 		# parameters of this behavior
-		self.add_parameter('boxX', 2)
-		self.add_parameter('boxY', 2)
+		self.add_parameter('boxX', 4)
+		self.add_parameter('boxY', 1)
 		self.add_parameter('stroke', 1)
-		self.add_parameter('radius', 0.4)
+		self.add_parameter('radius', 0.2)
 
 		# references to used behaviors
 

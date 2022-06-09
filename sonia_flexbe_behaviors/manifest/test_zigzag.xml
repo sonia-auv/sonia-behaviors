@@ -16,12 +16,12 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="boxX" default="2" label="boxX" hint="Sets the boxX">
+		<param type="numeric" name="boxX" default="4" label="boxX" hint="Sets the boxX">
 			<min value="0" />
 			<max value="25" />
 		</param>
 
-		<param type="numeric" name="boxY" default="2" label="boxY" hint="Sets the boxY">
+		<param type="numeric" name="boxY" default="1" label="boxY" hint="Sets the boxY">
 			<min value="0" />
 			<max value="25" />
 		</param>
@@ -31,7 +31,7 @@
 			<max value="25" />
 		</param>
 
-		<param type="numeric" name="radius" default="0.4" label="radius" hint="Sets the radius">
+		<param type="numeric" name="radius" default="0.2" label="radius" hint="Sets the radius">
 			<min value="0" />
 			<max value="25" />
 		</param>

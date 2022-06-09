@@ -33,9 +33,7 @@ class send_to_planner(EventState):
     
     def on_enter(self, userdata):
         Logger.log('Sending trajectory to planner', Logger.REPORT_HINT)    
-        trajectory = MultiAddPose()
-        trajectory.pose = userdata.input_traj.pose
-        self.publish_to_planner.publish(trajectory)
+        self.publish_to_planner.publish(userdata.input_traj)
         self.time_launch = time()
         self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Bool, self.is_waypoints_valid_cb)
 

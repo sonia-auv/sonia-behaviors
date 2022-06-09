@@ -160,13 +160,13 @@ class get_simple_vision_target(EventState):
         new_traj.pose.append(self.fill_pose(new_pose))
 
     def fill_pose(self, pose):
-        new_traj = MultiAddPose()
-        new_traj.pose.append(navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation))
-        return (new_traj)
+        
+        return navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
+        
 
     def angle_obtained(self):
         new_traj = MultiAddPose()
-        new_traj.pose.append(navUtils.addpose(0., 0., 0., 0., 0., self.angle, 1, self.param_speed_profile, 0, self.param_long_rotation))
+        new_traj.pose.append(navUtils.addpose(0.0, 0.0, 0.0, 0.0, 0.0, self.angle, 1, self.param_speed_profile, 0, self.param_long_rotation))
         return (new_traj)
 
     def rotate(self):

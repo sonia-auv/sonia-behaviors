@@ -96,7 +96,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'output_trajectory'})
 
-			# x:310 y:153
+			# x:319 y:187
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},

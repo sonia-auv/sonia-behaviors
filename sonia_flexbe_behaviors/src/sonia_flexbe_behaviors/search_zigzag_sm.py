@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.test_zigzag_sm import test_zigzagSM
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
+from sonia_vision_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -80,18 +81,25 @@ class search_zigzagSM(Behavior):
 
 
 		with _state_machine:
-			# x:136 y:150
+			# x:81 y:263
+			OperatableStateMachine.add('start_filter',
+										start_filter_chain(param_node_name='simple_pipe_straight', header_name='pipe straight', camera_no=4, param_cmd=1),
+										transitions={'continue': 'Container', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'target', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+
+			# x:640 y:159
+			OperatableStateMachine.add('stop',
+										stop_move(timeout=3),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'lost_target'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:223 y:170
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
 										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
-
-			# x:646 y:189
-			OperatableStateMachine.add('stop',
-										stop_move(timeout=3),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
-										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine
