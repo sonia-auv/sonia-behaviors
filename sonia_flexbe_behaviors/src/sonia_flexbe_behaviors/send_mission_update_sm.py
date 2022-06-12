@@ -55,7 +55,7 @@ class SendMissionUpdateSM(Behavior):
 		with _state_machine:
 			# x:175 y:117
 			OperatableStateMachine.add('update_mission',
-										send_update(mission=0, state=-4),
+										send_update(mission=0, state=1),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
 
