@@ -58,8 +58,6 @@ class wait_target_reached(EventState):
             if self.mpc_mode == 10:
                 if self.traj_complete == True:
                     self.time_diff = time() - self.launch_time
-            else:
-                self.time_diff = time() - self.launch_time
             if self.time_diff > 15 or self.target_reached == True:
                 if self.target_reached == True:
                     Logger.log("Target Reached", Logger.REPORT_HINT)
