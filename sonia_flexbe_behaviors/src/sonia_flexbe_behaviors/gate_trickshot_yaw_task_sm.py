@@ -72,7 +72,7 @@ class gate_trickshot_yaw_taskSM(Behavior):
 										transitions={'finished': 'trickshot yaw', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:650 y:253
+			# x:612 y:311
 			OperatableStateMachine.add('trickshot yaw',
 										self.use_behavior(trickshotyawSM, 'trickshot yaw'),
 										transitions={'finished': 'finished', 'failed': 'failed'},

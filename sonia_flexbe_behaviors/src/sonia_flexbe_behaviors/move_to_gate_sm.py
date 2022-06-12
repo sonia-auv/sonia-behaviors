@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
-from sonia_flexbe_states.trick_shot import trick_shot
+from sonia_navigation_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
