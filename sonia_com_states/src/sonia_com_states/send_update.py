@@ -23,7 +23,7 @@ class send_update(EventState):
 
         self.mission = mission
         self.state = state
-        self.publisher = rospy.Publisher('/proc_underwater_com/to_define', ModemUpdateMissionList, queue_size=1)
+        self.publisher = rospy.Publisher('/proc_underwater_com/mission_state_msg', ModemUpdateMissionList, queue_size=2)
 
     def on_enter(self, userdata):
         Logger.log('Updating mission ' + str(self.mission) + ' with the state ' + str(self.state), Logger.REPORT_HINT)
