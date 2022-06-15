@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test addpose">
+
+	<executable package_path="sonia_flexbe_behaviors.test_addpose_sm" class="testaddposeSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Wed Jun 15 2022</date>
+	<description>
+		test the behavior to create a trajcetory with addpose
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Move with Addpose msg" />
+
+	<!-- Available Parameters -->
+
+</behavior>

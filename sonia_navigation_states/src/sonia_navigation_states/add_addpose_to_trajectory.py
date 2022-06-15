@@ -10,8 +10,8 @@ class add_addpose_to_trajectory(EventState):
         Create the pose for the trajectory with a message Addpose.
         Should only be use for the vision state.
 
-        ># pose             AddPose         Input pose
         ># input_traj       MultiAddPose    Input trajectory
+        ># pose             AddPose         Input pose
 
         #> trajectory       MultiAddPose    Output trajectory with the new pose added
 
@@ -39,6 +39,7 @@ class add_addpose_to_trajectory(EventState):
             ' frame = ' + str(pose.frame), Logger.REPORT_HINT)
 
         new_traj.pose.append(pose)
+        new_traj.interpolation_method = traj.interpolation_method
         userdata.trajectory = new_traj
         return 'continue'
 
