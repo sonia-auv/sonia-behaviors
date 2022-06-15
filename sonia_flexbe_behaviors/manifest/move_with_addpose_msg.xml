@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move with Addpose msg">
+
+	<executable package_path="sonia_flexbe_behaviors.move_with_addpose_msg_sm" class="MovewithAddposemsgSM" />
+	<tagstring>mouvement</tagstring>
+	<author>FA</author>
+	<date>Tue Jun 14 2022</date>
+	<description>
+		This behavior use the msg Addpose to create the needed trajectory. This should only be use for the vision. The behavior "Move" should be use to create a single mouvement.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
