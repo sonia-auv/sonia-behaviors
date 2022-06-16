@@ -14,5 +14,29 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="boxX" default="4" label="boxX" hint="Sets the boxX">
+			<min value="0" />
+			<max value="25" />
+		</param>
+
+		<param type="numeric" name="boxY" default="1" label="boxY" hint="Sets the boxY">
+			<min value="0" />
+			<max value="25" />
+		</param>
+
+		<param type="numeric" name="stroke" default="1" label="stroke" hint="Sets the stroke">
+			<min value="0" />
+			<max value="25" />
+		</param>
+
+		<param type="numeric" name="radius" default="0.2" label="radius" hint="Sets the radius">
+			<min value="0" />
+			<max value="25" />
+		</param>
+
+	</params>
+
 
 </behavior>
