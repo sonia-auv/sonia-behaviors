@@ -35,7 +35,13 @@ class send_to_planner(EventState):
     
     def on_enter(self, userdata):
         Logger.log('Sending trajectory to planner', Logger.REPORT_HINT)    
-        self.publish_to_planner.publish(userdata.input_traj)
+
+        trajectory = MultiAddPose()
+        trajectory.pose = userdata.input_traj.pose
+        trajectory.interpolation_method = userdata.input_traj.interpolation_method
+        
+        self.publish_to_planner.publish(trajectory)
+        
         self.time_launch = time()
         self.trajectory_compiled = rospy.Subscriber('/proc_planner/is_waypoints_valid', Int8, self.is_waypoints_valid_cb)
 
@@ -46,7 +52,7 @@ class send_to_planner(EventState):
             if self.valid == 0:
                 return 'continue'
             else:
-                Logger.log('Trajectory is invalid. Error code : ' + self.valid, Logger.REPORT_HINT)
+                Logger.log('Trajectory is invalid. Error code : ' + str(self.valid), Logger.REPORT_HINT)
                 return 'failed'
 
     def on_exit(self, userdata):
