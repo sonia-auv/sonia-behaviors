@@ -34,6 +34,10 @@ class test_zigzagSM(Behavior):
 		self.name = 'test_zigzag'
 
 		# parameters of this behavior
+		self.add_parameter('boxX', 4)
+		self.add_parameter('boxY', 1)
+		self.add_parameter('stroke', 1)
+		self.add_parameter('radius', 0.2)
 
 		# references to used behaviors
 
@@ -47,7 +51,7 @@ class test_zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:1225 y:49, x:1232 y:226
+		# x:1225 y:49, x:669 y:291
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -78,14 +82,14 @@ class test_zigzagSM(Behavior):
 
 			# x:509 y:31
 			OperatableStateMachine.add('zig',
-										search_zigzag(boxX=5, boxY=5, stroke=1, radius=0.4, side=False),
+										search_zigzag(boxX=self.boxX, boxY=self.boxY, stroke=self.stroke, radius=self.radius, side=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 			# x:286 y:31
 			OperatableStateMachine.add('init',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'zig'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})

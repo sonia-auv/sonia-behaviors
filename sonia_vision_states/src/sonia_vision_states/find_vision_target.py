@@ -28,6 +28,7 @@ class find_vision_target(EventState):
         
         self.param_number_samples = number_samples
         self.param_timeout = timeout
+        self.start_time = 0
 
     def vision_cb(self, data):
         self.number_of_found += 1

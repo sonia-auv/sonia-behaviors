@@ -8,9 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.aligment_with_stopping_sm import AligmentwithstoppingSM
-from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
-from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
@@ -41,8 +39,7 @@ class vision_path_new_algoSM(Behavior):
 		self.add_parameter('camera_no', 4)
 
 		# references to used behaviors
-		self.add_behavior(AligmentwithstoppingSM, 'Aligment with stopping')
-		self.add_behavior(search_snakeSM, 'search_snake')
+		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -74,9 +71,9 @@ class vision_path_new_algoSM(Behavior):
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
 										get_simple_vision_target(bounding_box_pixel=100, image_height=400, image_width=600, ratio_victory=0.05, number_of_average=10, max_mouvement=1, alignement_distance=5, long_rotation=False, timeout=20, speed_profile=0),
-										transitions={'success': 'rotate to path', 'align': 'Aligment with stopping', 'move': 'planner', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
+										transitions={'success': 'rotate_on_path', 'align': 'align', 'move': 'planner', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'input_traj': 'trajectory', 'pose': 'target_pose', 'bounding_box': 'bounding_box'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'input_trajectory': 'trajectory', 'output_trajectory': 'output_trajectory', 'bounding_box': 'bounding_box'})
 
 			# x:253 y:45
 			OperatableStateMachine.add('init_traj',
@@ -90,18 +87,18 @@ class vision_path_new_algoSM(Behavior):
 										send_to_planner(),
 										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'target_pose'})
+										remapping={'input_traj': 'output_trajectory'})
 
-			# x:1100 y:240
-			OperatableStateMachine.add('rotate to path',
-										move_to_target(),
+			# x:1093 y:226
+			OperatableStateMachine.add('rotate_on_path',
+										send_to_planner(),
 										transitions={'continue': 'stop_filter_success', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'target_pose'})
+										remapping={'input_traj': 'output_trajectory'})
 
-			# x:330 y:201
-			OperatableStateMachine.add('search_snake',
-										self.use_behavior(search_snakeSM, 'search_snake'),
+			# x:319 y:187
+			OperatableStateMachine.add('search_zigzag',
+										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
@@ -127,12 +124,12 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:784 y:247
-			OperatableStateMachine.add('Aligment with stopping',
-										self.use_behavior(AligmentwithstoppingSM, 'Aligment with stopping'),
-										transitions={'lost_target': 'stop_filter_lost', 'failed': 'stop_filter_fail', 'success': 'get_target'},
-										autonomy={'lost_target': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'success': Autonomy.Inherit},
-										remapping={'target': 'target_pose', 'filterchain': 'filterchain', 'header_name': 'header_name', 'bounding_box': 'bounding_box'})
+			# x:774 y:225
+			OperatableStateMachine.add('align',
+										send_to_planner(),
+										transitions={'continue': 'get_target', 'failed': 'stop_filter_lost'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'output_trajectory'})
 
 
 		return _state_machine

@@ -8,9 +8,10 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.squarry_circle_sm import squarry_circleSM
+from sonia_flexbe_behaviors.test_zigzag_sm import test_zigzagSM
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
+from sonia_vision_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -18,24 +19,23 @@ from sonia_vision_states.find_vision_target import find_vision_target
 
 
 '''
-Created on Mon Nov 15 2021
-@author: William Brouillard
+Created on Wed May 18 2022
+@author: KY
 '''
-class search_circleSM(Behavior):
+class search_zigzagSM(Behavior):
 	'''
-	Looking for a vision target in a squarry circle pattern.
+	Search mouvement in a zigzag patern.
 	'''
 
 
 	def __init__(self):
-		super(search_circleSM, self).__init__()
-		self.name = 'search_circle'
+		super(search_zigzagSM, self).__init__()
+		self.name = 'search_zigzag'
 
 		# parameters of this behavior
-		self.add_parameter('time_stop_search', 105)
 
 		# references to used behaviors
-		self.add_behavior(squarry_circleSM, 'move with search/squarry_circle')
+		self.add_behavior(test_zigzagSM, 'Container/test_zigzag')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -47,33 +47,33 @@ class search_circleSM(Behavior):
 
 
 	def create(self):
-		# x:683 y:76, x:446 y:218, x:179 y:231
+		# x:966 y:299, x:614 y:439, x:407 y:424
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
-		_state_machine.userdata.target = ' '
+		_state_machine.userdata.target = ''
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:374 y:297, x:559 y:126, x:401 y:134, x:469 y:41, x:608 y:67, x:595 y:178, x:397 y:202
-		_sm_move_with_search_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266, x:736 y:185
+		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
+										('lost_target', [('test_zigzag', 'finished')]),
+										('failed', [('test_zigzag', 'failed')]),
 										('finished', [('find_target', 'continue')]),
-										('lost_target', [('find_target', 'failed')]),
-										('lost_target', [('squarry_circle', 'finished')]),
-										('failed', [('squarry_circle', 'failed')])
+										('lost_target', [('find_target', 'failed')])
 										])
 
-		with _sm_move_with_search_0:
-			# x:95 y:47
-			OperatableStateMachine.add('squarry_circle',
-										self.use_behavior(squarry_circleSM, 'move with search/squarry_circle'),
+		with _sm_container_0:
+			# x:286 y:59
+			OperatableStateMachine.add('test_zigzag',
+										self.use_behavior(test_zigzagSM, 'Container/test_zigzag'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:91 y:291
+			# x:192 y:232
 			OperatableStateMachine.add('find_target',
-										find_vision_target(number_samples=10, timeout=self.time_stop_search),
+										find_vision_target(number_samples=10, timeout=50),
 										transitions={'continue': 'finished', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target'})
@@ -81,18 +81,25 @@ class search_circleSM(Behavior):
 
 
 		with _state_machine:
-			# x:122 y:66
-			OperatableStateMachine.add('move with search',
-										_sm_move_with_search_0,
-										transitions={'finished': 'stop mouvement', 'failed': 'failed', 'lost_target': 'lost_target'},
+			# x:81 y:263
+			OperatableStateMachine.add('start_filter',
+										start_filter_chain(param_node_name='simple_pipe_straight', header_name='pipe straight', camera_no=4, param_cmd=1),
+										transitions={'continue': 'Container', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'target', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+
+			# x:640 y:159
+			OperatableStateMachine.add('stop',
+										stop_move(timeout=3),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'lost_target'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:223 y:170
+			OperatableStateMachine.add('Container',
+										_sm_container_0,
+										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
-
-			# x:413 y:42
-			OperatableStateMachine.add('stop mouvement',
-										stop_move(timeout=10),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
