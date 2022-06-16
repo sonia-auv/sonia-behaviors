@@ -55,12 +55,9 @@ class wait_target_reached(EventState):
 
     def execute(self, userdata):
         if self.is_alive == True:
-            if self.mpc_mode == 10:
-                if self.traj_complete == True:
-                    self.time_diff = time() - self.launch_time
-            else:
+            if self.traj_complete == True:
                 self.time_diff = time() - self.launch_time
-            if self.time_diff > 15 or self.target_reached == True:
+            if self.time_diff > 5 or self.target_reached == True:
                 if self.target_reached == True:
                     Logger.log("Target Reached", Logger.REPORT_HINT)
                     return 'target_reached'
