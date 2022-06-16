@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_filterchain">
+
+	<executable package_path="sonia_flexbe_behaviors.test_filterchain_sm" class="test_filterchainSM" />
+	<tagstring>vision</tagstring>
+	<author>guilhem</author>
+	<date>Fri May 13 2022</date>
+	<description>
+		test
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="cam_numero" default="0" label="cam_numero" hint="Sets the cam_numero">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="text" name="filterchain" default="" label="filterchain" hint="Sets the filterchain" />
+
+		<param type="text" name="target" default="" label="target" hint="Sets the target" />
+
+	</params>
+
+
+</behavior>

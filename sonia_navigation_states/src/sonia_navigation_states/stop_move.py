@@ -18,6 +18,10 @@ class stop_move(EventState):
 
         super(stop_move, self).__init__(outcomes=['target_reached', 'target_not_reached','error'])
 
+        self.launch_time = 0
+        self.time_diff = 0
+        self.trajectory_done_prev = True
+        self.traj_complete = False
         self.param_timeout = timeout
         self.reset_trajectory = rospy.Publisher('/proc_control/reset_trajectory', Bool, queue_size=2)
         self.traj_complete = False
@@ -31,6 +35,7 @@ class stop_move(EventState):
         if self.trajectory_done != self.trajectory_done_prev:
             if self.trajectory_done == False:
                 Logger.log("Reset traj has been received", Logger.REPORT_HINT)
+
             elif self.trajectory_done == True:
                 self.launch_time = time()
                 self.traj_complete = True
@@ -65,3 +70,4 @@ class stop_move(EventState):
 
     def on_exit(self, userdata):
         self.get_controller_info_sub.unregister()
+

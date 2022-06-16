@@ -206,7 +206,6 @@ class get_simple_vision_target(EventState):
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
-            
             self.parse_data = False
             if self.param_ra == True:
                 Logger.log('Rotation the image for deep learning', Logger.REPORT_HINT)

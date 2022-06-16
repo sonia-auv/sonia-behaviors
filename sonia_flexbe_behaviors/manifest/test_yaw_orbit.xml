@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_yaw_orbit">
+
+	<executable package_path="sonia_flexbe_behaviors.test_yaw_orbit_sm" class="test_yaw_orbitSM" />
+	<tagstring></tagstring>
+	<author>lamarre</author>
+	<date>Wed May 11 2022</date>
+	<description>
+		test yaw_orbit state
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

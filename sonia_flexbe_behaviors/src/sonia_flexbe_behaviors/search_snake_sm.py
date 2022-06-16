@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
 from sonia_vision_states.find_vision_target import find_vision_target
 from sonia_navigation_states.stop_move import stop_move
+
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -58,14 +59,14 @@ class search_snakeSM(Behavior):
 
 		# x:349 y:161, x:437 y:28, x:414 y:120, x:322 y:249, x:598 y:122, x:641 y:62, x:543 y:252
 		_sm_snake_searching_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'], conditions=[
-										('lost_target', [('snake_mouvement', 'finished')]),
-										('failed', [('snake_mouvement', 'failed')]),
 										('lost_target', [('find target', 'failed')]),
-										('finished', [('find target', 'continue')])
+										('finished', [('find target', 'continue')]),
+										('lost_target', [('snake_mouvement', 'finished')]),
+										('failed', [('snake_mouvement', 'failed')])
 										])
 
 		with _sm_snake_searching_0:
-			# x:126 y:63
+			# x:95 y:39
 			OperatableStateMachine.add('snake_mouvement',
 										self.use_behavior(snake_mouvementSM, 'Snake searching/snake_mouvement'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
@@ -81,16 +82,16 @@ class search_snakeSM(Behavior):
 
 
 		with _state_machine:
-			# x:111 y:54
+			# x:90 y:76
 			OperatableStateMachine.add('Snake searching',
 										_sm_snake_searching_0,
-										transitions={'finished': 'stop mouvement', 'failed': 'failed', 'lost_target': 'lost_target'},
+										transitions={'finished': 'found target', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target'})
 
-			# x:378 y:39
-			OperatableStateMachine.add('stop mouvement',
-										stop_move(timeout=20),
+			# x:338 y:63
+			OperatableStateMachine.add('found target',
+										stop_move(timeout=3),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
