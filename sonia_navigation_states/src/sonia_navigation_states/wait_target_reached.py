@@ -31,11 +31,6 @@ class wait_target_reached(EventState):
         self.is_alive = data.is_mpc_alive
         self.mpc_mode = data.mpc_mode
 
-        # Logger.log("Controller => Target Reached :" + str(self.target_reached) + \
-        #     " Trajectory Done :"+ str(self.trajectory_done) + \
-        #     " Previous TD :" + str(self.trajectory_done_prev) + \
-        #     " MPC Alive :" + str(self.is_alive), Logger.REPORT_HINT)
-
         if self.trajectory_done != self.trajectory_done_prev:
             if self.trajectory_done == False:
                 Logger.log("Trajectory has been received", Logger.REPORT_HINT)
@@ -57,7 +52,7 @@ class wait_target_reached(EventState):
         if self.is_alive == True:
             if self.traj_complete == True:
                 self.time_diff = time() - self.launch_time
-            if self.time_diff > 5 or self.target_reached == True:
+            if self.time_diff > 60 or self.target_reached == True:
                 if self.target_reached == True:
                     Logger.log("Target Reached", Logger.REPORT_HINT)
                     return 'target_reached'
