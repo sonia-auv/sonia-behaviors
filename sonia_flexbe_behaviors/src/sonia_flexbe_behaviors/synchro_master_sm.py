@@ -45,7 +45,7 @@ class SynchroMasterSM(Behavior):
 
 
 	def create(self):
-		# x:791 y:272, x:342 y:253, x:572 y:57
+		# x:791 y:272, x:437 y:267, x:572 y:57
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'timeout'])
 
 		# Additional creation code can be added inside the following tags

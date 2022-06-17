@@ -17,7 +17,14 @@ class synchro_master(EventState):
         Synchronize a mission with the slave. The master changes depth to reduce the
         chance of hitting each submarine.
 
+        -- depth_change         Bool        When synchronizing, the depth will be change if needed for the
+                                            next mission
+        -- max_depth_surface    Float       The minimum depth that the submarine can go if the depth is changing
+        -- max_depth_bottom     Float       The maximum depth that the submarine can go if the depth is changing
+        -- min_depth_offset     Float       The difference required between the submarines
         -- mission_id           UInt8       Position of the mission in the array for the mission to sync
+        -- timeout              UInt16      Maximum time to wait for the state to complete. Will be resest if the state
+                                            is exited to change the depth      
 
         #> depth_change          AddPose    Pose for the new depth requested for the submarine
 
@@ -30,8 +37,6 @@ class synchro_master(EventState):
     def __init__(self, depth_change=True, max_depth_surface=0.5, max_depth_bottom=1.5, min_depth_offset=1,  mission_id=0, timeout=180):
         super(synchro_master, self).__init__(outcomes=['continue', 'failed', 'timeout', 'pose_change_depth'],
                                              output_keys=['depth_change'])
-        self.array = Int8MultiArray()
-        self.other_array = Int8MultiArray()
         self.depth_change = depth_change
         self.max_depth_surface = max_depth_surface
         self.max_depth_bottom = max_depth_bottom
@@ -137,7 +142,7 @@ class synchro_master(EventState):
         if msg.data[self.mission_id] > 1 and self.mission_to_do == True:
             Logger.log('Mission has be completed while waiting. Synching the submarines', Logger.REPORT_HINT)
             
-            self.sync = rospy.Publisher('/proc_underwater_com/sync_send_msg', Bool, queue_size=2)
+            self.sync = rospy.Publisher('/proc_underwater_com/send_sync_request', Bool, queue_size=2)
 
             sync_msg = Bool()
             sync_msg.data = True
