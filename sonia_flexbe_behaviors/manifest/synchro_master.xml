@@ -12,6 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="Move with Addpose msg" />
 
 	<!-- Available Parameters -->
 
