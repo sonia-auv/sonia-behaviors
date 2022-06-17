@@ -143,6 +143,7 @@ class synchro_master(EventState):
             sync_msg.data = True
             self.sync.publish(sync_msg)
 
+            self.sync.unregister()
             self.sync_in_progress = True
         
     def on_enter(self, userdata):
