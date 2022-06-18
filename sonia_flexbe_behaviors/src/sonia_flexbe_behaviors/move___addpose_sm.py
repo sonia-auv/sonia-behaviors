@@ -8,10 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_navigation_states.add_addpose_to_trajectory import add_addpose_to_trajectory
 from sonia_navigation_states.init_trajectory import init_trajectory
-from sonia_navigation_states.search_zigzag import search_zigzag
 from sonia_navigation_states.send_to_planner import send_to_planner
-from sonia_navigation_states.set_control_mode import set_control_mode
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -20,24 +19,20 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Thu May 05 2022
-@author: lamarre
+Created on Tue Jun 14 2022
+@author: FA
 '''
-class test_zigzagSM(Behavior):
+class MoveAddposeSM(Behavior):
 	'''
-	test zigzag state
+	This behavior use the msg Addpose to create the needed trajectory. This should only be use for the vision. The behavior "Move" should be use to create a single mouvement.
 	'''
 
 
 	def __init__(self):
-		super(test_zigzagSM, self).__init__()
-		self.name = 'test_zigzag'
+		super(MoveAddposeSM, self).__init__()
+		self.name = 'Move - Addpose'
 
 		# parameters of this behavior
-		self.add_parameter('boxX', 4)
-		self.add_parameter('boxY', 1)
-		self.add_parameter('stroke', 1)
-		self.add_parameter('radius', 0.2)
 
 		# references to used behaviors
 
@@ -51,8 +46,9 @@ class test_zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:1225 y:49, x:669 y:291
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:833 y:390, x:1133 y:90, x:1133 y:290
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'failed_target_reached'], input_keys=['pose'])
+		_state_machine.userdata.pose = ' '
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -61,38 +57,32 @@ class test_zigzagSM(Behavior):
 
 
 		with _state_machine:
-			# x:63 y:27
-			OperatableStateMachine.add('mode',
-										set_control_mode(mode=10, timeout=2),
-										transitions={'continue': 'init', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+			# x:133 y:67
+			OperatableStateMachine.add('init_traj',
+										init_trajectory(interpolation_method=0),
+										transitions={'continue': 'add_addpose_msg'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'input_traj'})
 
-			# x:723 y:32
-			OperatableStateMachine.add('send',
+			# x:733 y:67
+			OperatableStateMachine.add('send_to_planner',
 										send_to_planner(),
-										transitions={'continue': 'tr', 'failed': 'failed'},
+										transitions={'continue': 'target_reached', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:946 y:34
-			OperatableStateMachine.add('tr',
-										wait_target_reached(timeout=15),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+			# x:733 y:202
+			OperatableStateMachine.add('target_reached',
+										wait_target_reached(),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed_target_reached', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:509 y:31
-			OperatableStateMachine.add('zig',
-										search_zigzag(boxX=self.boxX, boxY=self.boxY, stroke=self.stroke, radius=self.radius, side=False),
-										transitions={'continue': 'send'},
+			# x:426 y:67
+			OperatableStateMachine.add('add_addpose_msg',
+										add_addpose_to_trajectory(),
+										transitions={'continue': 'send_to_planner'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
-
-			# x:286 y:31
-			OperatableStateMachine.add('init',
-										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'zig'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
+										remapping={'input_traj': 'input_traj', 'pose': 'pose', 'trajectory': 'trajectory'})
 
 
 		return _state_machine

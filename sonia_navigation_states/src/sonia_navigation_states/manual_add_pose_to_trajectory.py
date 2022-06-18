@@ -11,7 +11,7 @@ import sonia_navigation_states.modules.navigation_utilities as navUtils
 from flexbe_core import EventState, Logger
 from sonia_common.msg import MultiAddPose
 
-class add_pose_to_trajectory(EventState):
+class manual_add_pose_to_trajectory(EventState):
 
     '''
         Create the object for the trajectory
@@ -42,7 +42,7 @@ class add_pose_to_trajectory(EventState):
 
     def __init__(self, positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False):
         
-        super(add_pose_to_trajectory, self).__init__(outcomes=['continue'],
+        super(manual_add_pose_to_trajectory, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
                                                      output_keys=['trajectory'])
         # create addpose object

@@ -10,7 +10,7 @@ import sonia_navigation_states.modules.navigation_utilities as navUtils
 from sonia_common.msg import VisionTarget, MultiAddPose, AddPose
 from geometry_msgs.msg import Point, Vector3
 
-class get_simple_vision_target(EventState):
+class get_bottom_vision_target(EventState):
 
     '''
         Get the movement target from vision filterchain
@@ -51,7 +51,7 @@ class get_simple_vision_target(EventState):
 
     def __init__(self, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
         
-        super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
+        super(get_bottom_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain', 'camera_no', 'header_name', 'input_trajectory'],
                                                 output_keys = ['output_trajectory', 'camera', 'angle'])
 
@@ -181,19 +181,19 @@ class get_simple_vision_target(EventState):
 
     def execute(self, userdata):
         actual = time() - self.start_time
-        if self.parse_data == True:
+        if self.parse_data:
             self.parse_data = False
             Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
-            if self.position_reached == True and self.alignement_reached == True:
-                if self.cam_bottom == True :
+            if self.position_reached and self.alignement_reached:
+                if self.cam_bottom:
                     userdata.angle = self.angle
                     userdata.output_trajectory = userdata.input_trajectory
                     userdata.camera = 1
                 return 'success'
-            elif self.alignement_reached == False:
+            elif not self.alignement_reached:
                 userdata.output_trajectory = self.align_with_vision()
                 return 'align'
-            elif self.position_reached == False:
+            elif not self.position_reached:
                 userdata.output_trajectory = self.position_with_vision()
                 return 'move'
             else:

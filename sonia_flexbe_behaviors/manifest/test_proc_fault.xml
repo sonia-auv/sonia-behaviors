@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test proc fault">
+
+	<executable package_path="sonia_flexbe_behaviors.test_proc_fault_sm" class="testprocfaultSM" />
+	<tagstring>test</tagstring>
+	<author>FA</author>
+	<date>Sat May 28 2022</date>
+	<description>
+		Test the fault detection of different modules
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
