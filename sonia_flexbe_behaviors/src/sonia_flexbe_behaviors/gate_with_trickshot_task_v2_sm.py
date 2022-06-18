@@ -8,8 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
-from sonia_navigation_states.trick_shot import trick_shot
+from sonia_flexbe_behaviors.move_to_gate_sm import move_to_gateSM
+from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_navigation_states.set_control_mode import set_control_mode
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,24 +18,23 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Mon Nov 15 2021
-@author: FA
+Created on Thu May 31 2022
+@author: Guilhem Schena
 '''
-class move_to_gateSM(Behavior):
+class gate_with_trickshot_task_v2SM(Behavior):
 	'''
-	Mouvement to gate with trickshot
+	Init the submarine and move through the gate.
 	'''
 
 
 	def __init__(self):
-		super(move_to_gateSM, self).__init__()
-		self.name = 'move_to_gate'
+		super(gate_with_trickshot_task_v2SM, self).__init__()
+		self.name = 'gate_with_trickshot_task_v2'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
-		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
+		self.add_behavior(move_to_gateSM, 'move_to_gate')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,7 +46,7 @@ class move_to_gateSM(Behavior):
 
 
 	def create(self):
-		# x:846 y:87, x:398 y:199
+		# x:878 y:587, x:465 y:590
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,17 +56,24 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:191 y:53
-			OperatableStateMachine.add('move_to_gate_no_trickshot',
-										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
-										transitions={'finished': 'trickshot', 'failed': 'failed'},
+			# x:98 y:132
+			OperatableStateMachine.add('set control mode',
+										set_control_mode(mode=11, timeout=2),
+										transitions={'continue': 'move_to_gate', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:473 y:250
+			OperatableStateMachine.add('move_to_gate',
+										self.use_behavior(move_to_gateSM, 'move_to_gate'),
+										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:575 y:69
-			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=3),
-										transitions={'continue': 'finished'},
-										autonomy={'continue': Autonomy.Off})
+			# x:657 y:560
+			OperatableStateMachine.add('move_buffer',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
 
 
 		return _state_machine

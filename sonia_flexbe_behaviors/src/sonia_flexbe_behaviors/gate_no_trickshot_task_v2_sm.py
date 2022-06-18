@@ -8,10 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
-from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
 from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
-from sonia_flexbe_behaviors.trickshot_yaw_sm import trickshotyawSM
+from sonia_flexbe_states.move_to_target import move_to_target
+from sonia_navigation_states.set_control_mode import set_control_mode
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -19,26 +18,23 @@ from sonia_flexbe_behaviors.trickshot_yaw_sm import trickshotyawSM
 
 
 '''
-Created on Sun Nov 21 2021
-@author: FA
+Created on Thu May 31 2022
+@author: Guilhem Schena
 '''
-class gate_trickshot_yaw_taskSM(Behavior):
+class gate_no_trickshot_task_v2SM(Behavior):
 	'''
-	Init the sub, coin filp and gate with a yaw trickshot only.
+	Init the submarine and move through the gate.
 	'''
 
 
 	def __init__(self):
-		super(gate_trickshot_yaw_taskSM, self).__init__()
-		self.name = 'gate_trickshot_yaw_task'
+		super(gate_no_trickshot_task_v2SM, self).__init__()
+		self.name = 'gate_no_trickshot_task_v2'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(coin_flipSM, 'coin_flip')
-		self.add_behavior(init_submarineSM, 'init_submarine')
 		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
-		self.add_behavior(trickshotyawSM, 'trickshot yaw')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -50,7 +46,7 @@ class gate_trickshot_yaw_taskSM(Behavior):
 
 
 	def create(self):
-		# x:796 y:384, x:377 y:410
+		# x:878 y:587, x:465 y:590
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -60,29 +56,24 @@ class gate_trickshot_yaw_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:165 y:95
-			OperatableStateMachine.add('init_submarine',
-										self.use_behavior(init_submarineSM, 'init_submarine'),
-										transitions={'finished': 'coin_flip', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:98 y:132
+			OperatableStateMachine.add('set control mode',
+										set_control_mode(mode=11, timeout=2),
+										transitions={'continue': 'move_to_gate_no_trickshot', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:727 y:127
+			# x:645 y:286
 			OperatableStateMachine.add('move_to_gate_no_trickshot',
 										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
-										transitions={'finished': 'trickshot yaw', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:612 y:311
-			OperatableStateMachine.add('trickshot yaw',
-										self.use_behavior(trickshotyawSM, 'trickshot yaw'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:446 y:90
-			OperatableStateMachine.add('coin_flip',
-										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'move_to_gate_no_trickshot', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:657 y:560
+			OperatableStateMachine.add('move_buffer',
+										move_to_target(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'pose': 'buffer_pose'})
 
 
 		return _state_machine
