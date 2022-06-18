@@ -15,7 +15,7 @@ class wait_target_reached(EventState):
         target reached.
     '''
 
-    def __init__(self):
+    def __init__(self, timeout=30):
         
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 
@@ -23,13 +23,12 @@ class wait_target_reached(EventState):
         self.time_diff = 0
         self.trajectory_done_prev = True
         self.traj_complete = False
-        self.mpc_mode = 0
+        self.param_timeout = timeout
         
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
         self.trajectory_done = data.is_trajectory_done
         self.is_alive = data.is_mpc_alive
-        self.mpc_mode = data.mpc_mode
 
         if self.trajectory_done != self.trajectory_done_prev:
             if self.trajectory_done == False:
@@ -52,7 +51,7 @@ class wait_target_reached(EventState):
         if self.is_alive == True:
             if self.traj_complete == True:
                 self.time_diff = time() - self.launch_time
-            if self.time_diff > 60 or self.target_reached == True:
+            if self.time_diff > self.param_timeout or self.target_reached == True:
                 if self.target_reached == True:
                     Logger.log("Target Reached", Logger.REPORT_HINT)
                     return 'target_reached'

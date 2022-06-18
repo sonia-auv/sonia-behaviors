@@ -53,7 +53,7 @@ class vision_path_new_algoSM(Behavior):
 
 
 	def create(self):
-		# x:607 y:410, x:550 y:677, x:1237 y:280
+		# x:1135 y:470, x:550 y:677, x:1237 y:280
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -72,7 +72,7 @@ class vision_path_new_algoSM(Behavior):
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel_height=300, bounding_box_pixel_width=50, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, alignement_distance=1, long_rotation=False, timeout=20, speed_profile=0),
+										get_simple_vision_target(bounding_box_pixel_height=300, bounding_box_pixel_width=50, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=20, speed_profile=0),
 										transitions={'success': 'rotate', 'align': 'align', 'move': 'planner', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name', 'input_trajectory': 'trajectory', 'output_trajectory': 'output_trajectory', 'camera': 'camera', 'angle': 'angle'})
@@ -84,7 +84,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:270 y:131
+			# x:216 y:203
 			OperatableStateMachine.add('planner',
 										send_to_planner(),
 										transitions={'continue': 'wait_move', 'failed': 'stop_filter_fail'},
@@ -98,7 +98,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'output_trajectory', 'camera': 'camera', 'angle': 'angle', 'trajectory': 'trajectory'})
 
-			# x:571 y:162
+			# x:581 y:234
 			OperatableStateMachine.add('rotate_on_path',
 										send_to_planner(),
 										transitions={'continue': 'wait_rotate', 'failed': 'stop_filter_fail'},
@@ -126,7 +126,7 @@ class vision_path_new_algoSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:577 y:248
+			# x:989 y:565
 			OperatableStateMachine.add('stop_filter_success',
 										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=2),
 										transitions={'continue': 'finished', 'failed': 'finished'},
@@ -135,19 +135,19 @@ class vision_path_new_algoSM(Behavior):
 
 			# x:783 y:144
 			OperatableStateMachine.add('wait',
-										wait_target_reached(),
+										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'stop_filter_fail', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:396 y:199
 			OperatableStateMachine.add('wait_move',
-										wait_target_reached(),
+										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'stop_filter_fail', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:793 y:486
 			OperatableStateMachine.add('wait_rotate',
-										wait_target_reached(),
+										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'stop_filter_success', 'target_not_reached': 'stop_filter_fail', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 

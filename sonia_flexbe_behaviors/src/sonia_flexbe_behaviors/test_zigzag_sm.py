@@ -76,7 +76,7 @@ class test_zigzagSM(Behavior):
 
 			# x:946 y:34
 			OperatableStateMachine.add('tr',
-										wait_target_reached(),
+										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 

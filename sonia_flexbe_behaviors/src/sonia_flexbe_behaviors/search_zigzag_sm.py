@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.test_zigzag_sm import test_zigzagSM
+from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
 from sonia_vision_states.start_filter_chain import start_filter_chain
@@ -47,8 +48,8 @@ class search_zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:966 y:299, x:614 y:439, x:407 y:424
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target'])
+		# x:966 y:299, x:498 y:378, x:522 y:207, x:549 y:268
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'], input_keys=['target'])
 		_state_machine.userdata.target = ''
 
 		# Additional creation code can be added inside the following tags
@@ -88,13 +89,19 @@ class search_zigzagSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'target', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
+			# x:664 y:321
+			OperatableStateMachine.add('is_moving',
+										is_moving(timeout=15),
+										transitions={'stopped': 'finished', 'moving': 'failed', 'error': 'controller_error'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
 			# x:640 y:159
 			OperatableStateMachine.add('stop',
-										stop_move(timeout=3),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'lost_target'},
+										stop_move(timeout=15),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'is_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:223 y:170
+			# x:294 y:152
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
 										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'lost_target'},

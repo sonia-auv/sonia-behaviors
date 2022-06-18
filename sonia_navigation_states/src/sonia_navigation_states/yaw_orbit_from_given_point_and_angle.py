@@ -84,11 +84,9 @@ class yaw_orbit_from_given_point_and_angle(EventState):
         ppt = 8 # point per turn
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
-        Logger.log(degstep, Logger.REPORT_HINT)
 
         nFullPoints = int(abs(math.ceil(userdata.angle / degstep)))
-        Logger.log(nFullPoints, Logger.REPORT_HINT)
-        residueDegStep = abs(userdata.angle % degstep)
+        residueDegStep = abs(userdata.angle) % degstep
         residueRadStep = (residueDegStep*2*math.pi) / 360.0 
 
         # get direction (cw vs ccw)
