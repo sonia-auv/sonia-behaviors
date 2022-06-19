@@ -57,7 +57,7 @@ class SynchroMasterSM(Behavior):
 		with _state_machine:
 			# x:157 y:64
 			OperatableStateMachine.add('sync',
-										synchro_master(depth_change=True, max_depth_surface=0.5, max_depth_bottom=1.5, min_depth_offset=1, mission_id=2, timeout=180),
+										synchro_master(depth_change=True, max_depth_surface=0.5, max_depth_bottom=2.5, min_depth_offset=0.75, mission_id=2, timeout=180),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'timeout', 'pose_change_depth': 'Move with Addpose msg'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off, 'pose_change_depth': Autonomy.Off},
 										remapping={'depth_change': 'depth_change'})

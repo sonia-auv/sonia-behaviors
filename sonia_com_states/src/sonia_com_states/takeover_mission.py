@@ -3,6 +3,7 @@
 
 import rospy
 import sonia_com_states.modules.com_utilities as comUtils
+from time import sleep
 
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Int8MultiArray
@@ -27,6 +28,8 @@ class takeover_mission(EventState):
         self.message_received = False
         self.message_received_other = False
 
+        self.update_array = rospy.Publisher('/proc_underwater_com/mission_state_msg', ModemUpdateMissionList, queue_size=2)
+
     def mission_array_cb(self, msg):
         Logger.log('Received the updated state of the sub', Logger.REPORT_HINT)
         Logger.log(str(msg.data), Logger.REPORT_HINT)
@@ -42,7 +45,6 @@ class takeover_mission(EventState):
     def on_enter(self, userdata):
         self.receive_array = rospy.Subscriber('/proc_underwater_com/sub_mission_list', Int8MultiArray, self.mission_array_cb)
         self.other_receive_array = rospy.Subscriber('/proc_underwater_com/other_sub_mission_list', Int8MultiArray, self.other_mission_array_cb)
-        self.update_array = rospy.Publisher('/proc_underwater_com/to_define', ModemUpdateMissionList, queue_size=1)
         
     def execute(self, userdata):
         if self.message_received == True and self.message_received_other == True:
@@ -59,4 +61,3 @@ class takeover_mission(EventState):
     def on_exit(self, userdata):
         self.receive_array.unregister()
         self.other_receive_array.unregister()
-        self.update_array.unregister()

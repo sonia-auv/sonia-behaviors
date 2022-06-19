@@ -13,11 +13,13 @@ class synchro_slave(EventState):
         Synchronize a mission with the master. This state needs to be placed before the mission that
         needs to be synchronise.
 
+        -- timeout          uint16      Maximum time to wait for the synch request
+
         <=continue                      Both mission completed.
         <=timeout                       Timeout reached. The submarine didn't receive the message
     '''
 
-    def __init__(self, timeout=300):
+    def __init__(self, timeout=120):
         super(synchro_slave, self).__init__(outcomes=['continue', 'timeout'])
         self.timeout = timeout
         self.message_received = False
@@ -30,7 +32,7 @@ class synchro_slave(EventState):
             self.message_received = True
         
     def on_enter(self, userdata):
-        self.other_receive_array = rospy.Subscriber('/proc_underwater_com/synchronisation_slave', Bool, self.receive_synchro_msg_cb)
+        self.other_receive_array = rospy.Subscriber('/proc_underwater_com/sync_requested', Bool, self.receive_synchro_msg_cb)
         self.time_start = time()
         
     def execute(self, userdata):

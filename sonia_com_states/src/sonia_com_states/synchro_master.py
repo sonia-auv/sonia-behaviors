@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 import rospy
-from time import time
+from time import time, sleep
 
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Int8MultiArray, Float32, Bool
@@ -125,7 +125,7 @@ class synchro_master(EventState):
             # Vérification de la profondeur de l'autre sous-marin
             if self.depth_change == True:
                 Logger.log('Verification from the other sub depth', Logger.REPORT_HINT)
-                self.get_current_position_sub = rospy.Subscriber('/telemetry/auv_states', Odometry, self.get_current_position_cb)
+                self.get_current_position_sub = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.get_current_position_cb)
                 self.get_depth_other_sub = rospy.Subscriber('/proc_underwater_com/other_sub_depth', Float32, self.get_depth_cb)
                 
                 # Demande pour obtenir la profondeur de l'autre sous-marin
@@ -141,18 +141,18 @@ class synchro_master(EventState):
                 
         if msg.data[self.mission_id] > 1 and self.mission_to_do == True:
             Logger.log('Mission has be completed while waiting. Synching the submarines', Logger.REPORT_HINT)
-            
-            self.sync = rospy.Publisher('/proc_underwater_com/send_sync_request', Bool, queue_size=2)
 
             sync_msg = Bool()
             sync_msg.data = True
             self.sync.publish(sync_msg)
-
-            self.sync.unregister()
+            
+            # This sleep is needed to ensure that the message is published
+            sleep(1)
             self.sync_in_progress = True
         
     def on_enter(self, userdata):
         self.other_receive_array = rospy.Subscriber('/proc_underwater_com/other_sub_mission_list', Int8MultiArray, self.other_mission_array_cb)
+        self.sync = rospy.Publisher('/proc_underwater_com/send_sync_request', Bool, queue_size=2)
         self.time_start = time()
         
     def execute(self, userdata):
@@ -179,3 +179,4 @@ class synchro_master(EventState):
 
     def on_exit(self, userdata):
         self.other_receive_array.unregister()
+        self.sync.unregister()

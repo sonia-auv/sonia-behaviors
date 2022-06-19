@@ -43,7 +43,7 @@ class SynchroslaveSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
+		# x:362 y:399, x:604 y:123
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'timeout'])
 
 		# Additional creation code can be added inside the following tags
@@ -53,7 +53,7 @@ class SynchroslaveSM(Behavior):
 
 
 		with _state_machine:
-			# x:167 y:67
+			# x:276 y:83
 			OperatableStateMachine.add('slave',
 										synchro_slave(timeout=20),
 										transitions={'continue': 'finished', 'timeout': 'timeout'},
