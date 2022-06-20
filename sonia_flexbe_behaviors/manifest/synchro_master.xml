@@ -3,11 +3,11 @@
 <behavior name="Synchro Master">
 
 	<executable package_path="sonia_flexbe_behaviors.synchro_master_sm" class="SynchroMasterSM" />
-	<tagstring>test</tagstring>
+	<tagstring>com</tagstring>
 	<author>FA</author>
-	<date>Wed Jun 08 2022</date>
+	<date>Wed Jun 19 2022</date>
 	<description>
-		Test du state pour la synchronisation du master
+		Synchronisation du master pour effectuer la tâche suivante ensemble.
 	</description>
 
 
@@ -15,5 +15,31 @@
 	<contains name="Move with Addpose msg" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="Change_depth" default="True" label="Change_depth" hint="Change the depth during sync" />
+
+		<param type="numeric" name="Max_distance_to_surface" default="0.5" label="Max_distance_to_surface" hint="Set the maximum allowed distance to the surface">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="Max_distance_to_bottom" default="2" label="Max_distance_to_bottom" hint="Set the maximum allowed distance to the bottom">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+		<param type="numeric" name="Difference_between_sub" default="0.75" label="Difference_between_sub" hint="Sets the difference between the sub to keep for sync">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="Mission_ID" default="0" label="Mission_ID" hint="Mission ID for the mission to sync the sub. State will check the previous mission.">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+	</params>
+
 
 </behavior>

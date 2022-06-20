@@ -179,4 +179,3 @@ class synchro_master(EventState):
 
     def on_exit(self, userdata):
         self.other_receive_array.unregister()
-        self.sync.unregister()
