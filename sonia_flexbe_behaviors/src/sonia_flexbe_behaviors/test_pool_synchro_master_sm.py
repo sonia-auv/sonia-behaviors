@@ -20,7 +20,7 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 '''
 Created on Mon Jun 20 2022
-@author: test
+@author: FA
 '''
 class testpoolsynchromasterSM(Behavior):
 	'''

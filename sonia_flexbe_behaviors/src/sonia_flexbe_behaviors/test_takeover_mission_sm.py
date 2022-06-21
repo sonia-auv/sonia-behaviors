@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_com_states.synchro_slave import synchro_slave
+from sonia_com_states.takeover_mission import takeover_mission
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -16,18 +16,18 @@ from sonia_com_states.synchro_slave import synchro_slave
 
 
 '''
-Created on Fri Jun 10 2022
+Created on Tue Jun 07 2022
 @author: FA
 '''
-class SynchroslaveSM(Behavior):
+class testtakeovermissionSM(Behavior):
 	'''
-	Test the state for synchronisation of the slave with the master
+	Test the takeover mission for the submarine
 	'''
 
 
 	def __init__(self):
-		super(SynchroslaveSM, self).__init__()
-		self.name = 'Synchro slave'
+		super(testtakeovermissionSM, self).__init__()
+		self.name = 'test takeover mission'
 
 		# parameters of this behavior
 
@@ -43,8 +43,8 @@ class SynchroslaveSM(Behavior):
 
 
 	def create(self):
-		# x:362 y:399, x:604 y:123
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'timeout'])
+		# x:644 y:356, x:643 y:54
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -53,11 +53,11 @@ class SynchroslaveSM(Behavior):
 
 
 		with _state_machine:
-			# x:276 y:83
-			OperatableStateMachine.add('slave',
-										synchro_slave(timeout=20),
-										transitions={'continue': 'finished', 'timeout': 'timeout'},
-										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
+			# x:280 y:124
+			OperatableStateMachine.add('takeover',
+										takeover_mission(mission_id=1),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine

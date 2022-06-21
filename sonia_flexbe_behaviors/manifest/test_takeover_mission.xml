@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Get Update Mission">
+<behavior name="test takeover mission">
 
-	<executable package_path="sonia_flexbe_behaviors.get_update_mission_sm" class="GetUpdateMissionSM" />
+	<executable package_path="sonia_flexbe_behaviors.test_takeover_mission_sm" class="testtakeovermissionSM" />
 	<tagstring>test</tagstring>
 	<author>FA</author>
 	<date>Tue Jun 07 2022</date>
 	<description>
-		Get the mission list from the other submarine.
+		Test the takeover mission for the submarine
 	</description>
 
 

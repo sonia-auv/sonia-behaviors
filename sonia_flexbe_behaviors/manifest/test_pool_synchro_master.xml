@@ -3,8 +3,8 @@
 <behavior name="test pool synchro master">
 
 	<executable package_path="sonia_flexbe_behaviors.test_pool_synchro_master_sm" class="testpoolsynchromasterSM" />
-	<tagstring>FA</tagstring>
-	<author>test</author>
+	<tagstring>test</tagstring>
+	<author>FA</author>
 	<date>Mon Jun 20 2022</date>
 	<description>
 		Testing the synchronisation between the 2 subs with a 180deg rotation
