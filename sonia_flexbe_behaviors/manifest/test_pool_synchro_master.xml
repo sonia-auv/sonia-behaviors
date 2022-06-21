@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test pool synchro master">
+
+	<executable package_path="sonia_flexbe_behaviors.test_pool_synchro_master_sm" class="testpoolsynchromasterSM" />
+	<tagstring>FA</tagstring>
+	<author>test</author>
+	<date>Mon Jun 20 2022</date>
+	<description>
+		Testing the synchronisation between the 2 subs with a 180deg rotation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+	<contains name="Synchro Master" />
+
+	<!-- Available Parameters -->
+
+</behavior>
