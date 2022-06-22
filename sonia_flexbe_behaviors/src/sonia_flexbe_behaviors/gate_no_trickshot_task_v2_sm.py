@@ -58,7 +58,7 @@ class gate_no_trickshot_task_v2SM(Behavior):
 		with _state_machine:
 			# x:98 y:132
 			OperatableStateMachine.add('set control mode',
-										set_control_mode(mode=11, timeout=2),
+										set_control_mode(mode=11, timeout=5),
 										transitions={'continue': 'move_to_gate_no_trickshot', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 

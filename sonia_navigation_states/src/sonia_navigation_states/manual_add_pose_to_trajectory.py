@@ -23,12 +23,12 @@ class manual_add_pose_to_trajectory(EventState):
         -- orientationY     uint8           Rotation in pitch axis
         -- orientationZ     uint8           Rotation in yaw axis
         -- frame            uint8           0 : Absolute position and absolute angle
-                                                1 : Relative position and relative angle
-                                                2 : Relative position and absolute angle
-                                                3 : Absolute position and relative angle 
+                                            1 : Relative position and relative angle
+                                            2 : Relative position and absolute angle
+                                            3 : Absolute position and relative angle 
         -- speed            uint8           0 : Normal speed
-                                                1 : Fast speed
-                                                2 : Low speed
+                                            1 : Fast speed
+                                            2 : Low speed
         -- precision        float64         Precision of the movement
         -- long_rotation    bool            False : Quickest rotation
                                                 True : Follow the rotation 

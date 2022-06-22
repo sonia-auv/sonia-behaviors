@@ -3,7 +3,7 @@
 <behavior name="search_path">
 
 	<executable package_path="sonia_flexbe_behaviors.search_path_sm" class="search_pathSM" />
-	<tagstring>Task</tagstring>
+	<tagstring>search</tagstring>
 	<author>KY</author>
 	<date>Wed May 11 2022</date>
 	<description>

@@ -3,7 +3,7 @@
 <behavior name="search_zigzag">
 
 	<executable package_path="sonia_flexbe_behaviors.search_zigzag_sm" class="search_zigzagSM" />
-	<tagstring>test</tagstring>
+	<tagstring>search</tagstring>
 	<author>KY</author>
 	<date>Wed May 18 2022</date>
 	<description>

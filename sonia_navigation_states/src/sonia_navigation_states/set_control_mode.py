@@ -20,7 +20,7 @@ class set_control_mode(EventState):
         <= failed       Indicate that the mode hasnt been set
     """
 
-    def __init__(self, mode, timeout=2):
+    def __init__(self, mode, timeout=5):
         super(set_control_mode, self).__init__(outcomes=['continue', 'failed'])
         self.param_mode = mode
         self.mpc_mode = 0

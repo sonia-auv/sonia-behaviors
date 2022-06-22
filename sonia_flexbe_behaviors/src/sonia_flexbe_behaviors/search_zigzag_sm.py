@@ -91,7 +91,7 @@ class search_zigzagSM(Behavior):
 
 			# x:664 y:321
 			OperatableStateMachine.add('is_moving',
-										is_moving(timeout=15),
+										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'finished', 'moving': 'failed', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 

@@ -65,11 +65,11 @@ class search_pathSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:267 y:196
+			# x:506 y:118
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
+										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'lost_target', 'controller_error': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
 
