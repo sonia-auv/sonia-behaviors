@@ -20,7 +20,6 @@ class wait_target_reached(EventState):
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 
         self.launch_time = 0
-        self.time_diff = 0
         self.trajectory_done_prev = True
         self.traj_complete = False
         self.param_timeout = timeout
@@ -41,6 +40,8 @@ class wait_target_reached(EventState):
         self.trajectory_done_prev = self.trajectory_done
 
     def on_enter(self, userdata):
+        self.traj_complete = False
+        self.time_diff = 0
         self.target_reached = False
         self.trajectory_done = True
         self.is_alive = True
