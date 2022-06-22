@@ -83,7 +83,7 @@ class PrequalifSM(Behavior):
 
 			# x:284 y:306
 			OperatableStateMachine.add('pose 12',
-										add_pose_to_trajectory(positionX=8.072, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=1, precision=0, long_rotation=False),
+										add_pose_to_trajectory(positionX=8.072, positionY=-1, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=1, precision=0, long_rotation=False),
 										transitions={'continue': 'send to planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj10', 'trajectory': 'traj12'})
