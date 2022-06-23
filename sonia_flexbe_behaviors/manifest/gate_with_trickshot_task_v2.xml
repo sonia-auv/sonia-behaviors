@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move_to_gate" />
+	<contains name="move_to_gate_no_trickshot_v2" />
 
 	<!-- Available Parameters -->
 

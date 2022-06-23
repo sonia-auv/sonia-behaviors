@@ -8,7 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_to_gate_no_trickshot_v2_sm import move_to_gate_no_trickshot_v2SM
+from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
+from sonia_hardware_states.wait_mission import wait_mission
+from sonia_navigation_states.set_control_mode import set_control_mode
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -16,23 +18,23 @@ from sonia_flexbe_behaviors.move_to_gate_no_trickshot_v2_sm import move_to_gate_
 
 
 '''
-Created on Thu May 31 2022
-@author: Guilhem Schena
+Created on Thu Jun 23 2022
+@author: GS
 '''
-class gate_no_trickshot_task_v2SM(Behavior):
+class InitialisationpourtestSM(Behavior):
 	'''
-	Move through the gate, no trickshot
+	Initialise le sub
 	'''
 
 
 	def __init__(self):
-		super(gate_no_trickshot_task_v2SM, self).__init__()
-		self.name = 'gate_no_trickshot_task_v2'
+		super(InitialisationpourtestSM, self).__init__()
+		self.name = 'Initialisation pour test'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(move_to_gate_no_trickshot_v2SM, 'move_to_gate_no_trickshot_v2')
+		self.add_behavior(coin_flipSM, 'coin_flip')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -44,7 +46,7 @@ class gate_no_trickshot_task_v2SM(Behavior):
 
 
 	def create(self):
-		# x:950 y:89, x:465 y:590
+		# x:755 y:75, x:262 y:205
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -54,9 +56,21 @@ class gate_no_trickshot_task_v2SM(Behavior):
 
 
 		with _state_machine:
-			# x:460 y:89
-			OperatableStateMachine.add('move_to_gate_no_trickshot_v2',
-										self.use_behavior(move_to_gate_no_trickshot_v2SM, 'move_to_gate_no_trickshot_v2'),
+			# x:30 y:40
+			OperatableStateMachine.add('wait mission switch',
+										wait_mission(),
+										transitions={'continue': 'set mode', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:299 y:52
+			OperatableStateMachine.add('set mode',
+										set_control_mode(mode=10, timeout=5),
+										transitions={'continue': 'coin_flip', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:512 y:54
+			OperatableStateMachine.add('coin_flip',
+										self.use_behavior(coin_flipSM, 'coin_flip'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
