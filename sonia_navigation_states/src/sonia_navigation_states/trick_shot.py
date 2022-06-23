@@ -14,7 +14,7 @@ class trick_shot(EventState):
         Send multiple pose to do a trick shot in gate.
         [...]
 
-        --delay      uint8   Delay wanted at the .
+        -- delay      uint8   Delay wanted at the .
 
         <= continue     Indicate that trick shot is complete
     '''

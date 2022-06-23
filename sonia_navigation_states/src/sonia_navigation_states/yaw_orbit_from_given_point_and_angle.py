@@ -4,9 +4,7 @@
 # standars includes
 from time import time
 from xml.dom import UserDataHandler
-import rospy
 import math
-import cmath
 
 # Custom includes
 import sonia_navigation_states.modules.navigation_utilities as navUtils
@@ -21,7 +19,7 @@ class yaw_orbit_from_given_point_and_angle(EventState):
     This state generate a 2D orbit in the xy plane arround a given point.
     Essential orbit point.
         bottom AUV8 : [0.2415, 0]
-        bottom AUV7 : [X, X]
+        bottom AUV7 : [0.16818, 0]
 
         ># input_traj       MultiAddPose    Input trajectory
         ># camera           uint8           0: None
@@ -63,8 +61,8 @@ class yaw_orbit_from_given_point_and_angle(EventState):
             self.px = 0.2415
             self.py = 0
         elif userdata.camera == 2:
-            self.px = 0 # TODO: change
-            self.py = 0 # TODO: change
+            self.px = 0.16818
+            self.py = 0
 
 
     def execute(self, userdata):
@@ -72,6 +70,7 @@ class yaw_orbit_from_given_point_and_angle(EventState):
         # define msg object
         traj = userdata.input_traj
         new_traj = MultiAddPose()
+        new_traj.interpolation_method = 1
 
         # Add previous waypoint if needed
         if not traj.pose:
@@ -85,7 +84,7 @@ class yaw_orbit_from_given_point_and_angle(EventState):
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 
-        nFullPoints = int(abs(math.ceil(userdata.angle / degstep)))
+        nFullPoints = int(math.floor(abs(userdata.angle) / degstep))
         residueDegStep = abs(userdata.angle) % degstep
         residueRadStep = (residueDegStep*2*math.pi) / 360.0 
 

@@ -13,8 +13,8 @@ class set_control_mode(EventState):
         Set the control mode of the sub. (change with control modif)
         [...]
 
-        --mode      uint8   The control mode wanted.
-        --timeout   uint8   The time allowed to do the change.
+        -- mode          uint8       The control mode wanted
+        -- timeout       uint8       The time allowed to do the change.
 
         <= continue     Indicate that the mode has been set.
         <= failed       Indicate that the mode hasnt been set

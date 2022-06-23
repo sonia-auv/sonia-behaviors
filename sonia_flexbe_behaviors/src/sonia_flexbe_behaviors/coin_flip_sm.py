@@ -48,7 +48,7 @@ class coin_flipSM(Behavior):
 
 
 	def create(self):
-		# x:1058 y:544, x:610 y:597
+		# x:765 y:559, x:215 y:565
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,44 +58,44 @@ class coin_flipSM(Behavior):
 
 
 		with _state_machine:
-			# x:38 y:85
+			# x:461 y:47
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'dive'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_traj'})
 
-			# x:122 y:234
+			# x:444 y:152
 			OperatableStateMachine.add('dive',
 										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'turn'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'input_traj', 'trajectory': 'trajectory'})
 
-			# x:657 y:90
+			# x:444 y:381
 			OperatableStateMachine.add('move',
 										send_to_planner(),
 										transitions={'continue': 'wait', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:425 y:136
+			# x:433 y:259
 			OperatableStateMachine.add('turn',
 										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=self.orientation_to_gate, frame=2, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:811 y:258
+			# x:444 y:495
 			OperatableStateMachine.add('wait',
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'check_moving', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:809 y:450
+			# x:454 y:622
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=30, tolerance=0.1),
-										transitions={'stopped': 'finished', 'moving': 'failed', 'error': 'failed'},
+										transitions={'stopped': 'finished', 'moving': 'wait', 'error': 'failed'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 

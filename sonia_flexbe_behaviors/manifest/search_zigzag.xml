@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="test_zigzag" />
+	<contains name="zigzag" />
 
 	<!-- Available Parameters -->
 
