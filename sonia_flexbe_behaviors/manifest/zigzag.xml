@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="test_zigzag">
+<behavior name="zigzag">
 
-	<executable package_path="sonia_flexbe_behaviors.test_zigzag_sm" class="test_zigzagSM" />
-	<tagstring>test</tagstring>
+	<executable package_path="sonia_flexbe_behaviors.zigzag_sm" class="zigzagSM" />
+	<tagstring>search</tagstring>
 	<author>lamarre</author>
 	<date>Thu May 05 2022</date>
 	<description>
-		test zigzag state
+		zigzag state
 	</description>
 
 

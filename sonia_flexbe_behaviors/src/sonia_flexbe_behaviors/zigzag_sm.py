@@ -23,15 +23,15 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 Created on Thu May 05 2022
 @author: lamarre
 '''
-class test_zigzagSM(Behavior):
+class zigzagSM(Behavior):
 	'''
-	test zigzag state
+	zigzag state
 	'''
 
 
 	def __init__(self):
-		super(test_zigzagSM, self).__init__()
-		self.name = 'test_zigzag'
+		super(zigzagSM, self).__init__()
+		self.name = 'zigzag'
 
 		# parameters of this behavior
 		self.add_parameter('boxX', 4)

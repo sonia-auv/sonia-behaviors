@@ -32,7 +32,7 @@ class set_initial_position(EventState):
             pose.orientation = Quaternion(0.,0.,0.,1)
             self.set_initial_position_pub.publish(pose)
         else:
-            Logger.log('Not in simulation. No need for intial condition', Logger.REPORT_HINT)
+            Logger.log('Not in simulation. No need for initial condition', Logger.REPORT_HINT)
         return 'continue'
 
     def on_exit(self, userdata):

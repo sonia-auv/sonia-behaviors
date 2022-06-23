@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_zigzag">
+
+	<executable package_path="sonia_flexbe_behaviors.search_zigzag_sm" class="search_zigzagSM" />
+	<tagstring>search</tagstring>
+	<author>KY</author>
+	<date>Wed May 18 2022</date>
+	<description>
+		Search mouvement in a zigzag patern.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="zigzag" />
+
+	<!-- Available Parameters -->
+
+</behavior>

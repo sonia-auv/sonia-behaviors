@@ -20,15 +20,15 @@ from sonia_navigation_states.trick_shot import trick_shot
 Created on Mon Nov 15 2021
 @author: FA
 '''
-class move_to_gateSM(Behavior):
+class move_to_gate_trickshot_v2SM(Behavior):
 	'''
 	Mouvement to gate with trickshot
 	'''
 
 
 	def __init__(self):
-		super(move_to_gateSM, self).__init__()
-		self.name = 'move_to_gate'
+		super(move_to_gate_trickshot_v2SM, self).__init__()
+		self.name = 'move_to_gate_trickshot_v2'
 
 		# parameters of this behavior
 		self.add_parameter('distance_to_gate', 5)

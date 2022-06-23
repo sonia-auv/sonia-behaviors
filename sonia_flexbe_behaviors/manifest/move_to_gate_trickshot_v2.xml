@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="move_to_gate">
+<behavior name="move_to_gate_trickshot_v2">
 
-	<executable package_path="sonia_flexbe_behaviors.move_to_gate_sm" class="move_to_gateSM" />
+	<executable package_path="sonia_flexbe_behaviors.move_to_gate_trickshot_v2_sm" class="move_to_gate_trickshot_v2SM" />
 	<tagstring>pool</tagstring>
 	<author>FA</author>
 	<date>Mon Nov 15 2021</date>

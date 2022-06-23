@@ -3,9 +3,8 @@
 
 # standars includes
 from time import time
-import rospy
+from xml.dom import UserDataHandler
 import math
-import cmath
 
 # Custom includes
 import sonia_navigation_states.modules.navigation_utilities as navUtils
@@ -14,19 +13,23 @@ import sonia_navigation_states.modules.navigation_utilities as navUtils
 from flexbe_core import EventState, Logger
 from sonia_common.msg import AddPose, MultiAddPose
 
-class yaw_orbit_from_given_point(EventState):
+class yaw_orbit_from_given_point_and_angle(EventState):
 
     '''
     This state generate a 2D orbit in the xy plane arround a given point.
-
-    Parameters:
-        pointX and pointY : orbit point expressed in body frame (geometric center of the sub).
-        Rotation : amount in degrees to turn arround the point. Positive value turn clockwise and negative value turn counterclockwise
-        Speed : Speed profile 
-
     Essential orbit point.
-        bottom AUV8 : [0.285, 0]
+        bottom AUV8 : [0.2415, 0]
         bottom AUV7 : [0.16818, 0]
+
+        ># input_traj       MultiAddPose    Input trajectory
+        ># camera           uint8           0: None
+                                            1: bottom AUV8
+                                            2: bottom AUV7
+        ># angle            float           angle from vision
+
+        #> trajectory       MultiAddPose    Output trajectory
+
+        <= continue                         Send trajectory to planner
     '''
     '''
                                   |<--- pointY --->|
@@ -45,16 +48,21 @@ class yaw_orbit_from_given_point(EventState):
      
         '''
 
-    def __init__(self, pointX=5, pointY=5, rotation = 360, speed =1 ):
+    def __init__(self, pointX=0, pointY=0):
         
-        super(yaw_orbit_from_given_point, self).__init__(outcomes=['continue'],
-                                                     input_keys=['input_traj'],
+        super(yaw_orbit_from_given_point_and_angle, self).__init__(outcomes=['continue'],
+                                                     input_keys=['input_traj','camera','angle'],
                                                      output_keys=['trajectory'])
-
         self.px = pointX
-        self.py = pointY
-        self.rotation = rotation
-        self.speed = speed
+        self.px = pointY
+
+    def on_enter(self, userdata):
+        if userdata.camera == 1:
+            self.px = 0.2415
+            self.py = 0
+        elif userdata.camera == 2:
+            self.px = 0.16818
+            self.py = 0
 
 
     def execute(self, userdata):
@@ -76,16 +84,16 @@ class yaw_orbit_from_given_point(EventState):
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 
-        nFullPoints = int(math.floor(abs(self.rotation) / degstep))
-        residueDegStep = abs(self.rotation) % degstep
+        nFullPoints = int(math.floor(abs(userdata.angle) / degstep))
+        residueDegStep = abs(userdata.angle) % degstep
         residueRadStep = (residueDegStep*2*math.pi) / 360.0 
 
         # get direction (cw vs ccw)
-        if self.rotation < 0:
+        if userdata.angle < 0:
             signe = -1
         else:
             signe =  1
-       
+
         # Express orbit in the complex plane. (easier for calculation) (work on the same principle as quaternions)
         # check complex multiplication for rotation transformation for further details
 
@@ -97,14 +105,14 @@ class yaw_orbit_from_given_point(EventState):
 
         # Generate the require amount of addpose msg
         for i in range(nFullPoints):
-
+            Logger.log(signe*degstep,Logger.REPORT_HINT)
             new_traj.pose.append(navUtils.addpose(pTrans.real, pTrans.imag, 0, 0, 0, signe * degstep, 1, 0, 0,False))
 
         # add residue point if needed,
         if residueDegStep > 0 :
             residueTrans= complex( math.cos(residueRadStep), signe * math.sin(residueRadStep))
             residuePoint = (p0 * residueTrans) - p0 # turn p0 of radstep radians and express the rotation in the body frame
-
+            Logger.log(signe * residueDegStep,Logger.REPORT_HINT)
             new_traj.pose.append(navUtils.addpose(residuePoint.real, residuePoint.imag, 0, 0, 0, signe * residueDegStep , 1, 0, 0,False))
 
 

@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.gate_no_trickshot_task_v2_sm import gate_no_trickshot_task_v2SM
-from sonia_navigation_states.trick_shot import trick_shot
+from sonia_flexbe_behaviors.move_with_addpose_msg_sm import MovewithAddposemsgSM
+from sonia_flexbe_states.create_pose import create_pose
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,24 +17,23 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Mon Nov 15 2021
+Created on Wed Jun 15 2022
 @author: FA
 '''
-class move_to_gateSM(Behavior):
+class testaddposeSM(Behavior):
 	'''
-	Mouvement to gate with trickshot
+	test the behavior to create a trajcetory with addpose
 	'''
 
 
 	def __init__(self):
-		super(move_to_gateSM, self).__init__()
-		self.name = 'move_to_gate'
+		super(testaddposeSM, self).__init__()
+		self.name = 'test addpose'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
-		self.add_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2')
+		self.add_behavior(MovewithAddposemsgSM, 'Move with Addpose msg')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,7 +45,7 @@ class move_to_gateSM(Behavior):
 
 
 	def create(self):
-		# x:846 y:87, x:398 y:199
+		# x:724 y:99, x:463 y:277
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,17 +55,19 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:113 y:48
-			OperatableStateMachine.add('gate_no_trickshot_task_v2',
-										self.use_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2'),
-										transitions={'finished': 'trickshot', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:126 y:73
+			OperatableStateMachine.add('create depth',
+										create_pose(positionX=2, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, time=0, precision=0, rotation=False),
+										transitions={'continue': 'Move with Addpose msg'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'pose': 'pose'})
 
-			# x:575 y:69
-			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=3),
-										transitions={'continue': 'finished'},
-										autonomy={'continue': Autonomy.Off})
+			# x:389 y:91
+			OperatableStateMachine.add('Move with Addpose msg',
+										self.use_behavior(MovewithAddposemsgSM, 'Move with Addpose msg'),
+										transitions={'finished': 'finished', 'failed': 'failed', 'failed_target_reached': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_target_reached': Autonomy.Inherit},
+										remapping={'pose': 'pose'})
 
 
 		return _state_machine
