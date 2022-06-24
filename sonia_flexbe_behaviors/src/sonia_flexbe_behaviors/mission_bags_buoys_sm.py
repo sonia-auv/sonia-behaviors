@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_hardware_states.wait_mission import wait_mission
-from sonia_navigation_states.add_pose_to_trajectory import add_pose_to_trajectory
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.set_control_mode import set_control_mode
@@ -74,35 +74,35 @@ class mission_bags_buoysSM(Behavior):
 
 			# x:533 y:212
 			OperatableStateMachine.add('go_backward_2',
-										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_left_in_orbit_2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_right_orbit_1', 'trajectory': 'traj_backward_2'})
 
 			# x:528 y:400
 			OperatableStateMachine.add('go_backward_3',
-										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_right_in_orbit_2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_left_orbit_2', 'trajectory': 'traj_backward_3'})
 
 			# x:751 y:33
 			OperatableStateMachine.add('go_backward_4',
-										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_left_in_orbit_3'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_right_orbit_2', 'trajectory': 'traj_backward_4'})
 
 			# x:754 y:226
 			OperatableStateMachine.add('go_backward_5',
-										add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-self.backward_length_in_between_arcs, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_right_in_orbit_3'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_left_orbit_3', 'trajectory': 'traj_backward_5'})
 
 			# x:316 y:115
 			OperatableStateMachine.add('go_down',
-										add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.initial_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.initial_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_backward_1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj', 'trajectory': 'traj_down'})
@@ -211,7 +211,7 @@ class mission_bags_buoysSM(Behavior):
 
 			# x:312 y:206
 			OperatableStateMachine.add('go_backward_1',
-										add_pose_to_trajectory(positionX=-self.initial_backward_length, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-self.initial_backward_length, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_left_in_orbit_1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj_down', 'trajectory': 'traj_backward_1'})
