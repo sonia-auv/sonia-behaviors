@@ -38,7 +38,7 @@ class vision_path_new_algoSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('filterchain_name', 'simple_pipe_straight')
 		self.add_parameter('header_name', 'pipe straight')
-		self.add_parameter('camera_no', 4)
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -108,8 +108,8 @@ class vision_path_new_algoSM(Behavior):
 			# x:1136 y:27
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
-										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
+										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'filterchain'})
 
 			# x:504 y:552
