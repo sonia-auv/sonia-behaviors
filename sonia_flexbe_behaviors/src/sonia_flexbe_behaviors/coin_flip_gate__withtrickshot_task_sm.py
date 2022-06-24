@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_to_gate_no_trickshot_v2_sm import move_to_gate_no_trickshot_v2SM
+from sonia_flexbe_behaviors.coin_flip_gate__notrickshot_task_sm import coin_flip_gate_notrickshot_taskSM
 from sonia_navigation_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -17,23 +17,26 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Thu May 31 2022
-@author: Guilhem Schena
+Created on Fri Jun 24 2022
+@author: GS
 '''
-class gate_with_trickshot_task_v2SM(Behavior):
+class coin_flip_gate_withtrickshot_taskSM(Behavior):
 	'''
-	Init the submarine and move through the gate.
+	Orient to gate for coin flip task and move forward through the gate with trickshot
 	'''
 
 
 	def __init__(self):
-		super(gate_with_trickshot_task_v2SM, self).__init__()
-		self.name = 'gate_with_trickshot_task_v2'
+		super(coin_flip_gate_withtrickshot_taskSM, self).__init__()
+		self.name = 'coin_flip_gate_ withtrickshot_task'
 
 		# parameters of this behavior
+		self.add_parameter('orientation_to_gate', 0)
+		self.add_parameter('dive_depth', 1)
+		self.add_parameter('distance_to_gate', 4)
 
 		# references to used behaviors
-		self.add_behavior(move_to_gate_no_trickshot_v2SM, 'move_to_gate_no_trickshot_v2')
+		self.add_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -45,7 +48,7 @@ class gate_with_trickshot_task_v2SM(Behavior):
 
 
 	def create(self):
-		# x:878 y:587, x:465 y:590
+		# x:602 y:128, x:130 y:255
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -55,15 +58,15 @@ class gate_with_trickshot_task_v2SM(Behavior):
 
 
 		with _state_machine:
-			# x:423 y:194
-			OperatableStateMachine.add('move_to_gate_no_trickshot_v2',
-										self.use_behavior(move_to_gate_no_trickshot_v2SM, 'move_to_gate_no_trickshot_v2'),
+			# x:81 y:114
+			OperatableStateMachine.add('coin_flip_gate_ notrickshot_task',
+										self.use_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task'),
 										transitions={'finished': 'trickshot', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:830 y:219
+			# x:375 y:113
 			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=3),
+										trick_shot(delay=15),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
 

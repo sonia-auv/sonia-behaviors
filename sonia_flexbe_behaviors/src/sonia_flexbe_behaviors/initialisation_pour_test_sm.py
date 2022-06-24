@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
 from sonia_hardware_states.wait_mission import wait_mission
 from sonia_navigation_states.set_control_mode import set_control_mode
+from sonia_navigation_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,7 +34,6 @@ class InitialisationpourtestSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(coin_flipSM, 'coin_flip')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -62,17 +61,17 @@ class InitialisationpourtestSM(Behavior):
 										transitions={'continue': 'set mode', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
+			# x:521 y:45
+			OperatableStateMachine.add('trickshot',
+										trick_shot(delay=3),
+										transitions={'continue': 'finished'},
+										autonomy={'continue': Autonomy.Off})
+
 			# x:299 y:52
 			OperatableStateMachine.add('set mode',
 										set_control_mode(mode=10, timeout=5),
-										transitions={'continue': 'coin_flip', 'failed': 'failed'},
+										transitions={'continue': 'trickshot', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
-
-			# x:512 y:54
-			OperatableStateMachine.add('coin_flip',
-										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
 		return _state_machine

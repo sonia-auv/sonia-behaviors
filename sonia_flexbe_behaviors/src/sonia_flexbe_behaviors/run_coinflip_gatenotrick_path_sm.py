@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.coin_flip_sm import coin_flipSM
-from sonia_flexbe_behaviors.gate_no_trickshot_task_v2_sm import gate_no_trickshot_task_v2SM
+from sonia_flexbe_behaviors.coin_flip_gate__notrickshot_task_sm import coin_flip_gate_notrickshot_taskSM
 from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
 from sonia_flexbe_behaviors.vision_path_new_algo_sm import vision_path_new_algoSM
 # Additional imports can be added inside the following tags
@@ -35,8 +34,7 @@ class Run_coinflip_gatenotrick_pathSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(coin_flipSM, 'coin_flip')
-		self.add_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2')
+		self.add_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task')
 		self.add_behavior(init_submarineSM, 'init_submarine')
 		self.add_behavior(vision_path_new_algoSM, 'vision_path_new_algo')
 
@@ -63,13 +61,7 @@ class Run_coinflip_gatenotrick_pathSM(Behavior):
 			# x:31 y:72
 			OperatableStateMachine.add('init_submarine',
 										self.use_behavior(init_submarineSM, 'init_submarine'),
-										transitions={'finished': 'coin_flip', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:474 y:59
-			OperatableStateMachine.add('gate_no_trickshot_task_v2',
-										self.use_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2'),
-										transitions={'finished': 'vision_path_new_algo', 'failed': 'failed'},
+										transitions={'finished': 'coin_flip_gate_ notrickshot_task', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:711 y:60
@@ -78,10 +70,10 @@ class Run_coinflip_gatenotrick_pathSM(Behavior):
 										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:248 y:62
-			OperatableStateMachine.add('coin_flip',
-										self.use_behavior(coin_flipSM, 'coin_flip'),
-										transitions={'finished': 'gate_no_trickshot_task_v2', 'failed': 'failed'},
+			# x:365 y:64
+			OperatableStateMachine.add('coin_flip_gate_ notrickshot_task',
+										self.use_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task'),
+										transitions={'finished': 'vision_path_new_algo', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 

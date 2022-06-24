@@ -13,9 +13,8 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="init_submarine" />
-	<contains name="gate_no_trickshot_task_v2" />
 	<contains name="vision_path_new_algo" />
-	<contains name="coin_flip" />
+	<contains name="coin_flip_gate_ notrickshot_task" />
 
 	<!-- Available Parameters -->
 
