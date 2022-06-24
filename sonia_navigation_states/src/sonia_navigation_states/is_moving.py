@@ -48,7 +48,7 @@ class is_moving(EventState):
         self.get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.get_controller_info_cb)
         self.get_current_states_sub = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.get_current_states_cb)
 
-        Logger.log('Checking is the sub is moving', Logger.REPORT_HINT)
+        Logger.log('Checking if the sub is moving', Logger.REPORT_HINT)
         
         self.launch_time = time()
 
@@ -95,7 +95,7 @@ class is_moving(EventState):
                     Logger.log('The sub is not moving, bypassing Target Reached', Logger.REPORT_HINT)
                     return 'stopped'
                 elif self.target_reached:
-                    Logger.log('Finally got target_reached')
+                    Logger.log('Finally got target_reached', Logger.REPORT_HINT)
                     return 'stopped'
                 else:
                     Logger.log('The sub is still moving', Logger.REPORT_HINT)

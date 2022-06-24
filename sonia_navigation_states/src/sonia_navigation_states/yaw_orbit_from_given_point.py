@@ -25,7 +25,8 @@ class yaw_orbit_from_given_point(EventState):
         Speed : Speed profile 
 
     Essential orbit point.
-        bottom AUV8 : [0.2415, 0]
+        bottom AUV8 : [0.285, 0]
+        bottom AUV7 : [0.16818, 0]
     '''
     '''
                                   |<--- pointY --->|
@@ -61,6 +62,7 @@ class yaw_orbit_from_given_point(EventState):
         # define msg object
         traj = userdata.input_traj
         new_traj = MultiAddPose()
+        new_traj.interpolation_method = 1
 
         # Add previous waypoint if needed
         if not traj.pose:
@@ -74,8 +76,8 @@ class yaw_orbit_from_given_point(EventState):
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 
-        nFullPoints = int(abs(math.floor(self.rotation / degstep)))
-        residueDegStep = abs(self.rotation % degstep)
+        nFullPoints = int(math.floor(abs(self.rotation) / degstep))
+        residueDegStep = abs(self.rotation) % degstep
         residueRadStep = (residueDegStep*2*math.pi) / 360.0 
 
         # get direction (cw vs ccw)

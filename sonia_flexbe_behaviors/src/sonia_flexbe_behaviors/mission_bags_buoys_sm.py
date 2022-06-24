@@ -151,14 +151,14 @@ class mission_bags_buoysSM(Behavior):
 
 			# x:310 y:33
 			OperatableStateMachine.add('init_traj',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'go_down'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'traj'})
 
 			# x:530 y:30
 			OperatableStateMachine.add('init_traj_2',
-										init_trajectory(InterpolationMethod=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'go_right_in_orbit_1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'traj_2'})

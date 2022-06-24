@@ -7,12 +7,12 @@
 	<author>Guilhem Schena</author>
 	<date>Thu May 31 2022</date>
 	<description>
-		Init the submarine and move through the gate.
+		Move through the gate, no trickshot
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move_to_gate_no_trickshot" />
+	<contains name="move_to_gate_no_trickshot_v2" />
 
 	<!-- Available Parameters -->
 
