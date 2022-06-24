@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_hardware_states.wait_mission import wait_mission
 from sonia_vision_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -59,9 +60,15 @@ class onsenfouSM(Behavior):
 			# x:96 y:90
 			OperatableStateMachine.add('filter',
 										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'stop_filter', 'failed': 'failed'},
+										transitions={'continue': 'mission', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+
+			# x:437 y:115
+			OperatableStateMachine.add('mission',
+										wait_mission(),
+										transitions={'continue': 'stop_filter', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 			# x:732 y:144
 			OperatableStateMachine.add('stop_filter',
