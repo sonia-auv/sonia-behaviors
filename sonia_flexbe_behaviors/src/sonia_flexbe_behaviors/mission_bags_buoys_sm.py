@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_hardware_states.wait_mission import wait_mission
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.set_control_mode import set_control_mode
@@ -56,7 +57,7 @@ class mission_bags_buoysSM(Behavior):
 
 
 	def create(self):
-		# x:595 y:662, x:11 y:699
+		# x:584 y:862, x:11 y:699
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -163,6 +164,18 @@ class mission_bags_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'traj_2'})
 
+			# x:104 y:253
+			OperatableStateMachine.add('is_moving',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'start_bag', 'moving': 'wait_target_reached', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:1202 y:644
+			OperatableStateMachine.add('is_moving_end',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'stop_bag', 'moving': 'wait_target_reached_final', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
 			# x:317 y:373
 			OperatableStateMachine.add('send_to_planner',
 										send_to_planner(),
@@ -185,12 +198,12 @@ class mission_bags_buoysSM(Behavior):
 
 			# x:256 y:523
 			OperatableStateMachine.add('start_bag',
-										start_rosbag_record(bag_name=test_bag, topic_name='/', timer_split=0, record_path='/home/sonia/ssd/Bags'),
+										start_rosbag_record(bag_name='test_bag', topic_name='/proc_simulation/front/compressed', timer_split=0, record_path='/home/willy/bags'),
 										transitions={'continue': 'init_traj_2', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'rosbag_proc': 'rosbag_proc', 'command': 'command'})
 
-			# x:746 y:589
+			# x:765 y:846
 			OperatableStateMachine.add('stop_bag',
 										stop_rosbag_record(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
@@ -200,13 +213,13 @@ class mission_bags_buoysSM(Behavior):
 			# x:308 y:456
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=30),
-										transitions={'target_reached': 'start_bag', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'start_bag', 'target_not_reached': 'is_moving', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:740 y:522
+			# x:735 y:523
 			OperatableStateMachine.add('wait_target_reached_final',
 										wait_target_reached(timeout=15),
-										transitions={'target_reached': 'stop_bag', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'is_moving_end', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:312 y:206
