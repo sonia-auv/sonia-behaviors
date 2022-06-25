@@ -38,7 +38,7 @@ class vision_path_new_algoSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('filterchain_name', 'simple_pipe_straight')
 		self.add_parameter('header_name', 'pipe straight')
-		self.add_parameter('camera_no', 4)
+		self.add_parameter('camera_no', 2)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')

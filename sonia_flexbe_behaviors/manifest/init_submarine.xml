@@ -18,7 +18,7 @@
 
 		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
 
-		<param type="numeric" name="mode" default="32" label="mode" hint="Sets the mode of the control">
+		<param type="numeric" name="mode" default="10" label="mode" hint="Sets the mode of the control">
 			<min value="0" />
 			<max value="99" />
 		</param>

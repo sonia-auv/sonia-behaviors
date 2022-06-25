@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trick_shot">
+
+	<executable package_path="sonia_flexbe_behaviors.trick_shot_sm" class="trick_shotSM" />
+	<tagstring>pool</tagstring>
+	<author>LAMARRE</author>
+	<date>Wed Jun 22 2022</date>
+	<description>
+		trickshot 6DOF
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
