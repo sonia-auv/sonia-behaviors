@@ -9,8 +9,8 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_hardware_states.wait_mission import wait_mission
-from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.set_control_mode import set_control_mode
 from sonia_navigation_states.wait_target_reached import wait_target_reached
@@ -183,30 +183,30 @@ class mission_bags_buoysSM(Behavior):
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:278 y:517
-			OperatableStateMachine.add('start_bag_record',
-										start_rosbag_record(bag_name='bag_test', topic_name='/proc_simulation/front/compressed', timer_split=0, record_path='/home/willy'),
+			# x:256 y:523
+			OperatableStateMachine.add('start_bag',
+										start_rosbag_record(bag_name=test_bag, topic_name='/', timer_split=0, record_path='/home/sonia/ssd/Bags'),
 										transitions={'continue': 'init_traj_2', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'rosbag_proc': 'rosbag_proc', 'command': 'command'})
 
-			# x:781 y:596
-			OperatableStateMachine.add('stop_rosbag_record',
+			# x:746 y:589
+			OperatableStateMachine.add('stop_bag',
 										stop_rosbag_record(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'rosbag_proc': 'rosbag_proc', 'command': 'command'})
 
-			# x:310 y:455
+			# x:308 y:456
 			OperatableStateMachine.add('wait_target_reached',
-										wait_target_reached(),
-										transitions={'target_reached': 'start_bag_record', 'target_not_reached': 'failed', 'error': 'failed'},
+										wait_target_reached(timeout=30),
+										transitions={'target_reached': 'start_bag', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:740 y:522
 			OperatableStateMachine.add('wait_target_reached_final',
-										wait_target_reached(),
-										transitions={'target_reached': 'stop_rosbag_record', 'target_not_reached': 'failed', 'error': 'failed'},
+										wait_target_reached(timeout=15),
+										transitions={'target_reached': 'stop_bag', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:312 y:206
