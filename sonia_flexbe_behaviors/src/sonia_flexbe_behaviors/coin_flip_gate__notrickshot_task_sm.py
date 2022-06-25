@@ -20,22 +20,23 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Fri Nov 12 2021
-@author: William Brouillard
+Created on Fri Jun 24 2022
+@author: GS
 '''
-class coin_flipSM(Behavior):
+class coin_flip_gate_notrickshot_taskSM(Behavior):
 	'''
-	Orient to gate for coin flip task.
+	Orient to gate for coin flip task and move forward through the gate without trickshot
 	'''
 
 
 	def __init__(self):
-		super(coin_flipSM, self).__init__()
-		self.name = 'coin_flip'
+		super(coin_flip_gate_notrickshot_taskSM, self).__init__()
+		self.name = 'coin_flip_gate_ notrickshot_task'
 
 		# parameters of this behavior
 		self.add_parameter('orientation_to_gate', 0)
 		self.add_parameter('dive_depth', 1)
+		self.add_parameter('distance_to_gate', 4)
 
 		# references to used behaviors
 
@@ -59,14 +60,14 @@ class coin_flipSM(Behavior):
 
 
 		with _state_machine:
-			# x:461 y:47
+			# x:448 y:17
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'dive'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_traj'})
 
-			# x:444 y:152
+			# x:428 y:91
 			OperatableStateMachine.add('dive',
 										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.dive_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'turn'},
@@ -80,10 +81,17 @@ class coin_flipSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:433 y:259
+			# x:437 y:275
+			OperatableStateMachine.add('move_to_gate',
+										manual_add_pose_to_trajectory(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'move'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+
+			# x:430 y:180
 			OperatableStateMachine.add('turn',
 										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=self.orientation_to_gate, frame=2, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'move'},
+										transitions={'continue': 'move_to_gate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 

@@ -20,22 +20,21 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Fri Nov 12 2021
-@author: William Brouillard
+Created on Jun 23 2022
+@author: GS
 '''
-class coin_flipSM(Behavior):
+class move_to_gate_no_trickshot_v2SM(Behavior):
 	'''
-	Orient to gate for coin flip task.
+	Mouvement to gate with trickshot
 	'''
 
 
 	def __init__(self):
-		super(coin_flipSM, self).__init__()
-		self.name = 'coin_flip'
+		super(move_to_gate_no_trickshot_v2SM, self).__init__()
+		self.name = 'move_to_gate_no_trickshot_v2'
 
 		# parameters of this behavior
-		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
+		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
 
@@ -49,7 +48,7 @@ class coin_flipSM(Behavior):
 
 
 	def create(self):
-		# x:765 y:559, x:215 y:565
+		# x:1315 y:51, x:720 y:158
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -59,45 +58,38 @@ class coin_flipSM(Behavior):
 
 
 		with _state_machine:
-			# x:461 y:47
-			OperatableStateMachine.add('init_traj',
+			# x:50 y:27
+			OperatableStateMachine.add('init traj',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'dive'},
+										transitions={'continue': 'move to gate'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'input_traj'})
+										remapping={'trajectory': 'trajectory'})
 
-			# x:444 y:152
-			OperatableStateMachine.add('dive',
-										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.dive_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'turn'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'input_traj', 'trajectory': 'trajectory'})
-
-			# x:444 y:381
-			OperatableStateMachine.add('move',
-										send_to_planner(),
-										transitions={'continue': 'wait', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'trajectory'})
-
-			# x:433 y:259
-			OperatableStateMachine.add('turn',
-										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=self.orientation_to_gate, frame=2, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'move'},
+			# x:283 y:31
+			OperatableStateMachine.add('move to gate',
+										manual_add_pose_to_trajectory(positionX=self.distance_to_gate, positionY=0, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'send to planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:444 y:495
-			OperatableStateMachine.add('wait',
-										wait_target_reached(timeout=30),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'check_moving', 'error': 'failed'},
-										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+			# x:542 y:33
+			OperatableStateMachine.add('send to planner',
+										send_to_planner(),
+										transitions={'continue': 'wait target', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'trajectory'})
 
-			# x:454 y:622
-			OperatableStateMachine.add('check_moving',
+			# x:1083 y:383
+			OperatableStateMachine.add('stop',
 										is_moving(timeout=30, tolerance=0.1),
-										transitions={'stopped': 'finished', 'moving': 'wait', 'error': 'failed'},
+										transitions={'stopped': 'finished', 'moving': 'wait target', 'error': 'failed'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:782 y:32
+			OperatableStateMachine.add('wait target',
+										wait_target_reached(timeout=30),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'stop', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine

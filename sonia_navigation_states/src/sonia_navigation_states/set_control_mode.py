@@ -41,7 +41,7 @@ class set_control_mode(EventState):
         time_dif = time() - self.launch_time
         if time_dif > self.param_timeout:
             if self.mpc_mode == self.param_mode:
-                Logger.log('MPC mode has been set',Logger.REPORT_HINT)
+                Logger.log('MPC mode has been set :' + str(self.mpc_mode),Logger.REPORT_HINT)
                 return 'continue'
             else:
                 Logger.log('MPC mode hasnt been set. Present mode is ' + str(self.mpc_mode),Logger.REPORT_HINT)
