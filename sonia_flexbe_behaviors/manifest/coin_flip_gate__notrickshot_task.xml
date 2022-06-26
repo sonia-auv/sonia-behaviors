@@ -21,7 +21,7 @@
 			<max value="360" />
 		</param>
 
-		<param type="numeric" name="dive_depth" default="1" label="dive_depth" hint="Sets the dive_depth">
+		<param type="numeric" name="dive_depth" default="2" label="dive_depth" hint="Sets the dive_depth">
 			<min value="0" />
 			<max value="5" />
 		</param>

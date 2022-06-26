@@ -35,7 +35,7 @@ class coin_flip_gate_notrickshot_taskSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
+		self.add_parameter('dive_depth', 2)
 		self.add_parameter('distance_to_gate', 4)
 
 		# references to used behaviors
