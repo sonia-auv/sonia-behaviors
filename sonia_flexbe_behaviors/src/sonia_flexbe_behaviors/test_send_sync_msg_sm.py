@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_hardware_states.module_check import module_check
+from sonia_com_states.synchro_send import synchro_send
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -16,18 +16,18 @@ from sonia_hardware_states.module_check import module_check
 
 
 '''
-Created on Sat May 28 2022
+Created on Tue Jun 28 2022
 @author: FA
 '''
-class testprocfaultSM(Behavior):
+class test_send_sync_msgSM(Behavior):
 	'''
-	Test the fault detection of different modules
+	Test the state to send a synching request
 	'''
 
 
 	def __init__(self):
-		super(testprocfaultSM, self).__init__()
-		self.name = 'test proc fault'
+		super(test_send_sync_msgSM, self).__init__()
+		self.name = 'test_send_sync_msg'
 
 		# parameters of this behavior
 
@@ -43,8 +43,8 @@ class testprocfaultSM(Behavior):
 
 
 	def create(self):
-		# x:480 y:162, x:478 y:49
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:532 y:114
+		_state_machine = OperatableStateMachine(outcomes=['finished'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -53,11 +53,11 @@ class testprocfaultSM(Behavior):
 
 
 		with _state_machine:
-			# x:173 y:79
-			OperatableStateMachine.add('module',
-										module_check(navigation=True, vision=True, mapping=False, hydro=False, io=False, underwater_com=True, power=True, internal_com=True),
-										transitions={'continue': 'finished', 'reboot': 'failed', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'reboot': Autonomy.Off, 'failed': Autonomy.Off})
+			# x:197 y:117
+			OperatableStateMachine.add('test',
+										synchro_send(),
+										transitions={'continue': 'finished'},
+										autonomy={'continue': Autonomy.Off})
 
 
 		return _state_machine

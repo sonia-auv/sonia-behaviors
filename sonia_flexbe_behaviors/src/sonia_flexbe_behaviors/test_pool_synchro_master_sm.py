@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_com_states.send_update import send_update
 from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.synchro_master_sm import SynchroMasterSM
 from sonia_navigation_states.wait_target_reached import wait_target_reached
@@ -58,11 +57,12 @@ class testpoolsynchromasterSM(Behavior):
 
 
 		with _state_machine:
-			# x:94 y:106
-			OperatableStateMachine.add('start_aray',
-										send_update(mission=0, state=1),
-										transitions={'continue': 'Synchro Master'},
-										autonomy={'continue': Autonomy.Off})
+			# x:396 y:109
+			OperatableStateMachine.add('Synchro Master',
+										self.use_behavior(SynchroMasterSM, 'Synchro Master',
+											parameters={'Change_depth': True, 'Max_distance_to_surface': 0.5, 'Max_distance_to_bottom': 2, 'Difference_between_sub': 0.75}),
+										transitions={'finished': 'move', 'failed': 'failed', 'timeout': 'failed', 'failed_target_reached': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'timeout': Autonomy.Inherit, 'failed_target_reached': Autonomy.Inherit})
 
 			# x:758 y:96
 			OperatableStateMachine.add('move',
@@ -76,13 +76,6 @@ class testpoolsynchromasterSM(Behavior):
 										wait_target_reached(),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:396 y:109
-			OperatableStateMachine.add('Synchro Master',
-										self.use_behavior(SynchroMasterSM, 'Synchro Master',
-											parameters={'Change_depth': True, 'Max_distance_to_surface': 0.5, 'Max_distance_to_bottom': 2, 'Difference_between_sub': 0.75}),
-										transitions={'finished': 'move', 'failed': 'failed', 'timeout': 'failed', 'failed_target_reached': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'timeout': Autonomy.Inherit, 'failed_target_reached': Autonomy.Inherit})
 
 
 		return _state_machine
