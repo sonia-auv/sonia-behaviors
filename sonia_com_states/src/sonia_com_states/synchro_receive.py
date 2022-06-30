@@ -7,7 +7,7 @@ from time import time
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Bool
 
-class synchro_slave(EventState):
+class synchro_receive(EventState):
 
     '''
         Synchronize a mission with the master. This state needs to be placed before the mission that
@@ -15,12 +15,12 @@ class synchro_slave(EventState):
 
         -- timeout          uint16      Maximum time to wait for the synch request
 
-        <=continue                      Both mission completed.
+        <=continue                      Message received
         <=timeout                       Timeout reached. The submarine didn't receive the message
     '''
 
     def __init__(self, timeout=120):
-        super(synchro_slave, self).__init__(outcomes=['continue', 'timeout'])
+        super(synchro_receive, self).__init__(outcomes=['continue', 'timeout'])
         self.timeout = timeout
         self.message_received = False
 
