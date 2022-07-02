@@ -4,7 +4,7 @@
 from time import time
 import rospy
 
-from Queue import deque
+from queue import deque
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget
 

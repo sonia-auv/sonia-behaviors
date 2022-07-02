@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trickshot">
+
+	<executable package_path="sonia_flexbe_behaviors.trickshot_sm" class="trickshotSM" />
+	<tagstring>mouvement</tagstring>
+	<author>KYGS</author>
+	<date>Fri Jun 24 2022</date>
+	<description>
+		Simple_trickshot
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

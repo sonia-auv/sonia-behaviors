@@ -8,8 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_to_gate_no_trickshot_sm import move_to_gate_no_trickshotSM
-from sonia_flexbe_states.trick_shot import trick_shot
+from sonia_flexbe_behaviors.gate_no_trickshot_task_v2_sm import gate_no_trickshot_task_v2SM
+from sonia_navigation_states.trick_shot import trick_shot
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,7 +34,7 @@ class move_to_gateSM(Behavior):
 		self.add_parameter('distance_to_gate', 5)
 
 		# references to used behaviors
-		self.add_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot')
+		self.add_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -56,9 +56,9 @@ class move_to_gateSM(Behavior):
 
 
 		with _state_machine:
-			# x:191 y:53
-			OperatableStateMachine.add('move_to_gate_no_trickshot',
-										self.use_behavior(move_to_gate_no_trickshotSM, 'move_to_gate_no_trickshot'),
+			# x:113 y:48
+			OperatableStateMachine.add('gate_no_trickshot_task_v2',
+										self.use_behavior(gate_no_trickshot_task_v2SM, 'gate_no_trickshot_task_v2'),
 										transitions={'finished': 'trickshot', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

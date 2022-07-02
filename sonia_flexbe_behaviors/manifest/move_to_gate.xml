@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move_to_gate_no_trickshot" />
+	<contains name="gate_no_trickshot_task_v2" />
 
 	<!-- Available Parameters -->
 	<params>
