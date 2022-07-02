@@ -4,7 +4,7 @@
 from flexbe_core import EventState, Logger
 from sonia_common.msg import MultiAddPose
 
-class add_addpose_to_trajectory(EventState):
+class vision_add_pose_to_trajectory(EventState):
 
     '''
         Create the pose for the trajectory with a message Addpose.
@@ -20,7 +20,7 @@ class add_addpose_to_trajectory(EventState):
 
     def __init__(self):
         
-        super(add_addpose_to_trajectory, self).__init__(outcomes=['continue'],
+        super(vision_add_pose_to_trajectory, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj', 'pose'],
                                                      output_keys=['trajectory'])
 

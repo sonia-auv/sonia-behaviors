@@ -12,19 +12,19 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_snake" />
+	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filter_name" default="simple_buoy" label="filter_name" hint="Sets the filter_name" />
+		<param type="text" name="filter_name" default="simple_obstacle" label="filter_name" hint="Sets the filter_name" />
 
 		<param type="numeric" name="camera_no" default="3" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="text" name="header_name" default="buoy" label="header_name" hint="Sets the header_name" />
+		<param type="text" name="header_name" default="obstacle" label="header_name" hint="Sets the header_name" />
 
 	</params>
 

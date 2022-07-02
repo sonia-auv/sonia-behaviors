@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Front_gate">
+
+	<executable package_path="sonia_flexbe_behaviors.front_gate_sm" class="Front_gateSM" />
+	<tagstring>task</tagstring>
+	<author>KY</author>
+	<date>Wed May 11 2022</date>
+	<description>
+		Trajectory - Front of the gate
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="interpolation_method" default="0" label="interpolation_method" hint="Sets the interpolation_method">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>
