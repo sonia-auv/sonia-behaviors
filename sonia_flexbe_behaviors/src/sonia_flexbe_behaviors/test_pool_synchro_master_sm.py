@@ -8,10 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_navigation_states.init_trajectory import init_trajectory
-from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_flexbe_behaviors.move_sm import moveSM
+from sonia_flexbe_behaviors.synchro_master_sm import SynchroMasterSM
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_navigation_states.yaw_orbit_from_given_point import yaw_orbit_from_given_point
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -19,22 +18,24 @@ from sonia_navigation_states.yaw_orbit_from_given_point import yaw_orbit_from_gi
 
 
 '''
-Created on Wed May 11 2022
-@author: lamarre
+Created on Mon Jun 20 2022
+@author: FA
 '''
-class test_yaw_orbitSM(Behavior):
+class testpoolsynchromasterSM(Behavior):
 	'''
-	test yaw_orbit state
+	Testing the synchronisation between the 2 subs with a 180deg rotation
 	'''
 
 
 	def __init__(self):
-		super(test_yaw_orbitSM, self).__init__()
-		self.name = 'test_yaw_orbit'
+		super(testpoolsynchromasterSM, self).__init__()
+		self.name = 'test pool synchro master'
 
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(SynchroMasterSM, 'Synchro Master')
+		self.add_behavior(moveSM, 'move')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,7 +47,7 @@ class test_yaw_orbitSM(Behavior):
 
 
 	def create(self):
-		# x:548 y:344, x:128 y:265
+		# x:996 y:535, x:495 y:454
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,32 +57,25 @@ class test_yaw_orbitSM(Behavior):
 
 
 		with _state_machine:
-			# x:300 y:58
-			OperatableStateMachine.add('itraj',
-										init_trajectory(InterpolationMethod=2),
-										transitions={'continue': 'orbit'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
+			# x:396 y:109
+			OperatableStateMachine.add('Synchro Master',
+										self.use_behavior(SynchroMasterSM, 'Synchro Master',
+											parameters={'Change_depth': True, 'Max_distance_to_surface': 0.5, 'Max_distance_to_bottom': 2, 'Difference_between_sub': 0.75}),
+										transitions={'finished': 'move', 'failed': 'failed', 'timeout': 'failed', 'failed_target_reached': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'timeout': Autonomy.Inherit, 'failed_target_reached': Autonomy.Inherit})
 
-			# x:298 y:163
-			OperatableStateMachine.add('orbit',
-										yaw_orbit_from_given_point(pointX=0.2415, pointY=0, rotation=360, speed=1),
-										transitions={'continue': 'sp'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+			# x:758 y:96
+			OperatableStateMachine.add('move',
+										self.use_behavior(moveSM, 'move',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 180, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'target_reached', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:299 y:330
-			OperatableStateMachine.add('reached',
+			# x:1015 y:251
+			OperatableStateMachine.add('target_reached',
 										wait_target_reached(),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:300 y:249
-			OperatableStateMachine.add('sp',
-										send_to_planner(),
-										transitions={'continue': 'reached', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'trajectory'})
 
 
 		return _state_machine
