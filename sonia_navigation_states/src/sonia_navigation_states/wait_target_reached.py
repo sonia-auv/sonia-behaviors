@@ -33,6 +33,7 @@ class wait_target_reached(EventState):
             if self.trajectory_done == False:
                 Logger.log("Trajectory has been received", Logger.REPORT_HINT)
             elif self.trajectory_done == True:
+                self.launch_time = time()
                 self.traj_complete = True
                 Logger.log("Trajectory Completed", Logger.REPORT_HINT)
 
