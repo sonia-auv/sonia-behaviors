@@ -4,16 +4,15 @@
 
 	<executable package_path="sonia_flexbe_behaviors.vision_droppers_sm" class="vision_droppersSM" />
 	<tagstring>pool</tagstring>
-	<author>William Brouillard</author>
-	<date>Wed Nov 17 2021</date>
+	<author>Camille Sauvain</author>
+	<date>06/07/2022</date>
 	<description>
 		Find the bin with the right filter chain, then drop the markers in the bin.
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_circle" />
-	<contains name="Aligment with stopping" />
+	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>

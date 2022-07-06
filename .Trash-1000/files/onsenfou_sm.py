@@ -60,12 +60,12 @@ class onsenfouSM(Behavior):
 			# x:96 y:90
 			OperatableStateMachine.add('filter',
 										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'mission switch', 'failed': 'failed'},
+										transitions={'continue': 'mission', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:359 y:127
-			OperatableStateMachine.add('mission switch',
+			# x:437 y:115
+			OperatableStateMachine.add('mission',
 										wait_mission(),
 										transitions={'continue': 'stop_filter', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
