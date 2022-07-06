@@ -106,15 +106,17 @@ class AUV8_AUV7_Test_piscine_francisSM(Behavior):
 										transitions={'continue': 'Get_update_of_AUV7'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:481 y:43
+			# x:426 y:45
 			OperatableStateMachine.add('Move_to_gate_straight_AUV7',
-										self.use_behavior(Move_to_gate_straightSM, 'Move_to_gate_straight_AUV7'),
+										self.use_behavior(Move_to_gate_straightSM, 'Move_to_gate_straight_AUV7',
+											parameters={'distance_to_gate': 1}),
 										transitions={'finished': 'AUV7_gate_completed', 'failed': 'AUV7_gate_failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:29 y:247
 			OperatableStateMachine.add('coin_flip_KY',
-										self.use_behavior(coin_flip_KYSM, 'coin_flip_KY'),
+										self.use_behavior(coin_flip_KYSM, 'coin_flip_KY',
+											parameters={'orientation_to_gate': 0, 'dive_depth': 0}),
 										transitions={'finished': 'Coin_flip_completed', 'failed': 'Coin_flip_failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
