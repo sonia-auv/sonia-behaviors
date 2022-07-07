@@ -8,10 +8,10 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.search_snake_sm import search_snakeSM
-from sonia_flexbe_states.move_to_target import move_to_target
-from sonia_navigation_states.set_control_mode import set_control_mode
-from sonia_vision_states.get_vision_target import get_vision_target
+from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_vision_states.get_bottom_vision_target import get_bottom_vision_target
 from sonia_vision_states.start_filter_chain import start_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -34,12 +34,12 @@ class vision_buoySM(Behavior):
 		self.name = 'vision_buoy'
 
 		# parameters of this behavior
-		self.add_parameter('filter_name', 'simple_buoy')
+		self.add_parameter('filter_name', 'simple_obstacle')
 		self.add_parameter('camera_no', 3)
-		self.add_parameter('header_name', 'buoy')
+		self.add_parameter('header_name', 'obstacle')
 
 		# references to used behaviors
-		self.add_behavior(search_snakeSM, 'search_snake')
+		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -61,38 +61,40 @@ class vision_buoySM(Behavior):
 
 
 		with _state_machine:
-			# x:43 y:54
-			OperatableStateMachine.add('set control mode',
-										set_control_mode(mode=11, timeout=2),
-										transitions={'continue': 'filter_chain', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+			# x:61 y:157
+			OperatableStateMachine.add('filter_chain',
+										start_filter_chain(param_node_name=self.filter_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
+										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'header_name': 'header_name'})
 
-			# x:376 y:46
+			# x:459 y:50
 			OperatableStateMachine.add('get_target',
-										get_vision_target(bounding_box_pixel=100, target_width_meter=0.1, target_height_meter=0.1, ratio_victory=1, number_of_average=10, max_mouvement=1, min_mouvement=0.25, timeout=30),
-										transitions={'success': 'stop_filter_success', 'move': 'set mode single', 'failed': 'stop_filter_fail', 'search': 'search_snake'},
-										autonomy={'success': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'pose': 'target'})
+										get_bottom_vision_target(bounding_box_pixel_height=200, bounding_box_pixel_width=150, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.25, long_rotation=False, timeout=30, speed_profile=0),
+										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
+										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'header_name': 'header_name', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
 
-			# x:909 y:363
+			# x:215 y:46
+			OperatableStateMachine.add('init',
+										init_trajectory(interpolation_method=0),
+										transitions={'continue': 'get_target'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'input_trajectory'})
+
+			# x:827 y:277
 			OperatableStateMachine.add('move',
-										move_to_target(),
+										send_to_planner(),
 										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'pose': 'target'})
+										remapping={'input_traj': 'trajectory'})
 
-			# x:366 y:155
-			OperatableStateMachine.add('search_snake',
-										self.use_behavior(search_snakeSM, 'search_snake'),
-										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
-										remapping={'target': 'filterchain'})
-
-			# x:596 y:326
-			OperatableStateMachine.add('set mode single',
-										set_control_mode(mode=11, timeout=2),
-										transitions={'continue': 'move', 'failed': 'stop_filter_fail'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+			# x:463 y:151
+			OperatableStateMachine.add('search_zigzag',
+										self.use_behavior(search_zigzagSM, 'search_zigzag'),
+										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
+										remapping={'target': 'header_name'})
 
 			# x:120 y:477
 			OperatableStateMachine.add('stop_filter_fail',
@@ -101,7 +103,7 @@ class vision_buoySM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
-			# x:393 y:292
+			# x:435 y:301
 			OperatableStateMachine.add('stop_filter_lost',
 										start_filter_chain(param_node_name=self.filter_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=2),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
@@ -114,13 +116,6 @@ class vision_buoySM(Behavior):
 										transitions={'continue': 'finished', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
-
-			# x:157 y:138
-			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(param_node_name=self.filter_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'get_target', 'failed': 'stop_filter_fail'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'header_name': 'header_name'})
 
 
 		return _state_machine

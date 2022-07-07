@@ -9,8 +9,9 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.snake_mouvement_sm import snake_mouvementSM
-from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
+from sonia_navigation_states.stop_move import stop_move
+
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -91,8 +92,8 @@ class search_snakeSM(Behavior):
 			# x:338 y:63
 			OperatableStateMachine.add('found target',
 										stop_move(timeout=3),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										transitions={'continue': 'finished', 'failed': 'failed', 'error': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine

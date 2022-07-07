@@ -15,11 +15,12 @@ class cross_check_vision_target(EventState):
         -- timeout              uint8           Time to stop looking at this position
         -- confidence_target    uint8           Confidence required to continue
 
-        ># target1              Pose2D
-        ># target2              Pose2D
-        ># target3              Pose2D
-        #> confidence           uint8
-        #> target_position      MultiAddPose    
+        ># target1              AddPose         Test
+        ># target2              AddPose         Test
+        ># target3              AddPose         Test
+
+        #> confidence           uint8           Test
+        #> target_position      MultiAddPose    Test
 
         <= continue                             Confidence reached a satsfying level
         <= failed                               Continue to search for the target

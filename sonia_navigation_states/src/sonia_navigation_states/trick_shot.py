@@ -14,7 +14,7 @@ class trick_shot(EventState):
         Send multiple pose to do a trick shot in gate.
         [...]
 
-        --delay      uint8   Delay wanted at the .
+        -- delay      uint8   Delay wanted at the .
 
         <= continue     Indicate that trick shot is complete
     '''
@@ -55,7 +55,8 @@ class trick_shot(EventState):
                         # Barrel Roll
                         #  { 'position': Point(0, 0, 1.5), 'orientation': Vector3(0, 0, 0), 'frame': 1, 'speed': 5, 'fine': 0, 'rotation': True },
                         #  { 'position': Point(0, 0, 0), 'orientation': Vector3(180, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True },
-                        #  { 'position': Point(0, 0, 0), 'orientation': Vector3(180, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True }                     
+                        #  { 'position': Point(0, 0, 0), 'orientation': Vector3(180, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True }
+                        ]                     
         sleep(1)
 
     def target_reached_cb(self, data):
