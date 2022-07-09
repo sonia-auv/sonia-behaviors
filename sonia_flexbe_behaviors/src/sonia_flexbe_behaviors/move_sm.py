@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.add_pose_to_trajectory import add_pose_to_trajectory
-from sonia_flexbe_states.init_trajectory import init_trajectory
-from sonia_flexbe_states.send_to_planner import send_to_planner
+from sonia_navigation_states.add_pose_to_trajectory import add_pose_to_trajectory
+from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.send_to_planner import send_to_planner
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -67,7 +67,7 @@ class moveSM(Behavior):
 		with _state_machine:
 			# x:69 y:82
 			OperatableStateMachine.add('init_traj',
-										init_trajectory(),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'add_move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
@@ -81,7 +81,7 @@ class moveSM(Behavior):
 
 			# x:63 y:227
 			OperatableStateMachine.add('add_move',
-										add_pose_to_trajectory(positionX=self.positionX, positionY=self.positionY, positionZ=self.positionZ, orientationX=self.orientationX, orientationY=self.orientationY, orientationZ=self.orientationZ, frame=self.frame, speed=self.speed, precision=self.precision, rotation=self.rotation),
+										add_pose_to_trajectory(positionX=self.positionX, positionY=self.positionY, positionZ=self.positionZ, orientationX=self.orientationX, orientationY=self.orientationY, orientationZ=self.orientationZ, frame=self.frame, speed=self.speed, precision=self.precision, long_rotation=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'move'})

@@ -29,7 +29,7 @@ class module_check(EventState):
         super(module_check, self).__init__(outcomes=['continue', 'reboot', 'failed'])
 
         self.modules = tuple((navigation, vision, mapping, hydro, io, underwater_com, power, internal_com))
-        self.message_received = True
+        self.message_received = False
         self.error_detected = False
         self.reboot_initiated = False
 
@@ -39,14 +39,14 @@ class module_check(EventState):
         dictionnary_module = tuple((("navigation", "vision", "mapping", "hydro", "io", "underwater_com", "power", "internal_com")))
         
         for x in range(0, len(self.modules)):
-            if msg_error[x] == True and self.modules[x] == True:
+            if msg_error[x] == False and self.modules[x] == True:
                 Logger.log('Error with the module ' + dictionnary_module[x], Logger.REPORT_HINT)
                 self.error_detected = True
 
         self.message_received = True
 
     def on_enter(self, userdata):
-        self.get_fault_state = rospy.Subscriber('/proc_fault/module_errors', FaultDetection, self.get_fault_state_cb)
+        self.get_fault_state = rospy.Subscriber('/proc_fault/fault_detection', FaultDetection, self.get_fault_state_cb)
 
     def execute(self, userdata):
         if self.message_received == True:
@@ -61,5 +61,5 @@ class module_check(EventState):
                 return 'continue'
 
     def on_exit(self, userdata):
-        self.get_fault_state.unregister
+        self.get_fault_state.unregister()
             
