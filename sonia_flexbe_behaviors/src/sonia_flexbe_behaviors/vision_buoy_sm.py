@@ -25,7 +25,7 @@ Created on Sat Nov 13 2021
 '''
 class vision_buoySM(Behavior):
 	'''
-	Detect the buoy to find the octogon
+	Detect the buoy and align
 	'''
 
 
@@ -34,9 +34,9 @@ class vision_buoySM(Behavior):
 		self.name = 'vision_buoy'
 
 		# parameters of this behavior
-		self.add_parameter('filter_name', 'simple_sift')
+		self.add_parameter('filter_name', 'simulation_buoys')
 		self.add_parameter('camera_no', 3)
-		self.add_parameter('header_name', 'makeGrade_tommyGun')
+		self.add_parameter('header_name', 'badge')
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -70,7 +70,7 @@ class vision_buoySM(Behavior):
 
 			# x:474 y:12
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel_height=400, bounding_box_pixel_width=600, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0),
+										get_simple_vision_target(bounding_box_pixel_height=200, bounding_box_pixel_width=300, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'header_name': 'header_name', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})

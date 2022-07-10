@@ -17,9 +17,9 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="deep_wolf" label="filterchain" hint="Sets the filterchain" />
+		<param type="text" name="filterchain" default="simulation_cover" label="filterchain" hint="Sets the filterchain" />
 
-		<param type="text" name="header_name" default="wolf" label="header_name" hint="Sets the header_name" />
+		<param type="text" name="header_name" default="obstacle" label="header_name" hint="Sets the header_name" />
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />

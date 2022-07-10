@@ -112,7 +112,6 @@ class get_simple_vision_target(EventState):
         if  len(self.vision_x_pixel) == self.param_number_of_average:
             self.get_vision_data.unregister()
             self.parse_vision_data()
-            self.parse_data = True
 
     def parse_vision_data(self):
         average_x_pixel = sum(self.vision_x_pixel)/len(self.vision_x_pixel)
@@ -125,16 +124,22 @@ class get_simple_vision_target(EventState):
             swap = average_x_pixel
             average_x_pixel = average_y_pixel
             average_y_pixel = swap
+        
+        Logger.log('Area of target (px): %f' %(average_height_pixel*average_width_pixel), Logger.REPORT_HINT)
+        Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
 
         if average_width_pixel * average_height_pixel > self.param_bbp_height * self.param_bbp_width :
             self.position_reached = True
             Logger.log('Position reached', Logger.REPORT_HINT)
         else:
             self.position_reached = False
-            Logger.log('Width of target (px): %f' %average_width_pixel, Logger.REPORT_HINT)
-            Logger.log('Height of target (px): %f' %average_height_pixel, Logger.REPORT_HINT)
-            Logger.log('Area of target (px): %f' %(average_height_pixel*average_width_pixel), Logger.REPORT_HINT)
-            Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
+            #Logger.log('Width of target (px): %f' %average_width_pixel, Logger.REPORT_HINT)
+            #Logger.log('Height of target (px): %f' %average_height_pixel, Logger.REPORT_HINT)
+
+        Logger.log(average_x_pixel)
+        Logger.log(self.param_bbp_width)
+        Logger.log(average_y_pixel)
+        Logger.log(self.param_bbp_height)
 
         if abs(average_y_pixel) <= self.param_bbp_height and abs(average_x_pixel) <= self.param_bbp_width :
             self.alignement_reached = True
@@ -143,6 +148,8 @@ class get_simple_vision_target(EventState):
             self.alignement_reached = False
             self.x = average_x_pixel
             self.y = average_y_pixel
+        
+        self.parse_data = True
 
     def align_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
@@ -158,7 +165,7 @@ class get_simple_vision_target(EventState):
         if self.cam_bottom :
             new_pose.position = Point(mouvement_x, mouvement_y, 0.)
         else :
-            new_pose.position = Point(0., mouvement_x, -mouvement_y/4)
+            new_pose.position = Point(0., mouvement_x, -mouvement_y)
 
         new_traj.pose.append(self.fill_pose(new_pose))
         return (new_traj)
