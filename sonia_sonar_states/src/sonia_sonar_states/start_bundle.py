@@ -6,7 +6,7 @@ from time import time
 import rospy
 
 from flexbe_core import EventState, Logger
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 
 class start_bundle(EventState):
 
@@ -17,22 +17,22 @@ class start_bundle(EventState):
         <= failed               Indicates that the waypoints aren't correctly
     '''
 
-    def __init__(self, resetBundle = True):
+    def __init__(self,Obstacle2Search = 'Buoys', resetBundle = True):
         
-        super(start_sonar, self).__init__(outcomes=['continue'])
+        super(start_bundle, self).__init__(outcomes=['continue'])
         self.time_launch = time()
         self.resetBundle = resetBundle
-        self.startBundlePub = rospy.Publisher('/proc_mapping/start_stop', Bool, queue_size=10)
-        self.clearBundlePub = rospy.Publisher('/proc_mapping/clear_bundle', Bool, queue_size=10)
+        self.startBundlePub = rospy.Publisher('/proc_mapping/start', String, queue_size= 1)
+        self.clearBundlePub = rospy.Publisher('/proc_mapping/clear_bundle', Bool, queue_size= 1)
+        self.Obstacle2Search = Obstacle2Search
     
-    def on_enter(self, userdata):
+    def execute(self, userdata):
         Logger.log('Sending start to bundler', Logger.REPORT_HINT)
         if(self.resetBundle):
             self.clearBundlePub.publish(True)
-        self.startBundlePub.publish(True)
+        self.startBundlePub.publish(self.Obstacle2Search)
+        return 'continue'
 
-    def execute(self, userdata):
-        time_dif = time() - self.time_launch
-        # Time has to experimental values
-        if time_dif > 0.5:
-            return 'continue'
+    def on_exit(self, userdata):
+        pass
+        

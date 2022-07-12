@@ -8,7 +8,7 @@ import rospy
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Bool
 from sonia_common.msg import MultiAddPose
-from sonia_common.msg import AddPose
+from sonia_common.msg import AddPose, ObstacleArray
 
 # Custom includes
 import sonia_navigation_states.modules.navigation_utilities as navUtils
@@ -22,39 +22,32 @@ class stop_bundle(EventState):
         <= failed               Indicates that the waypoints aren't correctly
     '''
 
-    def __init__(self, resetBundle = False, frame=1, speed=0, precision=0, long_rotation=False):
+    def __init__(self,ObstacleID = 1 , resetBundle = False):
         
-        super(stop_bundle, self).__init__(outcomes=['continue', 'time_out'], output_keys=['trajectory'])
-        self.time_launch = time()
+        super(stop_bundle, self).__init__(outcomes=['found','not_found', 'time_out'], output_keys=['trajectory'])
+        
         self.resetBundle = resetBundle
-        self.positionX = 0.0
-        self.positionY = 0.0
-        self.positionZ = 0.0
-        self.orientationX = 0.0
-        self.orientationY = 0.0
-        self.orientationZ = 0.0
-        self.frame = frame
-        self.speed = speed
-        self.precision = precision
-        self.long_rotation = long_rotation
-        self.poseFound = False
-        self.pose = None
-        self.startBundlePub = rospy.Publisher('/proc_mapping/start_stop', Bool, queue_size=10)
+        self.ObstacleArrayUpdated = False
+        self.ObstacleArray = None
+        self.startBundlePub = rospy.Publisher('/proc_mapping/stop', Bool, queue_size=10)
         self.clearBundlePub = rospy.Publisher('/proc_mapping/clear_bundle', Bool, queue_size=10)
-        self.outputPoseSub = rospy.Subscriber('proc_mapping/output_pose', AddPose, self.pose_cb)
-
+        self.outputPoseSub = rospy.Subscriber('/proc_mapping/obstacle_infos', ObstacleArray, self.pose_cb)
+        self.ObstacleID =ObstacleID
     
     def on_enter(self, userdata):
-        Logger.log('Sending start to bundler', Logger.REPORT_HINT)
+        Logger.log('Sending stop to bundler', Logger.REPORT_HINT)
         self.startBundlePub.publish(False)
+        self.time_launch = time()
 
     def execute(self, userdata):
         time_dif = time() - self.time_launch
         # Time has to experimental values
-        if time_dif < 60:
-            if(self.poseFound):
-                userdata.trajectory = navUtils.addpose(self.pose.position.x, self.pose.position.Y, self.pose.position.Z, self.pose.orientation.X,
-                                                      self.pose.orientation.Y, self.pose.orientation.Z,self.frame, self.speed, self.precision, self.long_rotation)
+        if time_dif < 10:
+            if(self.ObstacleArray):
+                if self.ObstacleArray.obstacles[self.ObstacleID].is_valid:
+                    return 'found'
+                else:
+                    return 'not_found'
         else:
             return 'time_out'
 
@@ -64,4 +57,4 @@ class stop_bundle(EventState):
 
     def pose_cb(self, data):
         self.poseFound = True
-        self.pose = data
+        self.ObstacleArray = data
