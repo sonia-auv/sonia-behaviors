@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_square">
+
+	<executable package_path="sonia_flexbe_behaviors.search_square_sm" class="search_squareSM" />
+	<tagstring>search</tagstring>
+	<author>CS</author>
+	<date>July 12 2022</date>
+	<description>
+		Search mouvement in a zigzag patern in a square.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="square" />
+
+	<!-- Available Parameters -->
+
+</behavior>

@@ -15,7 +15,7 @@ class wait_target_reached(EventState):
         target reached.
     '''
 
-    def __init__(self, timeout=30):
+    def __init__(self, timeout=5):
         
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 

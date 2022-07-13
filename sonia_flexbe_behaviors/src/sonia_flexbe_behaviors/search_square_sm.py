@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.zigzag_sm import zigzagSM
+from sonia_flexbe_behaviors.square_sm import squareSM
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
@@ -19,23 +19,23 @@ from sonia_vision_states.find_vision_target import find_vision_target
 
 
 '''
-Created on Wed May 18 2022
-@author: KY
+Created on July 12 2022
+@author: CS
 '''
-class search_zigzagSM(Behavior):
+class search_squareSM(Behavior):
 	'''
-	Search mouvement in a zigzag patern.
+	Search mouvement in a zigzag patern in a square.
 	'''
 
 
 	def __init__(self):
-		super(search_zigzagSM, self).__init__()
-		self.name = 'search_zigzag'
+		super(search_squareSM, self).__init__()
+		self.name = 'search_square'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(zigzagSM, 'Container/zigzag')
+		self.add_behavior(squareSM, 'Container/square')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -59,15 +59,15 @@ class search_zigzagSM(Behavior):
 
 		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266
 		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target', 'filterchain'], conditions=[
-										('lost_target', [('zigzag', 'finished')]),
-										('failed', [('zigzag', 'failed')]),
-										('finished', [('find_target', 'continue')])
+										('finished', [('find_target', 'continue')]),
+										('lost_target', [('square', 'finished')]),
+										('failed', [('square', 'failed')])
 										])
 
 		with _sm_container_0:
-			# x:195 y:94
-			OperatableStateMachine.add('zigzag',
-										self.use_behavior(zigzagSM, 'Container/zigzag'),
+			# x:187 y:65
+			OperatableStateMachine.add('square',
+										self.use_behavior(squareSM, 'Container/square'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

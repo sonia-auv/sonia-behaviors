@@ -22,25 +22,25 @@ from sonia_vision_states.start_filter_chain import start_filter_chain
 
 
 '''
-Created on Tue Jul 12 2022
+Created on 06/07/2022
 @author: CS
 '''
-class vision_buoySM(Behavior):
+class vision_binsSM(Behavior):
 	'''
-	Detect the buoy and align
+	Find the bins with the cover.
 	'''
 
 
 	def __init__(self):
-		super(vision_buoySM, self).__init__()
-		self.name = 'vision_buoy'
+		super(vision_binsSM, self).__init__()
+		self.name = 'vision_bins'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_buoys')
-		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'badge')
-		self.add_parameter('bounding_box_width', 70)
-		self.add_parameter('bounding_box_height', 350)
+		self.add_parameter('filterchain', 'simulation_cover')
+		self.add_parameter('target', 'bins_cover')
+		self.add_parameter('camera_no', 2)
+		self.add_parameter('bounding_box_width', 75)
+		self.add_parameter('bounding_box_height', 75)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -55,8 +55,8 @@ class vision_buoySM(Behavior):
 
 
 	def create(self):
-		# x:915 y:223, x:110 y:631, x:265 y:395
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
+		# x:413 y:401, x:130 y:365, x:590 y:631, x:781 y:243
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -65,73 +65,66 @@ class vision_buoySM(Behavior):
 
 
 		with _state_machine:
-			# x:61 y:157
-			OperatableStateMachine.add('filter_chain',
+			# x:65 y:163
+			OperatableStateMachine.add('find_bins',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=1),
-										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
+										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:706 y:50
-			OperatableStateMachine.add('get_target',
+			# x:516 y:225
+			OperatableStateMachine.add('check_moving',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'get_bins', 'moving': 'wait_align', 'error': 'controller_error'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:383 y:31
+			OperatableStateMachine.add('get_bins',
 										get_simple_vision_target(bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0),
-										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
+										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
-			# x:217 y:45
-			OperatableStateMachine.add('init',
+			# x:175 y:40
+			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'get_target'},
+										transitions={'continue': 'get_bins'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_trajectory'})
 
-			# x:531 y:215
-			OperatableStateMachine.add('move',
-										send_to_planner(),
-										transitions={'continue': 'wait_target_reached', 'failed': 'stop_filter_fail'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'trajectory'})
-
-			# x:214 y:138
+			# x:485 y:359
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
-										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
+										transitions={'finished': 'get_bins', 'failed': 'stop_lost_target', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'filterchain': 'filterchain'})
 
-			# x:109 y:475
-			OperatableStateMachine.add('stop_filter_fail',
+			# x:765 y:550
+			OperatableStateMachine.add('stop_lost_target',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
-										transitions={'continue': 'failed', 'failed': 'failed'},
+										transitions={'continue': 'lost_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:258 y:239
-			OperatableStateMachine.add('stop_filter_lost',
+			# x:292 y:277
+			OperatableStateMachine.add('stop_success',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
-										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
+										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:973 y:74
-			OperatableStateMachine.add('stop_filter_success',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
-										transitions={'continue': 'finished', 'failed': 'finished'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
-
-			# x:576 y:370
-			OperatableStateMachine.add('wait_target_reached',
-										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},
+			# x:603 y:101
+			OperatableStateMachine.add('wait_align',
+										wait_target_reached(timeout=30),
+										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:790 y:429
-			OperatableStateMachine.add('check_moving',
-										is_moving(timeout=15, tolerance=0.1),
-										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
-										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+			# x:844 y:31
+			OperatableStateMachine.add('align',
+										send_to_planner(),
+										transitions={'continue': 'wait_align', 'failed': 'stop_lost_target'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory'})
 
 
 		return _state_machine
