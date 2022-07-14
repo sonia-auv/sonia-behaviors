@@ -11,10 +11,11 @@ from std_msgs.msg import Bool
 class start_stop_sonar(EventState):
 
     '''
-        Create the object for the trajectory
+        State to start or stop the sonar pings.
 
-        <= continue             Indicates that the trajectory will be compute
-        <= failed               Indicates that the waypoints aren't correctly
+        -- startStop            Start (true) or stop (false) the pings.
+
+        <= continue             Indicates that the ping are started/stopped.
     '''
 
     def __init__(self, startStop = True):

@@ -16,15 +16,19 @@ import sonia_navigation_states.modules.navigation_utilities as navUtils
 class stop_bundle(EventState):
 
     '''
-        Create the object for the trajectory
+        Stop the record of a bundle with proc_mapping.
 
-        <= continue             Indicates that the trajectory will be compute
-        <= failed               Indicates that the waypoints aren't correctly
+        -- ObstacleID   uint8  The ID of the obstacle you wanted to find.
+        -- resetBundle  bool   Indicates if you want to clear a current bundle or not. 
+
+        <= found               Indicates that the proc_mapping found the object you specified.
+        <= not_found           Indicates that the proc_mapping didn't find the object you specified.
+        <= time_out            Indicates that the proc_mapping didn't find the object you specified within an appropriate delay.
     '''
 
-    def __init__(self,ObstacleID = 1 , resetBundle = False):
+    def __init__(self, ObstacleID = 1 , resetBundle = False):
         
-        super(stop_bundle, self).__init__(outcomes=['found','not_found', 'time_out'], output_keys=['trajectory'])
+        super(stop_bundle, self).__init__(outcomes=['found','not_found', 'time_out'])
         
         self.resetBundle = resetBundle
         self.ObstacleArrayUpdated = False

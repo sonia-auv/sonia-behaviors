@@ -116,7 +116,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:322 y:81
 			OperatableStateMachine.add('start bundle',
-										start_bundle(Obstacle2Search='Buoys', resetBundle=True),
+										start_bundle(target='Buoys', resetBundle=True),
 										transitions={'continue': 'init1'},
 										autonomy={'continue': Autonomy.Off})
 
@@ -124,8 +124,7 @@ class sonar_end_2_endSM(Behavior):
 			OperatableStateMachine.add('stop bundle',
 										stop_bundle(ObstacleID=1, resetBundle=False),
 										transitions={'found': 'stop sonar', 'not_found': 'failed', 'time_out': 'failed'},
-										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
+										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off})
 
 			# x:569 y:421
 			OperatableStateMachine.add('stop sonar',
