@@ -22,26 +22,34 @@ class activate_io(EventState):
 
     '''
 
-    def __init__(self, element, side):
+    def __init__(self, element, side, timeout=10):
         super(activate_io, self).__init__(outcomes=['continue', 'failed'])
         
         self.start_time = None
         self.do_action = None
+        self.param_side = side
+        self.param_element = element
+        self.timeout = timeout
 
         self.action = ActuatorDoActionSrvRequest()
         self.action_side = {'1': self.action.SIDE_PORT, '2': self.action.SIDE_STARBOARD}
         self.action_element = {'1': self.action.ELEMENT_TORPEDO, '2': self.action.ELEMENT_DROPPER, '3': self.action.ELEMENT_ARM}
-        self.param_side = side
-        self.param_element = element
 
     def on_enter(self, userdata):
-        rospy.wait_for_service('/proc_actuators/cm_action_srv')
-        self.do_action = rospy.ServiceProxy('/proc_actuators/cm_action_srv', ActuatorDoActionSrv)
+        try:
+            # rospy.wait_for_service('/proc_actuators/cm_action_srv', self.timeout)
+            # self.do_action = rospy.ServiceProxy('/proc_actuators/cm_action_srv', ActuatorDoActionSrv)
+            rospy.wait_for_service('/provider_actuators/do_action_srv', self.timeout)
+            self.do_action = rospy.ServiceProxy('/provider_actuators/do_action_srv', ActuatorDoActionSrv)
+        except rospy.ServiceException as exc:
+            rospy.loginfo('Service is not available : ' + str(exc))
+            return 'failed'
+
         try:
             self.do_action(self.action_element[str(int(self.param_element))], self.action_side[str(int(self.param_side))], self.action.ACTION_DROPPER_LAUNCH)
 
         except rospy.ServiceException as exc:
-            rospy.loginfo('Service did not process request: ' + str(exc))
+            rospy.loginfo('Service did not process request : ' + str(exc))
             return 'failed'
 
     def execute(self, userdata):

@@ -8,18 +8,19 @@ from queue import deque
 from flexbe_core import EventState, Logger
 import sonia_navigation_states.modules.navigation_utilities as navUtils
 from sonia_common.msg import VisionTarget, MultiAddPose, AddPose
-from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Vector3
 
-class get_bottom_vision_target(EventState):
+class get_bottom_vision_target_complex(EventState):
 
     '''
         Get the movement target from vision filterchain
 
-        -- bounding_box_pixel_height    uint16          height of bounding box for alignement on target in pixel
+        -- bounding_box_pixel_height    uint16          Height of bounding box for alignement on target in pixel
         -- bounding_box_pixel_width     uint16          Width of square bounding box for alignement on target in pixel
-        -- image_height                 uint16          Width of the image in pixels
-        -- image_width                  uint16          Height of the image in pixels
+        -- bounding_box_offset_x        uint16          X Offset of bounding box for alignement on target in pixel
+        -- bounding_box_offset_y        uint16          Y Offset of bounding box for alignement on target in pixel
+        -- target_width_meter           float           Width of the target in meters
+        -- target_height_meter          float           Height of the target in meters
         -- number_of_average            uint8           Number of image to average before creating a pose
         -- max_mouvement                uint8           Maximum distance allowed to move
         -- min_mouvement                float           Minimum distance for a mouvement
@@ -30,13 +31,14 @@ class get_bottom_vision_target(EventState):
                                                         0 : normal
                                                         1 : slow
                                                         2 : fast
+        -- max_tentative                uint8           Max number of tentative of alignement
 
         ># filterchain                  string          Topic to listen to get the target
         ># camera_no                    uint8           1 : front 
                                                         2 : bottom
                                                         3 : front simulation
                                                         4 : bottom simulation       
-        ># target                       string          Target to align to
+        ># header_name                  string          Header name to filter result
         ># input_trajectory             MultiAddPose    Input trajectory
 
         #> output_trajectory            MultiAddPose    Output trajectory
@@ -48,16 +50,19 @@ class get_bottom_vision_target(EventState):
         <= success                                      The target has been reached. Ready for action
         <= move                                         Movement ready to do with the pose calculated
         <= failed                                       Error in the calculation and loop
+        <= max_attempt
     '''
 
-    def __init__(self, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
+    def __init__(self, bounding_box_pixel_height=100, bounding_box_pixel_width=100, bounding_box_offset_x=0, bounding_box_offset_y=0, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0, max_tentative=10):
         
-        super(get_bottom_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'input_trajectory'],
+        super(get_bottom_vision_target_complex, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search', 'max_attempt'],
+                                                input_keys = ['filterchain', 'camera_no', 'header_name', 'input_trajectory'],
                                                 output_keys = ['output_trajectory', 'camera', 'angle'])
 
         self.param_bbp_height = bounding_box_pixel_height
         self.param_bbp_width = bounding_box_pixel_width
+        self.param_bbp_offset_x = bounding_box_offset_x
+        self.param_bbp_offset_y = bounding_box_offset_y
         self.param_image_height = image_height
         self.param_image_width = image_width
         self.param_number_of_average = number_of_average
@@ -66,8 +71,9 @@ class get_bottom_vision_target(EventState):
         self.param_long_rotation = long_rotation
         self.param_timeout = timeout
         self.param_speed_profile = speed_profile
+        self.param_max_enter = max_tentative
 
-        self.nombre_enter = 0
+        self.number_enter = 0
         
         self.vision_x_pixel = deque([], maxlen=self.param_number_of_average)
         self.vision_y_pixel = deque([], maxlen=self.param_number_of_average)
@@ -76,6 +82,12 @@ class get_bottom_vision_target(EventState):
         self.vision_angle = deque([], maxlen=self.param_number_of_average)
 
     def on_enter(self, userdata):
+
+        self.number_enter += 1
+        if self.number_enter > self.param_max_enter:
+            self.number_enter = 0
+            return 'max_attempt'
+        Logger.log('Starting attempt ' + str(self.number_enter) + '/' + str(self.param_max_enter), Logger.REPORT_HINT) 
 
         self.vision_x_pixel.clear()
         self.vision_y_pixel.clear()
@@ -89,27 +101,24 @@ class get_bottom_vision_target(EventState):
         self.x = 0.
         self.y = 0.
         self.angle = 0.
-        self.target = userdata.target
-
-        self.position_z = 0.3
+        self.header_name = userdata.header_name
 
         if userdata.camera_no == 2 or userdata.camera_no == 4 :
             self.cam_bottom = True
+            swap = self.param_bbp_offset_x
+            self.param_bbp_offset_x = self.param_bbp_offset_y
+            self.param_bbp_offset_y = swap
+            swap = self.param_image_height
+            self.param_image_height = self.param_image_width
+            self.param_image_height = swap
         else :
             self.cam_bottom = False
 
         self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
-        self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
         self.start_time = time()
 
-        self.nombre_enter += 1
-        Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
-
-    def position_cb(self, data):
-        self.position_z = data.pose.pose.position.z
-
     def vision_cb(self, vision_data):
-        if vision_data.header == self.target or vision_data.desc_1 == self.target:
+        if vision_data.header == self.header_name or vision_data.desc_1 == self.header_name:
             self.vision_x_pixel.append(vision_data.x)
             self.vision_y_pixel.append(vision_data.y)
             self.vision_width_pixel.append(vision_data.width)
@@ -119,6 +128,7 @@ class get_bottom_vision_target(EventState):
         if  len(self.vision_x_pixel) == self.param_number_of_average:
             self.get_vision_data.unregister()
             self.parse_vision_data()
+            self.parse_data = True
 
     def parse_vision_data(self):
         average_x_pixel = sum(self.vision_x_pixel)/len(self.vision_x_pixel)
@@ -127,44 +137,46 @@ class get_bottom_vision_target(EventState):
         average_height_pixel = sum(self.vision_height_pixel)/len(self.vision_height_pixel)
         self.angle = sum(self.vision_angle)/len(self.vision_angle)
 
-        if self.cam_bottom:
-            swap = average_x_pixel
-            average_x_pixel = average_y_pixel
-            average_y_pixel = swap
-        
-        Logger.log('Area of target (px): %f' %(average_height_pixel*average_width_pixel), Logger.REPORT_HINT)
-        Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
+        # if self.cam_bottom:
+        #     swap = average_x_pixel
+        #     average_x_pixel = average_y_pixel
+        #     average_y_pixel = swap
 
         if average_width_pixel * average_height_pixel > self.param_bbp_height * self.param_bbp_width :
             self.position_reached = True
             Logger.log('Position reached', Logger.REPORT_HINT)
         else:
             self.position_reached = False
-            #Logger.log('Width of target (px): %f' %average_width_pixel, Logger.REPORT_HINT)
-            #Logger.log('Height of target (px): %f' %average_height_pixel, Logger.REPORT_HINT)
+            # Logger.log('Width of target (px): %f' %average_width_pixel, Logger.REPORT_HINT)
+            # Logger.log('Height of target (px): %f' %average_height_pixel, Logger.REPORT_HINT)
+            # Logger.log('Area of target (px): %f' %(average_height_pixel*average_width_pixel), Logger.REPORT_HINT)
+            # Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
 
-        Logger.log(abs(average_x_pixel), Logger.REPORT_HINT)
-        Logger.log(self.param_bbp_width/2, Logger.REPORT_HINT)
-        Logger.log(abs(average_y_pixel), Logger.REPORT_HINT)
-        Logger.log(self.param_bbp_height/2, Logger.REPORT_HINT)
+        
 
-        if abs(average_y_pixel) <= self.param_bbp_height/2 and abs(average_x_pixel) <= self.param_bbp_width/2 :
+        #if abs(average_y_pixel) <= (self.param_bbp_height+self.param_bbp_offset_y) and abs(average_x_pixel) <= (self.param_bbp_width+self.param_bbp_offset_x) :
+        if average_y_pixel <= (self.param_bbp_offset_y+self.param_bbp_height/2) and average_y_pixel >= (self.param_bbp_offset_y-self.param_bbp_height/2) and average_x_pixel <= (self.param_bbp_offset_x+self.param_bbp_width/2) and average_x_pixel >= (self.param_bbp_offset_x-self.param_bbp_width/2):
             self.alignement_reached = True
             Logger.log('Alignement reached', Logger.REPORT_HINT)
         else:
             self.alignement_reached = False
             self.x = average_x_pixel
             self.y = average_y_pixel
-        
-        self.parse_data = True
 
     def align_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
 
         new_traj = MultiAddPose()
         new_pose = AddPose()
-        mouvement_x = self.x / (self.param_image_width*self.position_z)
-        mouvement_y = self.y / (self.param_image_height*self.position_z)
+
+        mouvement_x = (self.x + (self.param_bbp_offset_x/self.param_image_width) + ((self.param_bbp_width/2)/self.param_image_width)) / self.param_image_width
+        Logger.log('Average pixel x : ' + str(self.x), Logger.REPORT_HINT)
+        Logger.log('Average pixel x + offset x : ' + str(self.x + self.param_bbp_offset_x), Logger.REPORT_HINT)
+
+        mouvement_y = (self.y + (self.param_bbp_offset_y/self.param_image_height) + ((self.param_bbp_height/2)/self.param_image_height)) / self.param_image_height
+        Logger.log('Average pixel y : ' + str(self.y), Logger.REPORT_HINT)
+        Logger.log('Average pixel y + offset y : ' + str(self.y + self.param_bbp_offset_y), Logger.REPORT_HINT)
+
 
         Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
         Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)
@@ -172,7 +184,7 @@ class get_bottom_vision_target(EventState):
         if self.cam_bottom :
             new_pose.position = Point(mouvement_x, mouvement_y, 0.)
         else :
-            new_pose.position = Point(0., mouvement_x, -mouvement_y)
+            new_pose.position = Point(0., mouvement_x, -mouvement_y/4)
 
         new_traj.pose.append(self.fill_pose(new_pose))
         return (new_traj)
@@ -195,24 +207,25 @@ class get_bottom_vision_target(EventState):
 
     def execute(self, userdata):
         actual = time() - self.start_time
-        if self.parse_data == True:
+        if self.parse_data:
             self.parse_data = False
             Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
-            if self.position_reached == True and self.alignement_reached == True:
-                if self.cam_bottom == True :
+            if self.position_reached and self.alignement_reached:
+                if self.cam_bottom:
                     userdata.angle = self.angle
                     userdata.output_trajectory = userdata.input_trajectory
                     userdata.camera = 1
                 return 'success'
-            elif self.alignement_reached == False:
+            elif not self.alignement_reached:
                 userdata.output_trajectory = self.align_with_vision()
                 return 'align'
-            elif self.position_reached == False:
+            elif not self.position_reached:
                 userdata.output_trajectory = self.position_with_vision()
                 return 'move'
             else:
                 return 'failed'
         if actual > self.param_timeout :
+            Logger.log('TIMEOUT', Logger.REPORT_HINT)
             return 'search'
 
     def on_exit(self, userdata):

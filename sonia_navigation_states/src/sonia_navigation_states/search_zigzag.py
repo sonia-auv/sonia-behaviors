@@ -16,49 +16,53 @@ from sonia_common.msg import AddPose, MultiAddPose
 class search_zigzag(EventState):
 
     '''
-    This state generate a zigzag serach trajectory
+        This state generate a zigzag serach trajectory
+                |<------------- box Y ---------------->|
+            _ _  ______________________________________
+                ^  |
+                |  |
+                |  |______________________________________  _ _
+                |                                         |  ^
+            box X                                       |  stroke 
+                |   ______________________________________| _v_
+                |  |
+                |  |
+            _v_ |___________________
+                                    ___        ^ x
+                                    | ^ |       |
+                                _|   |_      |
+                                |_ sub _|     -----> y
+                                    |   |       body frame
+                                    |___|
+
+        -- boxX             uint8               Length of zigzag
+        -- boxY             uint8               Width of zigzag
+        -- stroke           float               Distance between changes of direction
+        -- radius           float               Radius rounds the trajectory
+        -- side             bool                False = start to left, True = start to right
+
+        ># input_traj       MultiAddPose        Input trajectory
+
+        #> trajectory       MultiAddPose        Output trajectory
+
+        <= continue                             End of the zigzag
     '''
-    '''
-               |<------------- box Y ---------------->|
-           _ _  ______________________________________
-            ^  |
-            |  |
-            |  |______________________________________  _ _
-            |                                         |  ^
-          box X                                       |  stroke 
-            |   ______________________________________| _v_
-            |  |
-            |  |
-           _v_ |___________________
-                                 ___        ^ x
-                                | ^ |       |
-                               _|   |_      |
-                              |_ sub _|     -----> y
-                                |   |       body frame
-                                |___|
 
-     Side false = start to left, true = start to right
-
-     radius can roud the trajectory.
-        '''
-
-    def __init__(self, boxX=5, boxY=5, stroke=1 , radius=0.4, side = False ):
+    def __init__(self, boxX=5, boxY=5, stroke=0.8 , radius=0.4, side = False ):
         
         super(search_zigzag, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
                                                      output_keys=['trajectory'])
 
-        self.boxX= boxX
+        self.boxX = boxX
         self.boxY = boxY
-        self.stroke =stroke
+        self.stroke = stroke
         self.radius = radius
-        self.side =side
+        self.side = side
 
         # Compute trajectory parameters
         self.fullStep = int(math.floor(self.boxX/self.stroke))
         self.residue = self.boxX % self.stroke
-
-
 
     def execute(self, userdata):
 
@@ -94,7 +98,7 @@ class search_zigzag(EventState):
             new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY), 0, 0, 0, 0, 1, 0, self.radius,False))
 
         # print debug
-        Logger.log('Zigzag serach as succesfully generated '+ str(i) + 'waypoints' , Logger.REPORT_HINT)
+        Logger.log('Zigzag search has succesfully generated ' + str(i) + ' waypoints', Logger.REPORT_HINT)
 
         userdata.trajectory = new_traj
         return 'continue'

@@ -4,27 +4,36 @@
 
 	<executable package_path="sonia_flexbe_behaviors.vision_droppers_sm" class="vision_droppersSM" />
 	<tagstring>pool</tagstring>
-	<author>William Brouillard</author>
-	<date>Wed Nov 17 2021</date>
+	<author>CS</author>
+	<date>06/07/2022</date>
 	<description>
 		Find the bin with the right filter chain, then drop the markers in the bin.
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_circle" />
-	<contains name="Aligment with stopping" />
+	<contains name="search_square" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="deep_wolf" label="filterchain" hint="Sets the filterchain" />
+		<param type="text" name="filterchain" default="simulation_bins_barrel" label="filterchain" hint="Sets the filterchain" />
 
-		<param type="text" name="header_name" default="wolf" label="header_name" hint="Sets the header_name" />
+		<param type="text" name="target" default="barrel" label="target" hint="Sets the target" />
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="130" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_width" default="250" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
 		</param>
 
 	</params>
