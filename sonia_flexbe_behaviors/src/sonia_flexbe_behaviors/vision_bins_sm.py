@@ -55,7 +55,7 @@ class vision_binsSM(Behavior):
 
 
 	def create(self):
-		# x:413 y:401, x:130 y:365, x:590 y:631, x:781 y:243
+		# x:455 y:272, x:130 y:365, x:590 y:631, x:771 y:240
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
@@ -92,10 +92,10 @@ class vision_binsSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_trajectory'})
 
-			# x:485 y:359
+			# x:536 y:310
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
-										transitions={'finished': 'get_bins', 'failed': 'stop_lost_target', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
+										transitions={'finished': 'get_bins', 'failed': 'failed', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'filterchain': 'filterchain'})
 

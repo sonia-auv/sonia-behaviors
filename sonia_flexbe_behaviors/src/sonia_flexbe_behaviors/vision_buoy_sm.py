@@ -121,13 +121,13 @@ class vision_buoySM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:576 y:370
+			# x:561 y:368
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:790 y:429
+			# x:797 y:471
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
