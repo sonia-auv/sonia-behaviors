@@ -110,7 +110,7 @@ class AUV8_AUV7_Run_coinflip_gate_with_trick_pathSM(Behavior):
 			# x:470 y:115
 			OperatableStateMachine.add('AUV8_gate_completed',
 										send_update(mission=1, state=2),
-										transitions={'continue': 'trickshot'},
+										transitions={'continue': 'AUV8_trickshot_failed'},
 										autonomy={'continue': Autonomy.Off})
 
 			# x:509 y:205
@@ -128,7 +128,7 @@ class AUV8_AUV7_Run_coinflip_gate_with_trick_pathSM(Behavior):
 			# x:704 y:217
 			OperatableStateMachine.add('AUV8_trickshot_failed',
 										send_update(mission=2, state=-1),
-										transitions={'continue': 'failed'},
+										transitions={'continue': 'Move_now'},
 										autonomy={'continue': Autonomy.Off})
 
 			# x:43 y:312
