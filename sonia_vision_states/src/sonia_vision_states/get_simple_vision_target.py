@@ -171,8 +171,16 @@ class get_simple_vision_target(EventState):
 
         new_traj = MultiAddPose()
         new_pose = AddPose()
-        mouvement_x = self.average_x_pixel / (self.param_image_width*self.position_z)
-        mouvement_y = self.average_y_pixel / (self.param_image_height*self.position_z)
+        
+        if self.position_z >=1:
+            mouvement_x = self.average_x_pixel / (self.param_image_width*self.position_z)
+            mouvement_y = self.average_y_pixel / (self.param_image_height*self.position_z)
+        else:
+            mouvement_x = self.average_x_pixel / (self.param_image_width)
+            mouvement_y = self.average_y_pixel / (self.param_image_height)
+           
+        # mouvement_x = self.average_x_pixel / (self.param_image_width*self.position_z)
+        # mouvement_y = self.average_y_pixel / (self.param_image_height*self.position_z)
 
         Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
         Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)

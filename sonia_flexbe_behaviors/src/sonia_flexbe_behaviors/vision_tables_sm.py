@@ -25,22 +25,22 @@ from sonia_vision_states.start_filter_chain import start_filter_chain
 Created on 06/07/2022
 @author: CS
 '''
-class vision_binsSM(Behavior):
+class vision_tablesSM(Behavior):
 	'''
 	Find the bins with the cover.
 	'''
 
 
 	def __init__(self):
-		super(vision_binsSM, self).__init__()
-		self.name = 'vision_bins'
+		super(vision_tablesSM, self).__init__()
+		self.name = 'vision_tables'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_cover')
-		self.add_parameter('target', 'bins_cover')
+		self.add_parameter('filterchain', 'simple_tables')
+		self.add_parameter('target', 'tables')
 		self.add_parameter('camera_no', 2)
-		self.add_parameter('bounding_box_width', 75)
-		self.add_parameter('bounding_box_height', 75)
+		self.add_parameter('bounding_box_width', 100)
+		self.add_parameter('bounding_box_height', 100)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
