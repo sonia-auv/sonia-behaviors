@@ -12,8 +12,18 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="init_submarine" />
 	<contains name="touch_buoy" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="threshold" default="0.5" label="threshold" hint="Sets the threshold">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+	</params>
+
 
 </behavior>

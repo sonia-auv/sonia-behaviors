@@ -17,21 +17,21 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simulation_buoys" label="filterchain" hint="Sets the filterchain" />
+		<param type="text" name="filterchain" default="simple_buoy_badge" label="filterchain" hint="Sets the filterchain" />
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="text" name="target" default="badge" label="target" hint="Sets the target" />
+		<param type="text" name="target" default="obstacle" label="target" hint="Sets the target" />
 
-		<param type="numeric" name="bounding_box_width" default="70" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="350" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>

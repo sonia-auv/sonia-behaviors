@@ -11,6 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
@@ -36,11 +37,11 @@ class vision_buoySM(Behavior):
 		self.name = 'vision_buoy'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_buoys')
+		self.add_parameter('filterchain', 'simple_buoy_badge')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'badge')
-		self.add_parameter('bounding_box_width', 70)
-		self.add_parameter('bounding_box_height', 350)
+		self.add_parameter('target', 'obstacle')
+		self.add_parameter('bounding_box_width', 200)
+		self.add_parameter('bounding_box_height', 300)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -93,6 +94,20 @@ class vision_buoySM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
+			# x:1178 y:71
+			OperatableStateMachine.add('move_forward',
+										manual_add_pose_to_trajectory(positionX=2, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'planner'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+
+			# x:1366 y:161
+			OperatableStateMachine.add('planner',
+										send_to_planner(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'trajectory'})
+
 			# x:214 y:138
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
@@ -117,7 +132,7 @@ class vision_buoySM(Behavior):
 			# x:973 y:74
 			OperatableStateMachine.add('stop_filter_success',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
-										transitions={'continue': 'finished', 'failed': 'finished'},
+										transitions={'continue': 'move_forward', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 

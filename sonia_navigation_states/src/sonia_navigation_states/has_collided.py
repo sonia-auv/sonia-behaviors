@@ -38,6 +38,9 @@ class has_collided(EventState):
 
         if norm_err > self.param_threshold:
             self.target_reached = True
+
+        # if self.err_position_x > self.param_threshold or self.err_position_y > self.param_threshold or self.err_position_z > self.param_threshold:
+        #     self.target_reached = True
         
         print("Trajectory error : x = " + str(self.err_position_x) + ", y = " + str(self.err_position_y) + ", z = " + str(self.err_position_z))
         print("Trajectory norm error : " + str(norm_err))

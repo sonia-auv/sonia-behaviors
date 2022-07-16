@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.init_submarine_sm import init_submarineSM
 from sonia_flexbe_behaviors.touch_buoy_sm import touch_buoySM
 from sonia_navigation_states.has_collided import has_collided
 from sonia_navigation_states.stop_move import stop_move
@@ -32,9 +33,11 @@ class check_collisionSM(Behavior):
 		self.name = 'check_collision'
 
 		# parameters of this behavior
+		self.add_parameter('threshold', 0.5)
 
 		# references to used behaviors
 		self.add_behavior(touch_buoySM, 'Container/touch_buoy')
+		self.add_behavior(init_submarineSM, 'init_submarine')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,7 +49,7 @@ class check_collisionSM(Behavior):
 
 
 	def create(self):
-		# x:117 y:192, x:720 y:54
+		# x:117 y:202, x:720 y:54
 		_state_machine = OperatableStateMachine(outcomes=['failed', 'target_reached'])
 
 		# Additional creation code can be added inside the following tags
@@ -54,7 +57,7 @@ class check_collisionSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:458, x:191 y:451, x:779 y:39, x:330 y:458, x:430 y:458, x:530 y:365, x:630 y:365
+		# x:30 y:458, x:191 y:451, x:779 y:39, x:330 y:458, x:430 y:458
 		_sm_container_0 = ConcurrencyContainer(outcomes=['failed', 'target_reached'], conditions=[
 										('failed', [('touch_buoy', 'failed'), ('has_collided', 'error')]),
 										('target_reached', [('has_collided', 'target_reached')]),
@@ -68,26 +71,32 @@ class check_collisionSM(Behavior):
 										transitions={'finished': 'failed', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:498 y:34
+			# x:494 y:114
 			OperatableStateMachine.add('has_collided',
-										has_collided(timeout=30, threshold=0.5),
+										has_collided(timeout=30, threshold=self.threshold),
 										transitions={'target_reached': 'target_reached', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 
 		with _state_machine:
-			# x:93 y:36
-			OperatableStateMachine.add('Container',
-										_sm_container_0,
-										transitions={'failed': 'failed', 'target_reached': 'stop'},
-										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
+			# x:29 y:333
+			OperatableStateMachine.add('init_submarine',
+										self.use_behavior(init_submarineSM, 'init_submarine'),
+										transitions={'finished': 'Container', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:344 y:45
 			OperatableStateMachine.add('stop',
 										stop_move(timeout=30),
 										transitions={'target_reached': 'target_reached', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:93 y:36
+			OperatableStateMachine.add('Container',
+										_sm_container_0,
+										transitions={'failed': 'failed', 'target_reached': 'stop'},
+										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
 
 
 		return _state_machine
