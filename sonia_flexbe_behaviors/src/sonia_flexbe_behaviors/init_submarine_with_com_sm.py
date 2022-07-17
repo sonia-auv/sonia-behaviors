@@ -18,22 +18,22 @@ from sonia_navigation_states.set_initial_position import set_initial_position
 
 
 '''
-Created on Thu Nov 11 2021
+Created on Sun July 17 2022
 @author: FA
 '''
-class init_submarineSM(Behavior):
+class init_submarine_with_comSM(Behavior):
 	'''
-	Behavior to start the submarine. Set mode of the control and wait for the mission switch
+	Behavior to start the submarine. Set mode of the control, wait for the mission switch and initialise the underwater communication.
 	'''
 
 
 	def __init__(self):
-		super(init_submarineSM, self).__init__()
-		self.name = 'init_submarine'
+		super(init_submarine_with_comSM, self).__init__()
+		self.name = 'init_submarine_with_com'
 
 		# parameters of this behavior
 		self.add_parameter('simulation', False)
-		self.add_parameter('mode', 10)
+		self.add_parameter('init_array', '1,1,1,0,0,0,0,1,1,1,1')
 
 		# references to used behaviors
 
@@ -47,8 +47,8 @@ class init_submarineSM(Behavior):
 
 
 	def create(self):
-		# x:948 y:109, x:693 y:296
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:948 y:109, x:896 y:286
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed_start_control'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -60,17 +60,17 @@ class init_submarineSM(Behavior):
 			# x:119 y:72
 			OperatableStateMachine.add('initial condition',
 										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'wait_mission'},
+										transitions={'continue': 'wait for mission switch'},
 										autonomy={'continue': Autonomy.Off})
 
 			# x:627 y:86
 			OperatableStateMachine.add('set control mode',
-										set_control_mode(mode=self.mode, timeout=5),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										set_control_mode(mode=10, timeout=5),
+										transitions={'continue': 'finished', 'failed': 'failed_start_control'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:362 y:78
-			OperatableStateMachine.add('wait_mission',
+			# x:359 y:80
+			OperatableStateMachine.add('wait for mission switch',
 										wait_mission(),
 										transitions={'continue': 'set control mode'},
 										autonomy={'continue': Autonomy.Off})
