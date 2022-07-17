@@ -6,7 +6,8 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Bool
-from sonia_common.msg import MpcInfo
+from sonia_common.msg import MpcInfo, MissionTimer
+from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class stop_move(EventState):
 
@@ -22,6 +23,8 @@ class stop_move(EventState):
         self.time_diff = 0
         self.param_timeout = timeout
         self.reset_trajectory = rospy.Publisher('/proc_control/reset_trajectory', Bool, queue_size=2)
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
+        self.uniqueID = str(time())
 
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
@@ -36,18 +39,22 @@ class stop_move(EventState):
         
         self.reset_trajectory.publish(Bool(True))
         self.launch_time = time()
+        self.timeout_pub.publish(missionTimerFunc("stop_move", self.param_timeout, self.uniqueID, 1))
 
     def execute(self, userdata):
         if self.is_alive == True:
             self.time_diff = time()-self.launch_time
             if self.time_diff > self.param_timeout or self.target_reached == True:
                 if self.target_reached == True:
+                    self.timeout_pub.publish(missionTimerFunc("stop_move", self.param_timeout, self.uniqueID, 2))
                     Logger.log('Mouvement has been stopped properly', Logger.REPORT_HINT)
                     return 'target_reached'
                 else:
+                    self.timeout_pub.publish(missionTimerFunc("stop_move", self.param_timeout, self.uniqueID, 3))
                     Logger.log('Submarine hasnt reached target after stopping', Logger.REPORT_HINT)
                     return 'target_not_reached'
         else:
+            self.timeout_pub.publish(missionTimerFunc("stop_move", self.param_timeout, self.uniqueID, 4))
             Logger.log("Problem with the controller", Logger.REPORT_HINT)
             return 'error'
 

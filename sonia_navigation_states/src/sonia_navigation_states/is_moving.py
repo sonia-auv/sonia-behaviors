@@ -7,8 +7,9 @@ import math
 from time import time
 from flexbe_core import EventState, Logger
 from nav_msgs.msg import Odometry
-from sonia_common.msg import MpcInfo
+from sonia_common.msg import MpcInfo, MissionTimer
 from tf.transformations import euler_from_quaternion
+from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class is_moving(EventState):
 
@@ -32,6 +33,8 @@ class is_moving(EventState):
         self.prev_time = 0
         self.param_timeout = timeout
         self.param_tolerance = tolerance
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
+        self.uniqueID = str(time())
 
         self.prev_position_x = 0
         self.prev_position_y = 0
@@ -51,6 +54,7 @@ class is_moving(EventState):
         Logger.log('Checking if the sub is moving', Logger.REPORT_HINT)
         
         self.launch_time = time()
+        self.timeout_pub.publish(missionTimerFunc("is_moving", self.param_timeout, self.uniqueID, 1))
 
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
@@ -92,12 +96,15 @@ class is_moving(EventState):
             self.time_diff = time()-self.launch_time
             if self.time_diff > self.param_timeout or self.target_reached or self.stopped:
                 if self.stopped:
+                    self.timeout_pub.publish(missionTimerFunc("is_moving", self.param_timeout, self.uniqueID, 4))
                     Logger.log('The sub is not moving, bypassing Target Reached', Logger.REPORT_HINT)
                     return 'stopped'
                 elif self.target_reached:
+                    self.timeout_pub.publish(missionTimerFunc("is_moving", self.param_timeout, self.uniqueID, 2))
                     Logger.log('Finally got target_reached', Logger.REPORT_HINT)
                     return 'stopped'
                 else:
+                    self.timeout_pub.publish(missionTimerFunc("is_moving", self.param_timeout, self.uniqueID, 3))
                     Logger.log('The sub is still moving', Logger.REPORT_HINT)
                     return 'moving'
         else:

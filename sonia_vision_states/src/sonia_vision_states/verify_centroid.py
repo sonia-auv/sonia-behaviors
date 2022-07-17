@@ -6,7 +6,8 @@ import rospy
 
 from queue import deque
 from flexbe_core import EventState, Logger
-from sonia_common.msg import VisionTarget
+from sonia_common.msg import VisionTarget, MissionTimer
+from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class verify_centroid(EventState):
 
@@ -31,6 +32,8 @@ class verify_centroid(EventState):
         
         self.param_number_sample = number_sample
         self.param_timeout = timeout
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
+        self.uniqueID = str(time())
 
         self.vision_x_pixel = deque([], maxlen=self.param_number_sample)
         self.vision_y_pixel = deque([], maxlen=self.param_number_sample)
@@ -70,14 +73,17 @@ class verify_centroid(EventState):
 
         self.get_vision_target = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
         self.start_time = time()
+        self.timeout_pub.publish(missionTimerFunc("verify_centroid", self.param_timeout, self.uniqueID, 1))
         Logger.log('Starting the verify the centroid', Logger.REPORT_HINT)
     
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.at_centroid == True:
+            self.timeout_pub.publish(missionTimerFunc("verify_centroid", self.param_timeout, self.uniqueID, 2))
             Logger.log('Alignement on centroid complete', Logger.REPORT_HINT)
             return 'align_complete'
         elif actual >= self.param_timeout:
+            self.timeout_pub.publish(missionTimerFunc("verify_centroid", self.param_timeout, self.uniqueID, 3))
             Logger.log('Timeout has been reached', Logger.REPORT_HINT)
             return 'timeout_reached'
 
