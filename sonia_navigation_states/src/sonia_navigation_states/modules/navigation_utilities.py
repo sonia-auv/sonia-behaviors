@@ -24,6 +24,6 @@ def missionTimerFunc(mission, timeout, uniqueID, status):
         buffer = MissionTimer()
         buffer.mission = mission
         buffer.timeout = timeout
-        buffer.uniqueID = uniqueID
+        buffer.uniqueID = str(uniqueID)
         buffer.status = status
         return buffer

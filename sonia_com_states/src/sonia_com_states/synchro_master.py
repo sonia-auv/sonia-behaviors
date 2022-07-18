@@ -10,7 +10,7 @@ from std_srvs.srv import Empty
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Vector3
 from sonia_common.msg import AddPose, MissionTimer
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class synchro_master(EventState):
 
@@ -54,7 +54,6 @@ class synchro_master(EventState):
         self.mission_to_do = False
         self.sync_in_progress = False
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
-        self.uniqueID = str(time())
 
     def get_depth_cb(self, data):
         self.other_sub_z = data.data
@@ -157,19 +156,19 @@ class synchro_master(EventState):
         self.other_receive_array = rospy.Subscriber('/proc_underwater_com/other_sub_mission_list', Int8MultiArray, self.other_mission_array_cb)
         self.sync = rospy.Publisher('/proc_underwater_com/send_sync_request', Bool, queue_size=2)
         self.time_start = time()
-        self.timeout_pub.publish(missionTimerFunc("synchro_master", self.param_timeout, self.uniqueID, 1))
+        self.timeout_pub.publish(missionTimerFunc("synchro_master", self.timeout, str(self.time_start), 1))
         
     def execute(self, userdata):
         time_since = time() - self.time_start
         if time_since > self.timeout:
-            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.param_timeout, self.uniqueID, 3))
+            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.timeout, str(self.time_start), 3))
             Logger.log('Timeout Reached', Logger.REPORT_HINT)
             return 'timeout'
         if self.done_already == True or self.failed == True:
-            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.param_timeout, self.uniqueID, 4))
+            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.timeout, str(self.time_start), 4))
             return 'failed'
         if self.sync_in_progress == True:
-            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.param_timeout, self.uniqueID, 2))
+            self.timeout_pub.publish(missionTimerFunc("synchro_master", self.timeout, str(self.time_start), 2))
             return 'continue'
         if self.request_completed == True and self.depth_received == True and self.other_sub_depth_received == True:
             #Stopping to get in the service calling in the callback for the other sub mission list
