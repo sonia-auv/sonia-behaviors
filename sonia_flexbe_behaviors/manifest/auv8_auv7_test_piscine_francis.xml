@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="AUV8_AUV7_Test_piscine_francis">
+
+	<executable package_path="sonia_flexbe_behaviors.auv8_auv7_test_piscine_francis_sm" class="AUV8_AUV7_Test_piscine_francisSM" />
+	<tagstring>test</tagstring>
+	<author>KY</author>
+	<date>Thu Jiuil 02 2022</date>
+	<description>
+		Run coinflip, forward and intercom
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_submarine" />
+	<contains name="Move_to_gate_straight" />
+	<contains name="coin_flip_KY" />
+
+	<!-- Available Parameters -->
+
+</behavior>
