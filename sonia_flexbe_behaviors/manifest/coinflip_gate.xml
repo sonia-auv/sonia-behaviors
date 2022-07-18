@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="CoinFlip-Gate">
+
+	<executable package_path="sonia_flexbe_behaviors.coinflip_gate_sm" class="CoinFlipGateSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Sun Jul 17 2022</date>
+	<description>
+		Orient to gate for coin flip task and starts to go to the gate.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="orientation_to_gate" default="0" label="orientation_to_gate" hint="Sets the orientation_to_gate">
+			<min value="0" />
+			<max value="360" />
+		</param>
+
+		<param type="numeric" name="dive_depth" default="1" label="dive_depth" hint="Sets the dive_depth">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="numeric" name="distance_to_gate" default="4" label="distance_to_gate" hint="Sets the distance_to_gate">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+	</params>
+
+
+</behavior>
