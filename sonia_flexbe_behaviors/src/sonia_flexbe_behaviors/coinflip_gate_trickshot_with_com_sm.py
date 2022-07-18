@@ -60,7 +60,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 
 	def create(self):
-		# x:1054 y:402, x:620 y:293, x:450 y:48
+		# x:1061 y:511, x:620 y:293, x:450 y:48
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'failed_start_control'])
 
 		# Additional creation code can be added inside the following tags
@@ -110,7 +110,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 										transitions={'finished': 'Move_now'},
 										autonomy={'finished': Autonomy.Inherit})
 
-			# x:566 y:416
+			# x:585 y:413
 			OperatableStateMachine.add('Trickshot with com (takeover)',
 										self.use_behavior(TrickshotwithcomSM, 'Trickshot with com (takeover)'),
 										transitions={'finished': 'finished'},
@@ -119,8 +119,8 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 			# x:463 y:607
 			OperatableStateMachine.add('taking_over_trickshot',
 										takeover_mission(mission_id=2),
-										transitions={'takeover': 'Trickshot with com (takeover)', 'already_done': 'finished'},
-										autonomy={'takeover': Autonomy.Off, 'already_done': Autonomy.Off})
+										transitions={'takeover': 'Trickshot with com (takeover)', 'no_takeover': 'finished', 'assigned': 'Trickshot with com (takeover)'},
+										autonomy={'takeover': Autonomy.Off, 'no_takeover': Autonomy.Off, 'assigned': Autonomy.Off})
 
 			# x:76 y:381
 			OperatableStateMachine.add('waiting_for_friend',

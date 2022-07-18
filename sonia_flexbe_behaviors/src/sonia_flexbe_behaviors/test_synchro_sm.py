@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_com_states.send_update import send_update
-from sonia_com_states.verify_task import verify_task
-from sonia_navigation_states.trick_shot import trick_shot
+from sonia_com_states.choose_your_character import choose_your_character
+from sonia_com_states.synchro_receive import synchro_receive
+from sonia_com_states.synchro_send import synchro_send
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -18,20 +18,21 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Sun Jul 17 2022
+Created on Mon Jul 18 2022
 @author: FA
 '''
-class TrickshotwithcomSM(Behavior):
+class test_synchroSM(Behavior):
 	'''
-	Trickshot state with the underwater communication.
+	testing synchro with the acknowledge
 	'''
 
 
 	def __init__(self):
-		super(TrickshotwithcomSM, self).__init__()
-		self.name = 'Trickshot with com'
+		super(test_synchroSM, self).__init__()
+		self.name = 'test_synchro'
 
 		# parameters of this behavior
+		self.add_parameter('submarine', 'AUV8')
 
 		# references to used behaviors
 
@@ -45,8 +46,8 @@ class TrickshotwithcomSM(Behavior):
 
 
 	def create(self):
-		# x:751 y:160
-		_state_machine = OperatableStateMachine(outcomes=['finished'])
+		# x:416 y:244, x:400 y:379
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -55,23 +56,23 @@ class TrickshotwithcomSM(Behavior):
 
 
 		with _state_machine:
-			# x:70 y:163
-			OperatableStateMachine.add('verify_trickshot',
-										verify_task(mission=2, timeout=3),
-										transitions={'to_do': 'trickshot', 'skip': 'finished'},
-										autonomy={'to_do': Autonomy.Off, 'skip': Autonomy.Off})
+			# x:146 y:87
+			OperatableStateMachine.add('choose_sub',
+										choose_your_character(submarine=self.submarine),
+										transitions={'auv8': 'send_synchro', 'auv7': 'wait_for_friend'},
+										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 
-			# x:229 y:47
-			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=15),
-										transitions={'continue': 'success_trickshot'},
-										autonomy={'continue': Autonomy.Off})
-
-			# x:499 y:48
-			OperatableStateMachine.add('success_trickshot',
-										send_update(mission=3, state=2),
+			# x:384 y:78
+			OperatableStateMachine.add('send_synchro',
+										synchro_send(),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
+
+			# x:111 y:250
+			OperatableStateMachine.add('wait_for_friend',
+										synchro_receive(timeout=60),
+										transitions={'continue': 'finished', 'timeout': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
 
 
 		return _state_machine
