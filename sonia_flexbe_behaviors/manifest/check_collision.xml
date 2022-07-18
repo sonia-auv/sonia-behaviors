@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="check_collision">
+
+	<executable package_path="sonia_flexbe_behaviors.check_collision_sm" class="check_collisionSM" />
+	<tagstring>mouvement</tagstring>
+	<author>GS</author>
+	<date>Fri Jul 15 2022</date>
+	<description>
+		Move forward and check collision
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="init_submarine" />
+	<contains name="touch_buoy" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="threshold" default="0.5" label="threshold" hint="Sets the threshold">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+	</params>
+
+
+</behavior>

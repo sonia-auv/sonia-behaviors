@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="touch_buoy">
+
+	<executable package_path="sonia_flexbe_behaviors.touch_buoy_sm" class="touch_buoySM" />
+	<tagstring>mouvement</tagstring>
+	<author>GS</author>
+	<date>Fri Jul 15 2022</date>
+	<description>
+		Go forward and detect collision
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="move_to_buoy" default="2" label="move_to_buoy" hint="Sets the move_to_buoy">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+	</params>
+
+
+</behavior>
