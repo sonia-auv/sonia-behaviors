@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="init_submarine_with_com">
+
+	<executable package_path="sonia_flexbe_behaviors.init_submarine_with_com_sm" class="init_submarine_with_comSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Sun July 17 2022</date>
+	<description>
+		Behavior to start the submarine. Set mode of the control, wait for the mission switch and initialise the underwater communication.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
+
+		<param type="text" name="sub_init_array" default="1,1,1,0,0,0,0,1,1,1,1" label="sub_init_array" hint="Sets the initial mission to do" />
+
+		<param type="text" name="other_sub_init_array" default="1,1,0,1,1,1,1,0,0,0,0" label="other_sub_init_array" hint="Sets the initial mission for the other sub to do" />
+
+		<param type="enum" name="submarine" default="AUV8" label="submarine" hint="Select the submarine">
+			<option value="AUV8" />
+			<option value="AUV7" />
+		</param>
+
+	</params>
+
+
+</behavior>
