@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_navigation_states.init_trajectory import init_trajectory
-from sonia_navigation_states.search_zigzag import search_zigzag
+from sonia_navigation_states.search_square import search_square
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.set_control_mode import set_control_mode
 from sonia_navigation_states.wait_target_reached import wait_target_reached
@@ -20,24 +20,23 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Thu May 05 2022
-@author: lamarre
+Created on Tue Jul 12 2022
+@author: CS
 '''
-class zigzagSM(Behavior):
+class squareSM(Behavior):
 	'''
-	zigzag state
+	Searching inside a square with a zigzag
 	'''
 
 
 	def __init__(self):
-		super(zigzagSM, self).__init__()
-		self.name = 'zigzag'
+		super(squareSM, self).__init__()
+		self.name = 'square'
 
 		# parameters of this behavior
-		self.add_parameter('boxX', 4)
-		self.add_parameter('boxY', 1)
+		self.add_parameter('box_size', 3)
 		self.add_parameter('stroke', 0.5)
-		self.add_parameter('radius', 0.2)
+		self.add_parameter('radius', 0.0)
 
 		# references to used behaviors
 
@@ -51,7 +50,7 @@ class zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:972 y:169, x:465 y:44
+		# x:452 y:547, x:377 y:206
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -61,38 +60,38 @@ class zigzagSM(Behavior):
 
 
 		with _state_machine:
-			# x:63 y:27
-			OperatableStateMachine.add('mode',
-										set_control_mode(mode=10, timeout=2),
+			# x:48 y:84
+			OperatableStateMachine.add('control_mode',
+										set_control_mode(mode=10, timeout=5),
 										transitions={'continue': 'init', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:646 y:160
-			OperatableStateMachine.add('send',
+			# x:54 y:205
+			OperatableStateMachine.add('init',
+										init_trajectory(interpolation_method=2),
+										transitions={'continue': 'search'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'trajectory'})
+
+			# x:44 y:421
+			OperatableStateMachine.add('move',
 										send_to_planner(),
-										transitions={'continue': 'tr', 'failed': 'failed'},
+										transitions={'continue': 'wait_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:819 y:33
-			OperatableStateMachine.add('tr',
-										wait_target_reached(timeout=15),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
-										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:398 y:165
-			OperatableStateMachine.add('zig',
-										search_zigzag(boxX=self.boxX, boxY=self.boxY, stroke=self.stroke, radius=self.radius, side=False),
-										transitions={'continue': 'send'},
+			# x:42 y:305
+			OperatableStateMachine.add('search',
+										search_square(box_size=self.box_size, stroke=self.stroke, radius=self.radius, side=False),
+										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:144 y:167
-			OperatableStateMachine.add('init',
-										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'zig'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
+			# x:29 y:526
+			OperatableStateMachine.add('wait_target',
+										wait_target_reached(timeout=5),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine
