@@ -7,7 +7,7 @@ import rospy
 from flexbe_core import EventState, Logger
 from std_msgs.msg import Bool
 from sonia_common.msg import MpcInfo, MissionTimer
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class stop_move(EventState):
 

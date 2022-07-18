@@ -7,7 +7,7 @@ import rospy
 from queue import deque
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget, MultiAddPose, AddPose, MissionTimer
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import addpose, missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import addpose, missionTimerFunc
 from geometry_msgs.msg import Point, Vector3
 
 class get_bottom_vision_target_complex(EventState):

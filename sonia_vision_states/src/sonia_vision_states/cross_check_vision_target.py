@@ -5,7 +5,7 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget, MissionTimer
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class cross_check_vision_target(EventState):
 

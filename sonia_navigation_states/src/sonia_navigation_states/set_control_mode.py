@@ -7,7 +7,7 @@ from flexbe_core import EventState, Logger
 from std_msgs.msg import UInt8
 from sonia_common.msg import MpcInfo, MissionTimer
 from time import time
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class set_control_mode(EventState):
     """

@@ -39,8 +39,10 @@ class vision_buoySM(Behavior):
 		self.add_parameter('filterchain', 'simulation_buoys')
 		self.add_parameter('camera_no', 1)
 		self.add_parameter('target', 'badge')
-		self.add_parameter('bounding_box_width', 70)
+		self.add_parameter('bounding_box_width', 250)
 		self.add_parameter('bounding_box_height', 350)
+		self.add_parameter('center_bounding_box_width', 50)
+		self.add_parameter('center_bounding_box_height', 50)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -74,7 +76,7 @@ class vision_buoySM(Behavior):
 
 			# x:706 y:50
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0),
+										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1.2, min_mouvement=0.25, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})

@@ -7,7 +7,7 @@ import rospy
 from queue import deque
 from flexbe_core import EventState, Logger
 from sonia_common.msg import VisionTarget, MissionTimer
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class verify_centroid(EventState):
 

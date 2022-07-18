@@ -9,7 +9,7 @@ from flexbe_core import EventState, Logger
 from nav_msgs.msg import Odometry
 from sonia_common.msg import MpcInfo, MissionTimer
 from tf.transformations import euler_from_quaternion
-from sonia_navigation_states.src.sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class is_moving(EventState):
 
