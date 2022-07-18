@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="sonar_end_2_end">
+
+	<executable package_path="sonia_flexbe_behaviors.sonar_end_2_end_sm" class="sonar_end_2_endSM" />
+	<tagstring>sonar</tagstring>
+	<author>team sonar</author>
+	<date>Sat Jul 09 2022</date>
+	<description>
+		sonar end 2 end
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

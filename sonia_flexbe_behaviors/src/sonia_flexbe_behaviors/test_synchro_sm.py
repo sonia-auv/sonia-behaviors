@@ -8,8 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.coin_flip_gate__notrickshot_task_sm import coin_flip_gate_notrickshot_taskSM
-from sonia_navigation_states.trick_shot import trick_shot
+from sonia_com_states.choose_your_character import choose_your_character
+from sonia_com_states.synchro_receive import synchro_receive
+from sonia_com_states.synchro_send import synchro_send
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,26 +18,23 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Fri Jun 24 2022
-@author: GS
+Created on Mon Jul 18 2022
+@author: FA
 '''
-class coin_flip_gate_withtrickshot_taskSM(Behavior):
+class test_synchroSM(Behavior):
 	'''
-	Orient to gate for coin flip task and move forward through the gate with trickshot
+	testing synchro with the acknowledge
 	'''
 
 
 	def __init__(self):
-		super(coin_flip_gate_withtrickshot_taskSM, self).__init__()
-		self.name = 'coin_flip_gate_ withtrickshot_task'
+		super(test_synchroSM, self).__init__()
+		self.name = 'test_synchro'
 
 		# parameters of this behavior
-		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
-		self.add_parameter('distance_to_gate', 4)
+		self.add_parameter('submarine', 'AUV8')
 
 		# references to used behaviors
-		self.add_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -48,7 +46,7 @@ class coin_flip_gate_withtrickshot_taskSM(Behavior):
 
 
 	def create(self):
-		# x:602 y:128, x:163 y:278
+		# x:416 y:244, x:400 y:379
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,17 +56,23 @@ class coin_flip_gate_withtrickshot_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:81 y:114
-			OperatableStateMachine.add('coin_flip_gate_ notrickshot_task',
-										self.use_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task'),
-										transitions={'finished': 'trickshot', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+			# x:146 y:87
+			OperatableStateMachine.add('choose_sub',
+										choose_your_character(submarine=self.submarine),
+										transitions={'auv8': 'send_synchro', 'auv7': 'wait_for_friend'},
+										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 
-			# x:375 y:113
-			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=15),
+			# x:384 y:78
+			OperatableStateMachine.add('send_synchro',
+										synchro_send(),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
+
+			# x:111 y:250
+			OperatableStateMachine.add('wait_for_friend',
+										synchro_receive(timeout=60),
+										transitions={'continue': 'finished', 'timeout': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
 
 
 		return _state_machine

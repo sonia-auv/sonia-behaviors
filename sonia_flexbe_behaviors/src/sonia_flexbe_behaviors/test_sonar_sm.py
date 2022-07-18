@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.coin_flip_gate__notrickshot_task_sm import coin_flip_gate_notrickshot_taskSM
-from sonia_navigation_states.trick_shot import trick_shot
+from sonia_sonar_states.start_sonar import start_sonar
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,26 +16,22 @@ from sonia_navigation_states.trick_shot import trick_shot
 
 
 '''
-Created on Fri Jun 24 2022
-@author: GS
+Created on Wed Jun 22 2022
+@author: .
 '''
-class coin_flip_gate_withtrickshot_taskSM(Behavior):
+class test_sonarSM(Behavior):
 	'''
-	Orient to gate for coin flip task and move forward through the gate with trickshot
+	.
 	'''
 
 
 	def __init__(self):
-		super(coin_flip_gate_withtrickshot_taskSM, self).__init__()
-		self.name = 'coin_flip_gate_ withtrickshot_task'
+		super(test_sonarSM, self).__init__()
+		self.name = 'test_sonar'
 
 		# parameters of this behavior
-		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
-		self.add_parameter('distance_to_gate', 4)
 
 		# references to used behaviors
-		self.add_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -48,7 +43,7 @@ class coin_flip_gate_withtrickshot_taskSM(Behavior):
 
 
 	def create(self):
-		# x:602 y:128, x:163 y:278
+		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -58,15 +53,9 @@ class coin_flip_gate_withtrickshot_taskSM(Behavior):
 
 
 		with _state_machine:
-			# x:81 y:114
-			OperatableStateMachine.add('coin_flip_gate_ notrickshot_task',
-										self.use_behavior(coin_flip_gate_notrickshot_taskSM, 'coin_flip_gate_ notrickshot_task'),
-										transitions={'finished': 'trickshot', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:375 y:113
-			OperatableStateMachine.add('trickshot',
-										trick_shot(delay=15),
+			# x:132 y:103
+			OperatableStateMachine.add('start_sonar',
+										start_sonar(resetBundle=False),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
 
