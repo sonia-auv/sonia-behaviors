@@ -68,7 +68,6 @@ class get_bottom_vision_target(EventState):
         self.param_speed_profile = speed_profile
 
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
-        self.uniqueID = str(time())
 
         self.nombre_enter = 0
         
@@ -104,7 +103,7 @@ class get_bottom_vision_target(EventState):
         self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
         self.start_time = time()
-        self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 1))
+        self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 1))
 
         self.nombre_enter += 1
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
@@ -207,21 +206,21 @@ class get_bottom_vision_target(EventState):
                     userdata.angle = self.angle
                     userdata.output_trajectory = userdata.input_trajectory
                     userdata.camera = 1
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 2))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 2))
                 return 'success'
             elif self.alignement_reached == False:
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 2))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 2))
                 userdata.output_trajectory = self.align_with_vision()
                 return 'align'
             elif self.position_reached == False:
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 2))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 2))
                 userdata.output_trajectory = self.position_with_vision()
                 return 'move'
             else:
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 4))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 4))
                 return 'failed'
         if actual > self.param_timeout :
-            self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.uniqueID, 3))
+            self.timeout_pub.publish(navUtils.missionTimerFunc("get_bottom_vision_target", self.param_timeout, self.start_time, 3))
             return 'search'
 
     def on_exit(self, userdata):
