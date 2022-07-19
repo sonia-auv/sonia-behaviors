@@ -14,15 +14,17 @@ class verify_task(EventState):
         while and will continue with the task.
 
         -- mission          uint8   Position in the mission array to check if the task needs to be done
+        -- has_com          bool    The submarine is using the underwater communication
 
         <= to_do                    Task is assigned to this submarine.
         <= skip                     Task is not assigned skip it.
     '''
 
-    def __init__(self, mission, timeout=3):
+    def __init__(self, mission, has_com=True, timeout=3):
         super(verify_task, self).__init__(outcomes=['to_do', 'skip'])
 
         self.mission = mission
+        self.has_com = has_com
         self.timeout = timeout
         self.message_received = False
 
@@ -37,6 +39,9 @@ class verify_task(EventState):
         self.time_start = time()
 
     def execute(self, userdata):
+        if self.has_com == False:
+            return 'to_do'
+        
         diff = time() - self.time_start
         if diff <= self.timeout:
             if self.message_received == True:

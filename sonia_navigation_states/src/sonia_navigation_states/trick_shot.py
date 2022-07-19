@@ -56,7 +56,7 @@ class trick_shot(EventState):
                         #  { 'position': Point(0, 0, 1.5), 'orientation': Vector3(0, 0, 0), 'frame': 1, 'speed': 5, 'fine': 0, 'rotation': True },
                         #  { 'position': Point(0, 0, 0), 'orientation': Vector3(180, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True },
                         #  { 'position': Point(0, 0, 0), 'orientation': Vector3(180, 0, 0), 'frame': 1, 'speed': 6, 'fine': 0, 'rotation': True }
-                        ]                     
+                        #]                     
         sleep(1)
 
     def target_reached_cb(self, data):
