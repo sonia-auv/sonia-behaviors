@@ -17,6 +17,7 @@
 	<contains name="vision_bins" />
 	<contains name="vision_buoy" />
 	<contains name="vision_droppers" />
+	<contains name="avoid_buoys_after_collision" />
 
 	<!-- Available Parameters -->
 

@@ -8,12 +8,12 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.avoid_buoys_after_collision_sm import avoid_buoys_after_collisionSM
 from sonia_flexbe_behaviors.drop_auv7_sm import drop_AUV7SM
 from sonia_flexbe_behaviors.vision_bins_sm import vision_binsSM
 from sonia_flexbe_behaviors.vision_buoy_sm import vision_buoySM
 from sonia_flexbe_behaviors.vision_droppers_sm import vision_droppersSM
 from sonia_flexbe_behaviors.vision_path_new_algo_sm import vision_path_new_algoSM
-from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -37,6 +37,7 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision')
 		self.add_behavior(drop_AUV7SM, 'drop_AUV7')
 		self.add_behavior(vision_binsSM, 'vision_bins')
 		self.add_behavior(vision_buoySM, 'vision_buoy')
@@ -85,7 +86,7 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 			# x:354 y:62
 			OperatableStateMachine.add('vision_buoy',
 										self.use_behavior(vision_buoySM, 'vision_buoy'),
-										transitions={'finished': 'EMPTY', 'failed': 'failed', 'lost_target': 'failed'},
+										transitions={'finished': 'avoid_buoys_after_collision', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:944 y:534
@@ -100,11 +101,11 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:957 y:55
-			OperatableStateMachine.add('EMPTY',
-										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'vision_path_new_algo_2', 'target_not_reached': 'failed', 'error': 'failed'},
-										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+			# x:927 y:57
+			OperatableStateMachine.add('avoid_buoys_after_collision',
+										self.use_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision'),
+										transitions={'finished': 'vision_path_new_algo_2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
 		return _state_machine

@@ -34,9 +34,9 @@ class avoid_buoys_after_collisionSM(Behavior):
 		self.name = 'avoid_buoys_after_collision'
 
 		# parameters of this behavior
-		self.add_parameter('distance_up', 1)
-		self.add_parameter('distance_forward', 3)
-		self.add_parameter('distance_down', 2)
+		self.add_parameter('distance_up_after_collision', 1)
+		self.add_parameter('distance_forward_after_collision', 3)
+		self.add_parameter('distance_down_after_collision', 2)
 
 		# references to used behaviors
 
@@ -69,7 +69,7 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 			# x:171 y:134
 			OperatableStateMachine.add('go_up',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=- self.distance_up, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=- self.distance_up_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -82,7 +82,7 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 			# x:375 y:135
 			OperatableStateMachine.add('move_forward',
-										manual_add_pose_to_trajectory(positionX=self.distance_forward, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=self.distance_forward_after_collision, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_down'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -102,7 +102,7 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 			# x:488 y:311
 			OperatableStateMachine.add('go_down',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=self.distance_down, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=self.distance_down_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})

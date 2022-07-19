@@ -37,7 +37,7 @@ class check_collisionSM(Behavior):
 		self.name = 'check_collision'
 
 		# parameters of this behavior
-		self.add_parameter('threshold', 0.2)
+		self.add_parameter('collision_threshold', 0.2)
 
 		# references to used behaviors
 		self.add_behavior(touch_buoySM, 'Container/touch_buoy')
@@ -76,7 +76,7 @@ class check_collisionSM(Behavior):
 
 			# x:494 y:114
 			OperatableStateMachine.add('has_collided',
-										has_collided(timeout=30, threshold=self.threshold),
+										has_collided(timeout=30, threshold=self.collision_threshold),
 										transitions={'target_reached': 'target_reached', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'error': Autonomy.Off})
 

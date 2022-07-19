@@ -33,7 +33,7 @@ class touch_buoySM(Behavior):
 		self.name = 'touch_buoy'
 
 		# parameters of this behavior
-		self.add_parameter('move_to_buoy', 2)
+		self.add_parameter('distance_to_buoy', 2)
 
 		# references to used behaviors
 
@@ -79,7 +79,7 @@ class touch_buoySM(Behavior):
 
 			# x:341 y:75
 			OperatableStateMachine.add('add_pose',
-										manual_add_pose_to_trajectory(positionX=self.move_to_buoy, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=self.distance_to_buoy, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'send_to_planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
