@@ -12,10 +12,10 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="vision_path_new_algo" />
+	<contains name="vision_path" />
 	<contains name="drop_AUV7" />
 	<contains name="vision_bins" />
-	<contains name="vision_buoy" />
+	<contains name="vision_buoys" />
 	<contains name="vision_droppers" />
 	<contains name="avoid_buoys_after_collision" />
 

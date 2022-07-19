@@ -11,9 +11,9 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.avoid_buoys_after_collision_sm import avoid_buoys_after_collisionSM
 from sonia_flexbe_behaviors.drop_auv7_sm import drop_AUV7SM
 from sonia_flexbe_behaviors.vision_bins_sm import vision_binsSM
-from sonia_flexbe_behaviors.vision_buoy_sm import vision_buoySM
+from sonia_flexbe_behaviors.vision_buoys_sm import vision_buoysSM
 from sonia_flexbe_behaviors.vision_droppers_sm import vision_droppersSM
-from sonia_flexbe_behaviors.vision_path_new_algo_sm import vision_path_new_algoSM
+from sonia_flexbe_behaviors.vision_path_sm import vision_pathSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -40,10 +40,10 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 		self.add_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision')
 		self.add_behavior(drop_AUV7SM, 'drop_AUV7')
 		self.add_behavior(vision_binsSM, 'vision_bins')
-		self.add_behavior(vision_buoySM, 'vision_buoy')
+		self.add_behavior(vision_buoysSM, 'vision_buoys')
 		self.add_behavior(vision_droppersSM, 'vision_droppers')
-		self.add_behavior(vision_path_new_algoSM, 'vision_path_new_algo')
-		self.add_behavior(vision_path_new_algoSM, 'vision_path_new_algo_2')
+		self.add_behavior(vision_pathSM, 'vision_path')
+		self.add_behavior(vision_pathSM, 'vision_path_2')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -65,10 +65,10 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 
 
 		with _state_machine:
-			# x:92 y:60
-			OperatableStateMachine.add('vision_path_new_algo',
-										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo'),
-										transitions={'finished': 'vision_buoy', 'failed': 'failed', 'lost_target': 'failed'},
+			# x:51 y:60
+			OperatableStateMachine.add('vision_path',
+										self.use_behavior(vision_pathSM, 'vision_path'),
+										transitions={'finished': 'vision_buoys', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:945 y:676
@@ -83,9 +83,9 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 										transitions={'finished': 'vision_droppers', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:354 y:62
-			OperatableStateMachine.add('vision_buoy',
-										self.use_behavior(vision_buoySM, 'vision_buoy'),
+			# x:368 y:61
+			OperatableStateMachine.add('vision_buoys',
+										self.use_behavior(vision_buoysSM, 'vision_buoys'),
 										transitions={'finished': 'avoid_buoys_after_collision', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
@@ -95,16 +95,16 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:937 y:227
-			OperatableStateMachine.add('vision_path_new_algo_2',
-										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo_2'),
+			# x:944 y:213
+			OperatableStateMachine.add('vision_path_2',
+										self.use_behavior(vision_pathSM, 'vision_path_2'),
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:927 y:57
 			OperatableStateMachine.add('avoid_buoys_after_collision',
 										self.use_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision'),
-										transitions={'finished': 'vision_path_new_algo_2', 'failed': 'failed'},
+										transitions={'finished': 'vision_path_2', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
