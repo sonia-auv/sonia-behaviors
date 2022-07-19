@@ -13,6 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="search_zigzag" />
+	<contains name="check_collision" />
 
 	<!-- Available Parameters -->
 	<params>
