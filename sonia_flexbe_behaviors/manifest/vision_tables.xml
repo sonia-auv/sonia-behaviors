@@ -7,7 +7,7 @@
 	<author>CS</author>
 	<date>06/07/2022</date>
 	<description>
-		Find the bins with the cover.
+		Find the tables center
 	</description>
 
 
@@ -34,6 +34,26 @@
 		<param type="numeric" name="bounding_box_height" default="100" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="mouvement_max" default="1.0" label="mouvement_max" hint="Sets the mouvement_max">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="mouvement_min" default="0.1" label="mouvement_min" hint="Sets the mouvement_min">
+			<min value="0" />
+			<max value="1" />
 		</param>
 
 	</params>
