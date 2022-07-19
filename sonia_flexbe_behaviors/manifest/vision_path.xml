@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="vision_path_new_algo">
+<behavior name="vision_path">
 
-	<executable package_path="sonia_flexbe_behaviors.vision_path_new_algo_sm" class="vision_path_new_algoSM" />
+	<executable package_path="sonia_flexbe_behaviors.vision_path_sm" class="vision_pathSM" />
 	<tagstring>pool</tagstring>
 	<author>FA</author>
 	<date>Mon Nov 15 2021</date>

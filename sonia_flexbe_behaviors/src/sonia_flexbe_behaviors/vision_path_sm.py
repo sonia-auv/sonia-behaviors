@@ -26,15 +26,15 @@ from sonia_vision_states.start_filter_chain import start_filter_chain
 Created on Mon Nov 15 2021
 @author: FA
 '''
-class vision_path_new_algoSM(Behavior):
+class vision_pathSM(Behavior):
 	'''
 	Behaviors for the task of the path and rotate to the right orientationLook for a vision target on the front camera
 	'''
 
 
 	def __init__(self):
-		super(vision_path_new_algoSM, self).__init__()
-		self.name = 'vision_path_new_algo'
+		super(vision_pathSM, self).__init__()
+		self.name = 'vision_path'
 
 		# parameters of this behavior
 		self.add_parameter('filterchain', 'simple_pipe_straight')

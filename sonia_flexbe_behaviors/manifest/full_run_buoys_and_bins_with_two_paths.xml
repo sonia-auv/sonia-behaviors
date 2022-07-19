@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="full_run_buoys_and_bins_with_two_paths">
+
+	<executable package_path="sonia_flexbe_behaviors.full_run_buoys_and_bins_with_two_paths_sm" class="full_run_buoys_and_bins_with_two_pathsSM" />
+	<tagstring></tagstring>
+	<author>Willy Kao</author>
+	<date>Tue Jul 19 2022</date>
+	<description>
+		Full-fledged mission run starting from the first path towards the buoys task and then, the AUV leaves for the bins task through the second path.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_path" />
+	<contains name="drop_AUV7" />
+	<contains name="vision_bins" />
+	<contains name="vision_buoys" />
+	<contains name="vision_droppers" />
+	<contains name="avoid_buoys_after_collision" />
+
+	<!-- Available Parameters -->
+
+</behavior>
