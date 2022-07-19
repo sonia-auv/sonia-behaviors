@@ -32,6 +32,7 @@ class TrickshotwithcomSM(Behavior):
 		self.name = 'Trickshot with com'
 
 		# parameters of this behavior
+		self.add_parameter('has_com', True)
 
 		# references to used behaviors
 
@@ -57,7 +58,7 @@ class TrickshotwithcomSM(Behavior):
 		with _state_machine:
 			# x:70 y:163
 			OperatableStateMachine.add('verify_trickshot',
-										verify_task(mission=2, timeout=3),
+										verify_task(mission=2, has_com=self.has_com, timeout=3),
 										transitions={'to_do': 'trickshot', 'skip': 'finished'},
 										autonomy={'to_do': Autonomy.Off, 'skip': Autonomy.Off})
 

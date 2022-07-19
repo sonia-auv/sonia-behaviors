@@ -36,6 +36,8 @@
 			<max value="5" />
 		</param>
 
+		<param type="boolean" name="has_com" default="True" label="has_com" hint="If submarines have com" />
+
 	</params>
 
 
