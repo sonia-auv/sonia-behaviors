@@ -80,7 +80,7 @@ class drop_AUV7SM(Behavior):
 
 			# x:109 y:184
 			OperatableStateMachine.add('shift',
-										manual_add_pose_to_trajectory(positionX=-0.05545, positionY=0.12393, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-0.05545, positionY=-0.12393, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
