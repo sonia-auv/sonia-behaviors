@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="drop_AUV8">
+
+	<executable package_path="sonia_flexbe_behaviors.drop_auv8_sm" class="drop_AUV8SM" />
+	<tagstring>task</tagstring>
+	<author>CS</author>
+	<date>Tue Jul 12 2022</date>
+	<description>
+		Shift and drop for AUV8
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

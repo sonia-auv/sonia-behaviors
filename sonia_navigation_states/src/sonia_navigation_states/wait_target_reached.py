@@ -25,7 +25,6 @@ class wait_target_reached(EventState):
         self.traj_complete = False
         self.param_timeout = timeout
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
-        self.uniqueID = str(time())
         
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
@@ -38,7 +37,7 @@ class wait_target_reached(EventState):
             elif self.trajectory_done == True:
                 self.launch_time = time()
                 self.traj_complete = True
-                self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.uniqueID, 1))
+                self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 1))
                 Logger.log("Trajectory Completed", Logger.REPORT_HINT)
 
         self.trajectory_done_prev = self.trajectory_done
@@ -58,11 +57,11 @@ class wait_target_reached(EventState):
                 self.time_diff = time() - self.launch_time
             if self.time_diff > self.param_timeout or self.target_reached == True:
                 if self.target_reached == True:
-                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.uniqueID, 2))
+                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 2))
                     Logger.log("Target Reached", Logger.REPORT_HINT)
                     return 'target_reached'
                 else:
-                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.uniqueID, 3))
+                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 3))
                     Logger.log("Target couldn't be reached", Logger.REPORT_HINT)
                     return 'target_not_reached'
         else:
