@@ -21,7 +21,7 @@ class takeover_mission(EventState):
     '''
 
     def __init__(self, mission_id=0):
-        super(takeover_mission, self).__init__(outcomes=['takeover', 'already_done'])
+        super(takeover_mission, self).__init__(outcomes=['takeover', 'no_takeover', 'assigned'])
         self.array = Int8MultiArray()
         self.other_array = Int8MultiArray()
         self.mission_id = mission_id
@@ -50,13 +50,14 @@ class takeover_mission(EventState):
         if self.message_received == True and self.message_received_other == True:
             if self.array[self.mission_id] > 0:
                 Logger.log('Mission already assigned to the submarine', Logger.REPORT_HINT)
+                return 'assigned'
             elif self.other_array[self.mission_id] > 0:
                 Logger.log('Mission is not yet failed or has been completed for the other submarine', Logger.REPORT_HINT)
+                return 'no_takeover'
             else:
                 Logger.log('Mission tranfered to the submarine', Logger.REPORT_HINT)
                 self.update_array.publish(comUtils.update_mission_array(self.mission_id, 1))
                 return 'takeover'
-            return 'already_done'
 
     def on_exit(self, userdata):
         self.receive_array.unregister()

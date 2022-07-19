@@ -4,10 +4,10 @@
 
 	<executable package_path="sonia_flexbe_behaviors.vision_buoy_sm" class="vision_buoySM" />
 	<tagstring>pool</tagstring>
-	<author>FA</author>
-	<date>Sat Nov 13 2021</date>
+	<author>CS</author>
+	<date>Tue Jul 12 2022</date>
 	<description>
-		Detect the buoy to find the octogon
+		Detect the buoy and align
 	</description>
 
 
@@ -17,14 +17,34 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filter_name" default="simple_obstacle" label="filter_name" hint="Sets the filter_name" />
+		<param type="text" name="filterchain" default="simple_buoy_badge" label="filterchain" hint="Sets the filterchain" />
 
-		<param type="numeric" name="camera_no" default="3" label="camera_no" hint="Sets the camera_no">
+		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="text" name="header_name" default="obstacle" label="header_name" hint="Sets the header_name" />
+		<param type="text" name="target" default="obstacle" label="target" hint="Sets the target" />
+
+		<param type="numeric" name="bounding_box_width" default="250" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
 
 	</params>
 

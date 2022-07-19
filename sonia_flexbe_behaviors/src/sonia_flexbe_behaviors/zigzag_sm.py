@@ -36,7 +36,7 @@ class zigzagSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('boxX', 4)
 		self.add_parameter('boxY', 1)
-		self.add_parameter('stroke', 1)
+		self.add_parameter('stroke', 0.5)
 		self.add_parameter('radius', 0.2)
 
 		# references to used behaviors
@@ -51,7 +51,7 @@ class zigzagSM(Behavior):
 
 
 	def create(self):
-		# x:1225 y:49, x:669 y:291
+		# x:972 y:169, x:465 y:44
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -67,27 +67,27 @@ class zigzagSM(Behavior):
 										transitions={'continue': 'init', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:723 y:32
+			# x:646 y:160
 			OperatableStateMachine.add('send',
 										send_to_planner(),
 										transitions={'continue': 'tr', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:946 y:34
+			# x:819 y:33
 			OperatableStateMachine.add('tr',
 										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:509 y:31
+			# x:398 y:165
 			OperatableStateMachine.add('zig',
 										search_zigzag(boxX=self.boxX, boxY=self.boxY, stroke=self.stroke, radius=self.radius, side=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:286 y:31
+			# x:144 y:167
 			OperatableStateMachine.add('init',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'zig'},

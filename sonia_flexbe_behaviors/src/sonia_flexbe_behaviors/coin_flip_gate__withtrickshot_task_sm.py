@@ -48,7 +48,7 @@ class coin_flip_gate_withtrickshot_taskSM(Behavior):
 
 
 	def create(self):
-		# x:602 y:128, x:130 y:255
+		# x:602 y:128, x:163 y:278
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags

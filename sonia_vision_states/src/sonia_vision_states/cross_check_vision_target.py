@@ -4,7 +4,8 @@ from time import time
 import rospy
 
 from flexbe_core import EventState, Logger
-from sonia_common.msg import VisionTarget
+from sonia_common.msg import VisionTarget, MissionTimer
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class cross_check_vision_target(EventState):
 
@@ -35,6 +36,7 @@ class cross_check_vision_target(EventState):
         
         self.param_number_samples = number_samples
         self.param_timeout = timeout
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
     def vision_cb(self, data):
         self.number_of_found += 1
@@ -44,13 +46,16 @@ class cross_check_vision_target(EventState):
         self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
         self.start_time = time()
         Logger.log('Checking to find the target for %d seconds' %self.param_timeout, Logger.REPORT_HINT)
+        self.timeout_pub.publish(missionTimerFunc("cross_check_vision_target", self.param_timeout, self.start_time, 1))
 
     def execute(self, userdata):
         actual = time()-self.start_time       
         if self.number_of_found > self.param_number_samples:
+            self.timeout_pub.publish(missionTimerFunc("cross_check_vision_target", self.param_timeout, self.start_time, 2))
             Logger.log('Target found', Logger.REPORT_HINT)
             return 'continue'
         if actual > self.param_timeout:
+            self.timeout_pub.publish(missionTimerFunc("cross_check_vision_target", self.param_timeout, self.start_time, 3))
             Logger.log('No target found', Logger.REPORT_HINT)
             return 'failed'
 

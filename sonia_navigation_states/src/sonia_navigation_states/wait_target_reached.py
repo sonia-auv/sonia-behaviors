@@ -2,10 +2,11 @@
 #-*- coding: utf-8 -*-
 
 import rospy
-from time import time
+from time import sleep, time
 
 from flexbe_core import EventState, Logger
-from sonia_common.msg import MpcInfo
+from sonia_common.msg import MpcInfo, MissionTimer
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class wait_target_reached(EventState):
 
@@ -15,7 +16,7 @@ class wait_target_reached(EventState):
         target reached.
     '''
 
-    def __init__(self, timeout=30):
+    def __init__(self, timeout=5):
         
         super(wait_target_reached, self).__init__(outcomes=['target_reached', 'target_not_reached', 'error'])
 
@@ -23,6 +24,7 @@ class wait_target_reached(EventState):
         self.trajectory_done_prev = True
         self.traj_complete = False
         self.param_timeout = timeout
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
         
     def get_controller_info_cb(self, data):
         self.target_reached = data.target_reached
@@ -35,6 +37,7 @@ class wait_target_reached(EventState):
             elif self.trajectory_done == True:
                 self.launch_time = time()
                 self.traj_complete = True
+                self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 1))
                 Logger.log("Trajectory Completed", Logger.REPORT_HINT)
 
         self.trajectory_done_prev = self.trajectory_done
@@ -54,9 +57,11 @@ class wait_target_reached(EventState):
                 self.time_diff = time() - self.launch_time
             if self.time_diff > self.param_timeout or self.target_reached == True:
                 if self.target_reached == True:
+                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 2))
                     Logger.log("Target Reached", Logger.REPORT_HINT)
                     return 'target_reached'
                 else:
+                    self.timeout_pub.publish(missionTimerFunc("wait_target_reached", self.param_timeout, self.launch_time, 3))
                     Logger.log("Target couldn't be reached", Logger.REPORT_HINT)
                     return 'target_not_reached'
         else:
