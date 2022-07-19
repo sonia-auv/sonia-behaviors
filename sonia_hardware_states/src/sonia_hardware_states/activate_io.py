@@ -37,17 +37,16 @@ class activate_io(EventState):
 
     def on_enter(self, userdata):
         try:
-            # rospy.wait_for_service('/proc_actuators/cm_action_srv', self.timeout)
-            # self.do_action = rospy.ServiceProxy('/proc_actuators/cm_action_srv', ActuatorDoActionSrv)
-            rospy.wait_for_service('/provider_actuators/do_action_srv', self.timeout)
-            self.do_action = rospy.ServiceProxy('/provider_actuators/do_action_srv', ActuatorDoActionSrv)
+            rospy.wait_for_service('/proc_actuators/cm_action_srv', self.timeout)
+            self.do_action = rospy.ServiceProxy('/proc_actuators/cm_action_srv', ActuatorDoActionSrv)
+            # rospy.wait_for_service('/provider_actuators/do_action_srv', self.timeout)
+            # self.do_action = rospy.ServiceProxy('/provider_actuators/do_action_srv', ActuatorDoActionSrv)
         except rospy.ServiceException as exc:
             rospy.loginfo('Service is not available : ' + str(exc))
             return 'failed'
 
         try:
             self.do_action(self.action_element[str(int(self.param_element))], self.action_side[str(int(self.param_side))], self.action.ACTION_DROPPER_LAUNCH)
-
         except rospy.ServiceException as exc:
             rospy.loginfo('Service did not process request : ' + str(exc))
             return 'failed'

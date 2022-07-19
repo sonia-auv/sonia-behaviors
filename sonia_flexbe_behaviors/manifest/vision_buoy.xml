@@ -46,6 +46,16 @@
 			<max value="600" />
 		</param>
 
+		<param type="numeric" name="max_mouvement" default="1.2" label="max_mouvement" hint="Sets the max_mouvement">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 
