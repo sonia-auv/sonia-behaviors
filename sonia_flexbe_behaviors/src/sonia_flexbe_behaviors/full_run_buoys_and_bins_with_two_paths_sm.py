@@ -54,7 +54,7 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 
 
 	def create(self):
-		# x:1366 y:360, x:321 y:278
+		# x:1017 y:823, x:412 y:464
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -70,13 +70,13 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 										transitions={'finished': 'vision_buoy', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:1018 y:353
+			# x:945 y:676
 			OperatableStateMachine.add('drop_AUV7',
 										self.use_behavior(drop_AUV7SM, 'drop_AUV7'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:435 y:451
+			# x:944 y:384
 			OperatableStateMachine.add('vision_bins',
 										self.use_behavior(vision_binsSM, 'vision_bins'),
 										transitions={'finished': 'vision_droppers', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
@@ -85,28 +85,22 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 			# x:354 y:62
 			OperatableStateMachine.add('vision_buoy',
 										self.use_behavior(vision_buoySM, 'vision_buoy'),
-										transitions={'finished': 'wait_before_going_up', 'failed': 'failed', 'lost_target': 'failed'},
+										transitions={'finished': 'EMPTY', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:699 y:453
+			# x:944 y:534
 			OperatableStateMachine.add('vision_droppers',
 										self.use_behavior(vision_droppersSM, 'vision_droppers'),
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:82 y:452
+			# x:937 y:227
 			OperatableStateMachine.add('vision_path_new_algo_2',
 										self.use_behavior(vision_path_new_algoSM, 'vision_path_new_algo_2'),
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:642 y:61
-			OperatableStateMachine.add('wait_before_going_up',
-										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'EMPTY', 'target_not_reached': 'failed', 'error': 'failed'},
-										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:702 y:252
+			# x:957 y:55
 			OperatableStateMachine.add('EMPTY',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'vision_path_new_algo_2', 'target_not_reached': 'failed', 'error': 'failed'},

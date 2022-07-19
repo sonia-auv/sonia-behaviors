@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_buoys">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_buoys_sm" class="vision_buoysSM" />
+	<tagstring>pool</tagstring>
+	<author>CS</author>
+	<date>Tue Jul 12 2022</date>
+	<description>
+		Detect the buoy and align
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_zigzag" />
+	<contains name="check_collision" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filterchain" default="simple_buoy_badge" label="filterchain" hint="Sets the filterchain" />
+
+		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+		<param type="text" name="target" default="obstacle" label="target" hint="Sets the target" />
+
+		<param type="numeric" name="bounding_box_width" default="250" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="max_mouvement" default="1.2" label="max_mouvement" hint="Sets the max_mouvement">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>
