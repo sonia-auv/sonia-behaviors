@@ -36,7 +36,6 @@ class squareSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('box_size', 3)
 		self.add_parameter('stroke', 0.5)
-		self.add_parameter('radius', 0.0)
 
 		# references to used behaviors
 
@@ -82,7 +81,7 @@ class squareSM(Behavior):
 
 			# x:42 y:305
 			OperatableStateMachine.add('search',
-										search_square(box_size=self.box_size, stroke=self.stroke, radius=self.radius, side=False),
+										search_square(box_size=self.box_size, stroke=self.stroke, side=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
