@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
@@ -44,6 +45,7 @@ class vision_pathSM(Behavior):
 		self.add_parameter('max_mouvement', 0.5)
 
 		# references to used behaviors
+		self.add_behavior(moveSM, 'move')
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
@@ -56,7 +58,7 @@ class vision_pathSM(Behavior):
 
 
 	def create(self):
-		# x:888 y:652, x:550 y:677, x:687 y:449
+		# x:751 y:684, x:550 y:677, x:687 y:449
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -105,6 +107,13 @@ class vision_pathSM(Behavior):
 										transitions={'stopped': 'stop_filter_success', 'moving': 'wait_rotate', 'error': 'stop_filter_fail'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
+			# x:886 y:735
+			OperatableStateMachine.add('move',
+										self.use_behavior(moveSM, 'move',
+											parameters={'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
 			# x:206 y:214
 			OperatableStateMachine.add('planner',
 										send_to_planner(),
@@ -150,7 +159,7 @@ class vision_pathSM(Behavior):
 			# x:997 y:598
 			OperatableStateMachine.add('stop_filter_success',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
-										transitions={'continue': 'finished', 'failed': 'finished'},
+										transitions={'continue': 'move', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 

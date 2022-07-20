@@ -12,6 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="move" />
 	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
