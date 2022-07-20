@@ -26,6 +26,7 @@ class init_trajectory(EventState):
         
         super(init_trajectory, self).__init__(outcomes=['continue'],
                                               output_keys=['trajectory'])
+        
         self.interpolation_method = interpolation_method
 
 

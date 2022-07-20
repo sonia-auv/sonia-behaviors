@@ -12,6 +12,12 @@ class has_collided(EventState):
 
     '''
         Indicates if the obstacle has been touched
+
+        -- timeout      uint8       Time before ending the mission
+        -- threshold    float       Value to compare with the error to detect a collision
+
+        <= target_reached           Collision has been detected
+        <= error                    Error has been detected
     '''
 
     def __init__(self, timeout=30, threshold=0.5):
@@ -42,6 +48,9 @@ class has_collided(EventState):
             if self.target_reached == True:
                 Logger.log('Collision has been detected', Logger.REPORT_HINT)
                 return 'target_reached'
+            else:
+                Logger.log('No collision has been detected', Logger.REPORT_HINT)
+                return 'error'
 
     def on_exit(self, userdata):
         self.get_traj_err_sub.unregister()

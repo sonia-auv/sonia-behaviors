@@ -16,7 +16,7 @@ from sonia_common.msg import AddPose, MultiAddPose
 class search_square(EventState):
 
     '''
-        This state generate a zigzag serach trajectory inside a square
+        This state generate a circle serach trajectory inside a square
                     |<----------------- box size ----------------->|
             _ _      ______________________________________________
                 ^   |      
@@ -47,7 +47,6 @@ class search_square(EventState):
 
         -- box_size         uint8               Length of box
         -- stroke           float               Distance between changes of direction
-        -- radius           float               Radius rounds the trajectory
         -- side             bool                False = start to left, True = start to right
 
         ># input_traj       MultiAddPose        Input trajectory
@@ -57,7 +56,7 @@ class search_square(EventState):
         <= continue                             End of the zigzag
     '''
 
-    def __init__(self, box_size=5, stroke=0.8 , radius=0.4, side = False ):
+    def __init__(self, box_size=5, stroke=0.8, side = False ):
         
         super(search_square, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
@@ -65,7 +64,7 @@ class search_square(EventState):
 
         self.box_size = box_size
         self.stroke = stroke
-        self.radius = radius
+        self.radius = 0.0
         self.side = side
         self.signe = 1
 
@@ -77,7 +76,9 @@ class search_square(EventState):
 
         traj = userdata.input_traj
         new_traj = MultiAddPose()
-       
+        # Force spline interpolation for circle
+        new_traj.interpolation_method = 2       
+
         # Add previous waypoint if needed
         if not traj.pose:
             Logger.log('First position of the trajectory', Logger.REPORT_HINT)

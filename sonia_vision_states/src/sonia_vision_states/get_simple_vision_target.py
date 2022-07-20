@@ -73,8 +73,6 @@ class get_simple_vision_target(EventState):
         self.param_timeout = timeout
         self.param_speed_profile = speed_profile
 
-        Logger.log(self.param_max_mouvement, Logger.REPORT_HINT)
-
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
         self.nombre_enter = 0

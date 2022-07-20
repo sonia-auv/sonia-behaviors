@@ -26,6 +26,7 @@ class manual_add_pose_to_trajectory(EventState):
                                             1 : Relative position and relative angle
                                             2 : Relative position and absolute angle
                                             3 : Absolute position and relative angle 
+                                            4 : Absolute depth and everything else relative
         -- speed            uint8           0 : Normal speed
                                             1 : Fast speed
                                             2 : Low speed

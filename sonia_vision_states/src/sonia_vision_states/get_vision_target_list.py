@@ -12,7 +12,7 @@ from sonia_common.msg import VisionTarget, MultiAddPose, AddPose, MissionTimer
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Vector3
 
-class get_vision_target(EventState):
+class get_vision_target_list(EventState):
 
     '''
         Get the movement target from vision filterchain
@@ -55,7 +55,7 @@ class get_vision_target(EventState):
                  bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, 
                  min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0, ai_confidence=90.0):
         
-        super(get_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
+        super(get_vision_target_list, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['filterchain', 'camera_no', 'target', 'target_list'],
                                                 output_keys = ['camera'])
 
