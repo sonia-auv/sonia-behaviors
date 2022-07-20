@@ -20,7 +20,7 @@ class set_initial_position(EventState):
         
         super(set_initial_position, self).__init__(outcomes=['continue'])
 
-        self.set_initial_position_pub = rospy.Publisher('/initial_condition', Pose, queue_size=2)
+        self.set_initial_position_pub = rospy.Publisher('/proc_simulation/start_simulation', Pose, queue_size=2)
 
         self.param_simulation = simulation
 

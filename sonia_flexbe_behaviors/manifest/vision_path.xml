@@ -37,6 +37,26 @@
 			<max value="2" />
 		</param>
 
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_width" default="50" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
 	</params>
 
 

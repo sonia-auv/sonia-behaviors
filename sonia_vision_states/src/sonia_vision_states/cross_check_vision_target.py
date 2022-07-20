@@ -12,26 +12,26 @@ class cross_check_vision_target(EventState):
     '''
         Verify that the vision target has been found
 
-        -- number_target        uint8           Number of target to cross-check
-        -- timeout              uint8           Time to stop looking at this position
-        -- confidence_target    uint8           Confidence required to continue
+        -- number_target            uint8           Number of target to cross-check
+        -- timeout                  uint8           Time to stop looking at this position
+        -- ai_confidence_target     uint8           Confidence required to continue
 
-        ># target1              AddPose         Test
-        ># target2              AddPose         Test
-        ># target3              AddPose         Test
+        ># AI_target                VisionTarget    Vision target from AI filter
+        ># SIFT_target              VisionTarget    Vision target from SIFT filter
+        ># conv_target              VisionTarget    Vision target from conventional filter
 
-        #> confidence           uint8           Test
-        #> target_position      MultiAddPose    Test
+        #> confidence               uint8           Test
+        #> target_position          MultiAddPose    Test
 
-        <= continue                             Confidence reached a satsfying level
-        <= failed                               Continue to search for the target
+        <= continue                                 Confidence reached a satisfying level
+        <= failed                                   Continue to search for the target
     
     '''
 
     def __init__(self, number_samples, timeout):
 
         super(cross_check_vision_target, self).__init__(outcomes = ['continue', 'failed'],
-                                                        input_keys = ['target1', 'target2', 'target3'],
+                                                        input_keys = ['AI_target', 'SIFT_target', 'conv_target'],
                                                         output_key = ['confidence', 'target_position'])
         
         self.param_number_samples = number_samples
