@@ -43,6 +43,10 @@ class vision_pathSM(Behavior):
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('min_mouvement', 0.1)
 		self.add_parameter('max_mouvement', 0.5)
+		self.add_parameter('bounding_box_height', 300)
+		self.add_parameter('bounding_box_width', 50)
+		self.add_parameter('center_bounding_box_height', 50)
+		self.add_parameter('center_bounding_box_width', 50)
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')
@@ -77,7 +81,7 @@ class vision_pathSM(Behavior):
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
-										get_simple_vision_target(center_bounding_box_pixel_height=50, center_bounding_box_pixel_width=50, bounding_box_pixel_height=300, bounding_box_pixel_width=50, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=5, speed_profile=0),
+										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=5, speed_profile=0),
 										transitions={'success': 'rotate', 'align': 'align', 'move': 'planner', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'output_trajectory', 'camera': 'camera', 'angle': 'angle'})
