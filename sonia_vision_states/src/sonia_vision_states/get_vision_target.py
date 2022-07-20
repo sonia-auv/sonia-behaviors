@@ -12,18 +12,24 @@ from sonia_common.msg import VisionTarget, MultiAddPose, AddPose, MissionTimer
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Vector3
 
-class get_simple_vision_target(EventState):
+class get_vision_target(EventState):
 
     '''
         Get the movement target from vision filterchain
 
         -- center_bounding_box_pixel_height     uint16          Height of center bounding box for alignement on target in pixel
         -- center_bounding_box_pixel_width      uint16          Width of center bounding box for alignement on target in pixel
-        -- bounding_box_pixel_height            uint16          Height of bounding box for alignement on target in pixel
-        -- bounding_box_pixel_width             uint16          Width of bounding box for alignement on target in pixel
+        -- ai_bounding_box_pixel_height         uint16          Height of bounding box for alignement on target in pixel
+        -- ai_bounding_box_pixel_width          uint16          Width of bounding box for alignement on target in pixel
+        -- sift_bounding_box_pixel_height       uint16          Height of bounding box for alignement on target in pixel
+        -- sift_bounding_box_pixel_width        uint16          Width of bounding box for alignement on target in pixel
+        -- simple_bounding_box_pixel_height     uint16          Height of bounding box for alignement on target in pixel
+        -- simple_bounding_box_pixel_width      uint16          Width of bounding box for alignement on target in pixel
         -- image_height                         float           Width of the image in pixel
         -- image_width                          float           Height of the image in pixel
-        -- number_of_average                    uint8           Number of image to average before creating a pose
+        -- ai_number_of_average                 uint8           Number of ai image to average before creating a pose
+        -- sift_number_of_average               uint8           Number of sift image to average before creating a pose
+        -- simple_number_of_average             uint8           Number of simple image to average before creating a pose
         -- max_mouvement                        uint8           Maximum distance allowed to move
         -- min_mouvement                        float           Minimum distance for a mouvement
         -- long_rotation                        bool            False : Quick path for rotation
@@ -34,30 +40,32 @@ class get_simple_vision_target(EventState):
                                                                 1 : slow
                                                                 2 : fast
 
-        ># filterchain                  string          Topic to listen to get the target
-        ># camera_no                    uint8           1 : front 
-                                                        2 : bottom
-                                                        3 : front simulation
-                                                        4 : bottom simulation       
-        ># target                       string          Target to align to
-        ># input_trajectory             MultiAddPose    Input trajectory
+        ># ai_filterchain                       string          Topic to listen to get the ai target
+        ># sift_filterchain                     string          Topic to listen to get the sift target
+        ># simple_filterchain                   string          Topic to listen to get the simple target
+        ># camera_no                            uint8           1 : front 
+                                                                2 : bottom
+                                                                3 : front simulation
+                                                                4 : bottom simulation       
+        ># target                               string          Target to align to
 
-        #> output_trajectory            MultiAddPose    Output trajectory
-        #> camera                       uint8           0 : None
-                                                        1 : bottom AUV8
-                                                        2 : bottom AUV7
-        #> angle                        float           Angle to rotate
+        #> camera                               uint8           0 : None
+                                                                1 : bottom AUV8
+                                                                2 : bottom AUV7
 
-        <= success                                      The target has been reached. Ready for action
-        <= move                                         Movement ready to do with the pose calculated
-        <= failed                                       Error in the calculation and loop
-    '''
+        <= success                                              The target has been reached. Ready for action
+        <= move                                                 Movement ready to do with the pose calculated
+        <= failed                                               Error in the calculation and loop
+        <= search                                               No target found, looking for it with research algo
+    '''     
 
-    def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
+    def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height,
+                 bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, 
+                 min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0, ai_confidence=90.0):
         
-        super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'input_trajectory'],
-                                                output_keys = ['output_trajectory', 'camera', 'angle'])
+        super(get_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
+                                                input_keys = ['filterchain', 'camera_no', 'target'],
+                                                output_keys = ['camera'])
 
         self.param_center_bbp_height = center_bounding_box_pixel_height
         self.param_center_bbp_width = center_bounding_box_pixel_width
@@ -169,75 +177,6 @@ class get_simple_vision_target(EventState):
             self.alignement_reached = False
         
         self.parse_data = True
-
-    def align_front_with_vision(self):
-        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
-
-        new_traj = MultiAddPose()
-        new_pose = AddPose()
-        
-        if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
-            mouvement_x = 0
-            Logger.log('X already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(self.average_x_pixel/(self.average_width_pixel)))
-        if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
-            mouvement_y = 0
-            Logger.log('Y already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs(self.average_y_pixel/(self.average_height_pixel)))
-
-        Logger.log('Déplacement y : %f' %mouvement_x, Logger.REPORT_HINT)
-        Logger.log('Déplacement z : %f' %mouvement_y, Logger.REPORT_HINT)
-
-        new_pose.position = Point(0., mouvement_x, -mouvement_y)
-        new_traj.pose.append(self.fill_pose(new_pose))
-        return (new_traj)
-
-    def align_bottom_with_vision(self):
-        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
-
-        new_traj = MultiAddPose()
-        new_pose = AddPose()
-        
-        if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
-            mouvement_x = 0
-            Logger.log('X already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
-        if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
-            mouvement_y = 0
-            Logger.log('Y already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
-
-        Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
-        Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)
-
-        new_pose.position = Point(mouvement_x, mouvement_y, 0.)
-        new_traj.pose.append(self.fill_pose(new_pose))
-        return (new_traj)
-        
-    def position_with_vision(self):
-        Logger.log('Getting closer. Creating pose', Logger.REPORT_HINT)
-
-        new_traj = MultiAddPose()
-        new_pose = AddPose()
-
-        mouvement = max(self.param_min_mouvement,(self.param_max_mouvement)*(1-((self.average_area_pixel)/(self.param_bbp_area))))
-
-        if self.cam_bottom:
-            new_pose.position = Point(0.,0.,mouvement)
-            Logger.log('Déplacement z : %f' %mouvement, Logger.REPORT_HINT)
-        else :
-            Logger.log('Déplacement x : %f' %mouvement, Logger.REPORT_HINT)
-            new_pose.position = Point(mouvement,0.,0.)
-
-        new_traj.pose.append(self.fill_pose(new_pose))
-        return (new_traj)
-
-    def fill_pose(self, pose):
-        return navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
 
     def execute(self, userdata):
         actual = time() - self.start_time
