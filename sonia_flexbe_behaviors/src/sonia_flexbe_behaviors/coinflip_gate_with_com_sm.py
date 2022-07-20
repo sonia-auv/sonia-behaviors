@@ -99,7 +99,7 @@ class CoinFlipGatewithcomSM(Behavior):
 										manual_add_pose_to_trajectory(positionX=self.distance_to_gate, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'input_traj', 'trajectory': 'trajectory'})
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 			# x:381 y:153
 			OperatableStateMachine.add('success_coin_flip',

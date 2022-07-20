@@ -21,7 +21,7 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 '''
 Created on Fri Jun 24 2022
-@author: KYGS
+@author: KY-GS
 '''
 class trickshotSM(Behavior):
 	'''

@@ -26,12 +26,12 @@
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="110" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="90" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_width" default="110" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="bounding_box_width" default="115" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
 			<max value="600" />
 		</param>
