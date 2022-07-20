@@ -69,7 +69,7 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 			# x:171 y:134
 			OperatableStateMachine.add('go_up',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=- self.distance_up_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=self.distance_up_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=4, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
