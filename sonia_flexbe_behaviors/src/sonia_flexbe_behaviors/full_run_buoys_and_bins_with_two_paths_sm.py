@@ -67,7 +67,8 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 		with _state_machine:
 			# x:51 y:60
 			OperatableStateMachine.add('vision_path',
-										self.use_behavior(vision_pathSM, 'vision_path'),
+										self.use_behavior(vision_pathSM, 'vision_path',
+											parameters={'filterchain': "simple_pipe_straight", 'target': "pipe straight", 'camera_no': 2}),
 										transitions={'finished': 'vision_buoys', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
@@ -79,25 +80,29 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 
 			# x:944 y:384
 			OperatableStateMachine.add('vision_bins',
-										self.use_behavior(vision_binsSM, 'vision_bins'),
+										self.use_behavior(vision_binsSM, 'vision_bins',
+											parameters={'camera_no': 2, 'center_bb_height': 50, 'center_bb_width': 50}),
 										transitions={'finished': 'vision_droppers', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
 			# x:368 y:61
 			OperatableStateMachine.add('vision_buoys',
-										self.use_behavior(vision_buoysSM, 'vision_buoys'),
+										self.use_behavior(vision_buoysSM, 'vision_buoys',
+											parameters={'camera_no': 1, 'center_bounding_box_width': 50, 'center_bounding_box_height': 50}),
 										transitions={'finished': 'avoid_buoys_after_collision', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:944 y:534
 			OperatableStateMachine.add('vision_droppers',
-										self.use_behavior(vision_droppersSM, 'vision_droppers'),
+										self.use_behavior(vision_droppersSM, 'vision_droppers',
+											parameters={'camera_no': 2, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50}),
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
 			# x:944 y:213
 			OperatableStateMachine.add('vision_path_2',
-										self.use_behavior(vision_pathSM, 'vision_path_2'),
+										self.use_behavior(vision_pathSM, 'vision_path_2',
+											parameters={'filterchain': "simple_pipe_straight", 'target': "pipe straight", 'camera_no': 2}),
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 

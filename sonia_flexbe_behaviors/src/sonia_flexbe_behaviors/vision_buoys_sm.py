@@ -40,11 +40,11 @@ class vision_buoysSM(Behavior):
 		self.add_parameter('filterchain', 'simple_buoy_badge')
 		self.add_parameter('camera_no', 1)
 		self.add_parameter('target', 'obstacle')
-		self.add_parameter('bounding_box_width', 250)
-		self.add_parameter('bounding_box_height', 300)
+		self.add_parameter('bounding_box_width', 200)
+		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('center_bounding_box_height', 50)
-		self.add_parameter('max_mouvement', 1.2)
+		self.add_parameter('max_mouvement', 1)
 		self.add_parameter('min_mouvement', 0.25)
 
 		# references to used behaviors
