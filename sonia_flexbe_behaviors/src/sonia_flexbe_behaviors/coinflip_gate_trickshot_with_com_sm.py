@@ -41,6 +41,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 		self.add_parameter('submarine', 'AUV8')
 		self.add_parameter('distance_to_gate', 4)
 		self.add_parameter('dive_depth', 1)
+		self.add_parameter('has_com', True)
 
 		# references to used behaviors
 		self.add_behavior(CoinFlipwithcomSM, 'CoinFlip with com')
@@ -106,31 +107,33 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 			# x:661 y:44
 			OperatableStateMachine.add('Trickshot with com',
-										self.use_behavior(TrickshotwithcomSM, 'Trickshot with com'),
+										self.use_behavior(TrickshotwithcomSM, 'Trickshot with com',
+											parameters={'has_com': self.has_com}),
 										transitions={'finished': 'Move_now'},
 										autonomy={'finished': Autonomy.Inherit})
 
 			# x:585 y:413
 			OperatableStateMachine.add('Trickshot with com (takeover)',
-										self.use_behavior(TrickshotwithcomSM, 'Trickshot with com (takeover)'),
+										self.use_behavior(TrickshotwithcomSM, 'Trickshot with com (takeover)',
+											parameters={'has_com': self.has_com}),
 										transitions={'finished': 'finished'},
 										autonomy={'finished': Autonomy.Inherit})
 
 			# x:463 y:607
 			OperatableStateMachine.add('taking_over_trickshot',
-										takeover_mission(mission_id=2),
+										takeover_mission(mission_id=2, has_com=self.has_com),
 										transitions={'takeover': 'Trickshot with com (takeover)', 'no_takeover': 'finished', 'assigned': 'Trickshot with com (takeover)'},
 										autonomy={'takeover': Autonomy.Off, 'no_takeover': Autonomy.Off, 'assigned': Autonomy.Off})
 
 			# x:76 y:381
 			OperatableStateMachine.add('waiting_for_friend',
-										synchro_receive(timeout=45),
+										synchro_receive(has_com=self.has_com, timeout=45),
 										transitions={'continue': 'Gate with com', 'timeout': 'Gate with com'},
 										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
 
 			# x:66 y:151
 			OperatableStateMachine.add('Choose_sub',
-										choose_your_character(submarine='AUV8'),
+										choose_your_character(submarine=self.submarine),
 										transitions={'auv8': 'CoinFlip-Gate with com', 'auv7': 'CoinFlip with com'},
 										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 

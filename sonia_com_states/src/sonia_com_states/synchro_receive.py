@@ -15,15 +15,17 @@ class synchro_receive(EventState):
         Synchronize a mission with the master. This state needs to be placed before the mission that
         needs to be synchronise.
 
-        -- timeout          uint16      Maximum time to wait for the synch request
+        -- timeout              uint16  Maximum time to wait for the synch request
+        -- has_com              bool    The submarine is using the underwater communication
 
-        <=continue                      Message received
+        <=continue                      Message received or no underwater communication
         <=timeout                       Timeout reached. The submarine didn't receive the message
     '''
 
-    def __init__(self, timeout=120):
+    def __init__(self, has_com=True, timeout=120):
         super(synchro_receive, self).__init__(outcomes=['continue', 'timeout'])
         self.timeout = timeout
+        self.has_com = has_com
         self.message_received = False
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
@@ -40,6 +42,9 @@ class synchro_receive(EventState):
         self.timeout_pub.publish(missionTimerFunc("synchro_receive", self.timeout, str(self.time_start), 1))
         
     def execute(self, userdata):
+        if self.has_com == False:
+            return 'continue'
+
         time_since = time() - self.time_start
         if time_since > self.timeout:
             self.timeout_pub.publish(missionTimerFunc("synchro_receive", self.timeout, str(self.time_start), 3))

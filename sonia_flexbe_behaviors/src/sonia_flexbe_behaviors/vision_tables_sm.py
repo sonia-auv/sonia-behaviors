@@ -27,7 +27,7 @@ Created on 06/07/2022
 '''
 class vision_tablesSM(Behavior):
 	'''
-	Find the bins with the cover.
+	Find the tables center
 	'''
 
 
@@ -41,6 +41,10 @@ class vision_tablesSM(Behavior):
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 100)
 		self.add_parameter('bounding_box_height', 100)
+		self.add_parameter('center_bounding_box_width', 50)
+		self.add_parameter('center_bounding_box_height', 50)
+		self.add_parameter('mouvement_max', 1.0)
+		self.add_parameter('mouvement_min', 0.1)
 
 		# references to used behaviors
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
@@ -80,7 +84,7 @@ class vision_tablesSM(Behavior):
 
 			# x:383 y:31
 			OperatableStateMachine.add('get_bins',
-										get_simple_vision_target(bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0),
+										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.mouvement_max, min_mouvement=self.mouvement_min, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
