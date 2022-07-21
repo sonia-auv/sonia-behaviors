@@ -72,8 +72,9 @@ class get_vision_target(EventState):
                  simple_number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
         
         super(get_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['deep_filterchain', 'sift_filterchain', 'simple_filterchain', 'camera_no', 'target'],
-                                                output_keys = ['camera'])
+                                                input_keys = ['deep_filterchain', 'sift_filterchain', 'simple_filterchain', 'camera_no',
+                                                 'deep_target', 'sift_target', 'simple_target'],
+                                                output_keys = ['camera', 'angle', 'output_trajectory'])
 
         self.param_center_bbp_height = center_bounding_box_pixel_height
         self.param_center_bbp_width = center_bounding_box_pixel_width
@@ -115,11 +116,9 @@ class get_vision_target(EventState):
 
     def on_enter(self, userdata):
 
-        self.vision_x_pixel.clear()
-        self.vision_y_pixel.clear()
-        self.vision_width_pixel.clear()
-        self.vision_height_pixel.clear()
-        self.vision_angle.clear()
+        self.deep_vision.clear()
+        self.sift_vision.clear()
+        self.simple_vision.clear()
 
         self.position_reached = False
         self.alignement_reached = False
@@ -132,7 +131,9 @@ class get_vision_target(EventState):
         self.sift_target = VisionTarget()
         self.simple_target = VisionTarget()
 
-        self.target = userdata.target
+        self.deep_target = userdata.deep_target
+        self.sift_target = userdata.sift_target
+        self.simple_target = userdata.simple_target
         self.position_z = 0.3
 
         if userdata.camera_no == 2 or userdata.camera_no == 4 :
@@ -144,8 +145,11 @@ class get_vision_target(EventState):
         self.get_sift_data = rospy.Subscriber(userdata.sift_filterchain, VisionTarget, self.sift_vision_cb)
         self.get_simple_data = rospy.Subscriber(userdata.simple_filterchain, VisionTarget, self.simple_vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
+        Logger.log('here 1', Logger.REPORT_HINT) 
         self.start_time = time()
+        Logger.log('here 2', Logger.REPORT_HINT) 
         self.timeout_pub.publish(navUtils.missionTimerFunc("get_vision_target", self.param_timeout, self.start_time, 1))
+        Logger.log('here 3', Logger.REPORT_HINT) 
 
         self.nombre_enter += 1
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
@@ -153,9 +157,9 @@ class get_vision_target(EventState):
     def position_cb(self, data):
         self.position_z = data.pose.pose.position.z
 
-    def append_vision(self, vision_method, vision_data):
+    def append_vision(self, vision_method, vision_data, target):
         pixel_data = navUtils.vision_pixel()
-        if vision_data.header == self.target or vision_data.desc_1 == self.target:
+        if vision_data.header == target or vision_data.desc_1 == target:
             pixel_data.x = vision_data.x
             pixel_data.y = vision_data.y
             pixel_data.width = vision_data.width
@@ -165,7 +169,7 @@ class get_vision_target(EventState):
             vision_method.append(pixel_data)
 
     def deep_vision_cb(self, vision_data):
-        self.append_vision(self.deep_vision, vision_data)
+        self.append_vision(self.deep_vision, vision_data, self.deep_target)
 
         if  len(self.deep_vision.x) == self.param_deep_number_of_average:
             self.get_deep_data.unregister()
@@ -173,7 +177,7 @@ class get_vision_target(EventState):
             self.deep_parse_data = True
     
     def sift_vision_cb(self, vision_data):
-        self.append_vision(self.sift_vision, vision_data)
+        self.append_vision(self.sift_vision, vision_data, self.sift_target)
 
         if  len(self.sift_vision.x) == self.param_sift_number_of_average:
             self.get_sift_data.unregister()
@@ -181,7 +185,7 @@ class get_vision_target(EventState):
             self.sift_parse_data = True
 
     def simple_vision_cb(self, vision_data):
-        self.append_vision(self.simple_vision, vision_data)
+        self.append_vision(self.simple_vision, vision_data, self.simple_target)
 
         if  len(self.simple_vision.x) == self.param_simple_number_of_average:
             self.get_simple_data.unregister()
@@ -205,6 +209,8 @@ class get_vision_target(EventState):
         swap = target.x
         target.x = target.y
         target.y = swap
+        
+        return target
 
     def compare(self):
 
@@ -219,29 +225,110 @@ class get_vision_target(EventState):
         Logger.log('Area of simple target (px): %f' %self.simple_average_area_pixel, Logger.REPORT_HINT)
         Logger.log('Area of simple bounding box (px): %f' %self.simple_average_area_pixel, Logger.REPORT_HINT)
 
-        # if self.average_area_pixel > self.param_bbp_area :
-        #     self.position_reached = True
-        #     Logger.log('Position reached', Logger.REPORT_HINT)
-        # else:
-        #     self.position_reached = False
+        if self.deep_average_area_pixel > self.param_deep_bbp_area or self.sift_average_area_pixel > self.param_sift_bbp_area or self.simple_average_area_pixel:
+            self.position_reached = True
+            Logger.log('Position reached', Logger.REPORT_HINT)
+        else:
+            self.position_reached = False
 
         if self.cam_bottom:
-            self.swap(self.deep_target)
-            self.swap(self.sift_target)
-            self.swap(self.simple_target)
+            self.deep_target = self.swap(self.deep_target)
+            self.sift_target = self.swap(self.sift_target)
+            self.vision_target = self.swap(self.simple_target)
 
-        # Logger.log('x average: %f' %abs(self.average_x_pixel), Logger.REPORT_HINT)
-        # Logger.log(self.param_center_bbp_width/2, Logger.REPORT_HINT)
-        # Logger.log('y average: %f' %abs(self.average_y_pixel), Logger.REPORT_HINT)
-        # Logger.log(self.param_center_bbp_height/2, Logger.REPORT_HINT)
+        Logger.log('Center target : %f' %(self.param_center_bbp_width/2), Logger.REPORT_HINT)
+        Logger.log('Center target : %f' %(self.param_center_bbp_height/2), Logger.REPORT_HINT)
 
-        # if abs(self.average_y_pixel) <= self.param_center_bbp_height/2 and abs(self.average_x_pixel) <= self.param_center_bbp_width/2 :
-        #     self.alignement_reached = True
-        #     Logger.log('Alignement reached', Logger.REPORT_HINT)
-        # else:
-        #     self.alignement_reached = False
+        self.average_x_pixel = (self.deep_target.x + self.sift_target.x + self.simple_target.x)/3
+        self.average_y_pixel = (self.deep_target.y + self.sift_target.y + self.simple_target.y)/3
+        self.average_width_pixel = (self.deep_target.width + self.sift_target.width + self.simple_target.width)/3
+        self.average_height_pixel = (self.deep_target.height + self.sift_target.height + self.simple_target.height)/3
+        self.average_angle = (self.deep_target.angle + self.sift_target.angle + self.simple_target.angle)
+
+        Logger.log('x deep average: %f' %abs(self.deep_target.x), Logger.REPORT_HINT)
+        Logger.log('y deep average: %f' %abs(self.deep_target.y), Logger.REPORT_HINT)
+        Logger.log('x sift average: %f' %abs(self.sift_target.x), Logger.REPORT_HINT)
+        Logger.log('y sift average: %f' %abs(self.sift_target.y), Logger.REPORT_HINT)
+        Logger.log('x simple average: %f' %abs(self.simple_target.x), Logger.REPORT_HINT)
+        Logger.log('y simple average: %f' %abs(self.simple_target.y), Logger.REPORT_HINT)
+
+        if abs(self.average_x_pixel) <= self.param_center_bbp_width/2 and abs(self.average_y_pixel) <= self.param_center_bbp_height/2 :
+            self.alignement_reached = True
+            Logger.log('Alignement reached', Logger.REPORT_HINT)
+        else:
+            self.alignement_reached = False
         
-        # self.parse_data = True
+        self.parse_data = True
+
+    def align_front_with_vision(self):
+        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
+
+        new_traj = MultiAddPose()
+        new_pose = AddPose()
+        
+        if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
+            mouvement_x = 0
+            Logger.log('X already aligned', Logger.REPORT_HINT)
+        else: 
+            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(self.average_x_pixel/(self.average_width_pixel)))
+        if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
+            mouvement_y = 0
+            Logger.log('Y already aligned', Logger.REPORT_HINT)
+        else: 
+            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs(self.average_y_pixel/(self.average_height_pixel)))
+
+        Logger.log('Déplacement y : %f' %mouvement_x, Logger.REPORT_HINT)
+        Logger.log('Déplacement z : %f' %mouvement_y, Logger.REPORT_HINT)
+
+        new_pose.position = Point(0., mouvement_x, -mouvement_y)
+        new_traj.pose.append(self.fill_pose(new_pose))
+        return (new_traj)
+
+    def align_bottom_with_vision(self):
+        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
+
+        new_traj = MultiAddPose()
+        new_pose = AddPose()
+        
+        if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
+            mouvement_x = 0
+            Logger.log('X already aligned', Logger.REPORT_HINT)
+        else: 
+            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+        if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
+            mouvement_y = 0
+            Logger.log('Y already aligned', Logger.REPORT_HINT)
+        else: 
+            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+
+        Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
+        Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)
+
+        new_pose.position = Point(mouvement_x, mouvement_y, 0.)
+        new_traj.pose.append(self.fill_pose(new_pose))
+        return (new_traj)
+        
+    def position_with_vision(self):
+        Logger.log('Getting closer. Creating pose', Logger.REPORT_HINT)
+
+        new_traj = MultiAddPose()
+        new_pose = AddPose()
+
+        mouvement = max(self.param_min_mouvement,(self.param_max_mouvement)*(1-((self.average_area_pixel)/(self.param_bbp_area))))
+
+        if self.cam_bottom:
+            new_pose.position = Point(0.,0.,mouvement)
+            Logger.log('Déplacement z : %f' %mouvement, Logger.REPORT_HINT)
+        else :
+            Logger.log('Déplacement x : %f' %mouvement, Logger.REPORT_HINT)
+            new_pose.position = Point(mouvement,0.,0.)
+
+        new_traj.pose.append(self.fill_pose(new_pose))
+        return (new_traj)
+
+    def fill_pose(self, pose):
+        return navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
+
 
     def execute(self, userdata):
         actual = time() - self.start_time

@@ -13,7 +13,10 @@ class start_filter_chain(EventState):
         [...]
 
         -- filterchain          string      Detection task
-        -- target               string      Header name to filter result
+        -- target_1             string      Header name to filter result
+        -- target_2             string      Header name to filter result
+        -- target_3             string      Header name to filter result
+        -- target_4             string      Header name to filter result
         -- camera_no            uint8       Enter 1:Front 2:Bottom 3:Front simulation 4:Bottom simulation
         -- param_cmd            uint8       Enter 1:Open  2:Close
 
@@ -21,13 +24,17 @@ class start_filter_chain(EventState):
         <= failed			Indicates that the camera didn't started
 
     '''
-    def __init__(self, filterchain, target, camera_no, param_cmd):
+    def __init__(self, filterchain, target, camera_no, param_cmd):  #_1, target_2, target_3, target_4, camera_no, param_cmd):
         super(start_filter_chain, self).__init__(   outcomes=['continue', 'failed'],
-                                                    output_keys=['filterchain', 'camera_no', 'target'])
+                                                    output_keys=['filterchain', 'camera_no', 'target'])  #_1', 'target_2', 'target_3', 'target_4'])
         self.execute_vision_cmd = None
         self.camera_no = camera_no
         self.filterchain = filterchain
         self.param_target = target
+        # self.param_target_1 = target_1
+        # self.param_target_2 = target_2
+        # self.param_target_3 = target_3
+        # self.param_target_4 = target_4
         self.param_cmd = param_cmd
         
     def on_enter(self, userdata):
