@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Trickshot with com">
+
+	<executable package_path="sonia_flexbe_behaviors.trickshot_with_com_sm" class="TrickshotwithcomSM" />
+	<tagstring>task</tagstring>
+	<author>FA</author>
+	<date>Sun Jul 17 2022</date>
+	<description>
+		Trickshot state with the underwater communication.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="trickshot" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="has_com" default="True" label="has_com" hint="If submarines have com" />
+
+	</params>
+
+
+</behavior>

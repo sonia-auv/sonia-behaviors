@@ -15,7 +15,7 @@ class wait_mission(EventState):
 
     def __init__(self):
         
-        super(wait_mission, self).__init__(outcomes=['continue', 'failed'])
+        super(wait_mission, self).__init__(outcomes=['continue'])
 
         self.get_mission_state_sub = rospy.Subscriber('/provider_kill_mission/mission_switch_msg', Bool, self.get_mission_state_cb)
 

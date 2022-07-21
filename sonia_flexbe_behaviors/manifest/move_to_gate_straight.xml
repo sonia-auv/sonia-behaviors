@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Move_to_gate_straight">
+
+	<executable package_path="sonia_flexbe_behaviors.move_to_gate_straight_sm" class="Move_to_gate_straightSM" />
+	<tagstring>task</tagstring>
+	<author>KY</author>
+	<date>Fri Juil 2 2022</date>
+	<description>
+		Move forward through the gate
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance_to_gate" default="4" label="distance_to_gate" hint="Sets the distance_to_gate">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+	</params>
+
+
+</behavior>

@@ -4,7 +4,7 @@
 
 	<executable package_path="sonia_flexbe_behaviors.trickshot_sm" class="trickshotSM" />
 	<tagstring>mouvement</tagstring>
-	<author>KYGS</author>
+	<author>KY-GS</author>
 	<date>Fri Jun 24 2022</date>
 	<description>
 		Simple_trickshot

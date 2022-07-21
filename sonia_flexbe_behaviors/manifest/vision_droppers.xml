@@ -26,14 +26,34 @@
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="130" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="90" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_width" default="250" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="bounding_box_width" default="115" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
 			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="max_mouvement" default="0.5" label="max_mouvement" hint="Sets the max_mouvement">
+			<min value="0" />
+			<max value="1.5" />
+		</param>
+
+		<param type="numeric" name="min_mouvement" default="0.1" label="min_mouvement" hint="Sets the min_mouvement">
+			<min value="0" />
+			<max value="1" />
 		</param>
 
 	</params>

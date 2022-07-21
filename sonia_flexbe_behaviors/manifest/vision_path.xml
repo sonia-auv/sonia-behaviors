@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_path">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_path_sm" class="vision_pathSM" />
+	<tagstring>pool</tagstring>
+	<author>FA</author>
+	<date>Mon Nov 15 2021</date>
+	<description>
+		Behaviors for the task of the path and rotate to the right orientationLook for a vision target on the front camera
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+	<contains name="search_zigzag" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="filterchain" default="simple_pipe_straight" label="filterchain" hint="Sets the filterchain name to start the vision target" />
+
+		<param type="text" name="target" default="pipe straight" label="target" hint="Sets the header name to filter the vision target message" />
+
+		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+		<param type="numeric" name="min_mouvement" default="0.1" label="min_mouvement" hint="Sets the min_mouvement">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="max_mouvement" default="0.5" label="max_mouvement" hint="Sets the max_mouvement">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_width" default="50" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+	</params>
+
+
+</behavior>

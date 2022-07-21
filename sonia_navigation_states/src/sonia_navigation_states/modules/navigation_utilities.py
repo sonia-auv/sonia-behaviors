@@ -2,7 +2,7 @@
 # Usefull for navigation states
 
 # includes
-from sonia_common.msg import AddPose
+from sonia_common.msg import AddPose, MissionTimer
 
 # fill and return an addpose object 
 def addpose( x, y, z, rx, ry,rz, frame, speed, fine, rot):
@@ -19,3 +19,18 @@ def addpose( x, y, z, rx, ry,rz, frame, speed, fine, rot):
         buffer.rotation = rot
 
         return buffer
+
+def missionTimerFunc(mission, timeout, uniqueID, status):
+        buffer = MissionTimer()
+        buffer.mission = mission
+        buffer.timeout = timeout
+        buffer.uniqueID = str(uniqueID)
+        buffer.status = status
+        return buffer
+
+class vision_pixel:
+        x = 0.
+        y = 0.
+        width = 0.
+        height = 0.
+        angle = 0.

@@ -36,7 +36,7 @@ class squareSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('box_size', 3)
 		self.add_parameter('stroke', 0.5)
-		self.add_parameter('radius', 0.5)
+		self.add_parameter('radius', 0.0)
 
 		# references to used behaviors
 

@@ -5,8 +5,9 @@ import rospy
 
 from flexbe_core import EventState, Logger
 from std_msgs.msg import UInt8
-from sonia_common.msg import MpcInfo
+from sonia_common.msg import MpcInfo, MissionTimer
 from time import time
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class set_control_mode(EventState):
     """
@@ -25,6 +26,7 @@ class set_control_mode(EventState):
         self.param_mode = mode
         self.mpc_mode = 0
         self.param_timeout = timeout
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
         self.set_mode = rospy.Publisher('proc_control/set_mode', UInt8, queue_size=1)
 
@@ -36,14 +38,17 @@ class set_control_mode(EventState):
         self.mpc_mode_sub = rospy.Subscriber('proc_control/controller_info', MpcInfo, self.mpc_mode_cb)
         self.set_mode.publish(UInt8(self.param_mode))
         self.launch_time = time()
+        self.timeout_pub.publish(missionTimerFunc("set_control_mode", self.param_timeout, self.launch_time, 1))
 
     def execute(self, userdata):
         time_dif = time() - self.launch_time
         if time_dif > self.param_timeout:
             if self.mpc_mode == self.param_mode:
+                self.timeout_pub.publish(missionTimerFunc("set_control_mode", self.param_timeout, self.launch_time, 2))
                 Logger.log('MPC mode has been set :' + str(self.mpc_mode),Logger.REPORT_HINT)
                 return 'continue'
             else:
+                self.timeout_pub.publish(missionTimerFunc("set_control_mode", self.param_timeout, self.launch_time, 3))
                 Logger.log('MPC mode hasnt been set. Present mode is ' + str(self.mpc_mode),Logger.REPORT_HINT)
                 return 'failed'
 
