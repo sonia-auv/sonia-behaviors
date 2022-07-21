@@ -16,12 +16,10 @@ class cross_check_vision_target(EventState):
         -- timeout                  uint8           Time to stop looking at this position
         -- ai_confidence_target     uint8           Confidence required to continue
 
-        ># AI_target                VisionTarget    Vision target from AI filter
-        ># SIFT_target              VisionTarget    Vision target from SIFT filter
-        ># conv_target              VisionTarget    Vision target from conventional filter
+        ># vision_target_list       VisionTarget    List of VisionTarget
+        #> input_trajectory         MultiAddPose    Input tajectory
 
-        #> confidence               uint8           Test
-        #> target_position          MultiAddPose    Test
+        #> output_trajectory        MultiAddPose    Output tajectory
 
         <= continue                                 Confidence reached a satisfying level
         <= failed                                   Continue to search for the target

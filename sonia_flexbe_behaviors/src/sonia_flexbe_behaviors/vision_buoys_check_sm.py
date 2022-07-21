@@ -96,7 +96,7 @@ class vision_buoys_checkSM(Behavior):
 
 			# x:30 y:132
 			OperatableStateMachine.add('start_sift',
-										start_filter_chain(filterchain='simple_sift', target='makeGrade_badge', camera_no=3, param_cmd=1),
+										start_filter_chain(filterchain='sift_front', target='makeGrade_badge', camera_no=3, param_cmd=1),
 										transitions={'continue': 'start_simple', 'failed': 'stop_deep'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'sift_filterchain', 'camera_no': 'camera_no', 'target': 'sift_target'})

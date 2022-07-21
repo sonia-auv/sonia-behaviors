@@ -40,8 +40,9 @@ class get_vision_target_list(EventState):
                                                                 3 : front simulation
                                                                 4 : bottom simulation       
         ># target                               string          Target to align to
-        ># target_list                          VisionTarget[]  List of targets
-
+        ># target_list_in                       VisionTarget[]  List of targets
+        
+        ># target_list_out                      VisionTarget[]  List of targets                     
         #> camera                               uint8           0 : None
                                                                 1 : bottom AUV8
                                                                 2 : bottom AUV7
@@ -53,11 +54,11 @@ class get_vision_target_list(EventState):
 
     def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height,
                  bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, 
-                 min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0, ai_confidence=90.0):
+                 min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
         
         super(get_vision_target_list, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'target_list'],
-                                                output_keys = ['camera'])
+                                                input_keys = ['filterchain', 'camera_no', 'target', 'target_list_in'],
+                                                output_keys = ['camera','target_list_out'])
 
         self.param_center_bbp_height = center_bounding_box_pixel_height
         self.param_center_bbp_width = center_bounding_box_pixel_width
@@ -96,13 +97,15 @@ class get_vision_target_list(EventState):
         self.position_reached = False
         self.alignement_reached = False
         self.parse_data = False
-        self.average_x_pixel = 0.
-        self.average_y_pixel = 0.
-        self.average_width_pixel = 0.
-        self.average_height_pixel = 0.
-        self.average_area_pixel = 0.
-        self.average_angle = 0.
+        self.vision_target = VisionTarget()
+        # self.average_x_pixel = 0.
+        # self.average_y_pixel = 0.
+        # self.average_width_pixel = 0.
+        # self.average_height_pixel = 0.
+        # self.average_area_pixel = 0.
+        # self.average_angle = 0.
         self.target = userdata.target
+        userdata.target_list_out = userdata.target_list_in
 
         self.position_z = 0.3
 
@@ -135,66 +138,83 @@ class get_vision_target_list(EventState):
             self.parse_vision_data()
 
     def parse_vision_data(self):
-        self.average_x_pixel = sum(self.vision_x_pixel)/len(self.vision_x_pixel)
-        self.average_y_pixel = sum(self.vision_y_pixel)/len(self.vision_y_pixel)
-        self.average_width_pixel = sum(self.vision_width_pixel)/len(self.vision_width_pixel)
-        self.average_height_pixel = sum(self.vision_height_pixel)/len(self.vision_height_pixel)
-        self.average_angle = sum(self.vision_angle)/len(self.vision_angle)
+        self.vision_target.x = sum(self.vision_x_pixel)/len(self.vision_x_pixel)
+        self.vision_target.y = sum(self.vision_y_pixel)/len(self.vision_y_pixel)
+        self.vision_target.width = sum(self.vision_width_pixel)/len(self.vision_width_pixel)
+        self.vision_target.height = sum(self.vision_height_pixel)/len(self.vision_height_pixel)
+        self.vision_target.angle = sum(self.vision_angle)/len(self.vision_angle)
 
-        self.average_area_pixel = self.average_width_pixel*self.average_height_pixel
-
+        self.vision_target_area = self.vision_target.width * self.vision_target.height
+        
         if self.cam_bottom:
-            swap = self.average_x_pixel
-            self.average_x_pixel = self.average_y_pixel
-            self.average_y_pixel = swap
-        
-        Logger.log('Area of target (px): %f' %(self.average_height_pixel*self.average_width_pixel), Logger.REPORT_HINT)
-        Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
+            swap = self.vision_target.x
+            self.vision_target.x = self.vision_target.y
+            self.vision_target.y = swap
 
-        if self.average_area_pixel > self.param_bbp_area :
-            self.position_reached = True
-            Logger.log('Position reached', Logger.REPORT_HINT)
-        else:
-            self.position_reached = False
-
-        Logger.log('x average: %f' %abs(self.average_x_pixel), Logger.REPORT_HINT)
-        Logger.log(self.param_center_bbp_width/2, Logger.REPORT_HINT)
-        Logger.log('y average: %f' %abs(self.average_y_pixel), Logger.REPORT_HINT)
-        Logger.log(self.param_center_bbp_height/2, Logger.REPORT_HINT)
-
-        if abs(self.average_y_pixel) <= self.param_center_bbp_height/2 and abs(self.average_x_pixel) <= self.param_center_bbp_width/2 :
-            self.alignement_reached = True
-            Logger.log('Alignement reached', Logger.REPORT_HINT)
-        else:
-            self.alignement_reached = False
-        
         self.parse_data = True
+
+
+
+
+        
+        # Logger.log('Area of target (px): %f' %self.vision_target_area, Logger.REPORT_HINT)
+        # Logger.log('Area of bounding box (px): %f' %self.param_bbp_area, Logger.REPORT_HINT)
+
+        # if self.average_area_pixel > self.param_bbp_area :
+        #     self.position_reached = True
+        #     Logger.log('Position reached', Logger.REPORT_HINT)
+        # else:
+        #     self.position_reached = False
+
+        # Logger.log('x average: %f' %abs(self.average_x_pixel), Logger.REPORT_HINT)
+        # Logger.log(self.param_center_bbp_width/2, Logger.REPORT_HINT)
+        # Logger.log('y average: %f' %abs(self.average_y_pixel), Logger.REPORT_HINT)
+        # Logger.log(self.param_center_bbp_height/2, Logger.REPORT_HINT)
+
+        # if abs(self.average_y_pixel) <= self.param_center_bbp_height/2 and abs(self.average_x_pixel) <= self.param_center_bbp_width/2 :
+        #     self.alignement_reached = True
+        #     Logger.log('Alignement reached', Logger.REPORT_HINT)
+        # else:
+        #     self.alignement_reached = False
+        
+        # self.parse_data = True
 
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
             self.parse_data = False
-            if self.position_reached == True and self.alignement_reached == True:
-                if self.cam_bottom == True :
-                    userdata.angle = self.average_angle
-                    userdata.output_trajectory = userdata.input_trajectory
-                    userdata.camera = 1
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
-                return 'success'
-            elif self.alignement_reached == False:
-                if self.cam_bottom:
-                    userdata.output_trajectory = self.align_bottom_with_vision()
-                else:
-                    userdata.output_trajectory = self.align_front_with_vision()
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
-                return 'align'
-            elif self.position_reached == False:
-                userdata.output_trajectory = self.position_with_vision()
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
-                return 'move'
-            else:
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 4))
-                return 'failed'
+            userdata.target_list_out.append(self.vision_target)
+            if self.cam_bottom == True :
+                userdata.angle = self.average_angle
+                userdata.camera = 1
+            self.timeout_pub.publish(navUtils.missionTimerFunc("get_vision_target_list", self.param_timeout, self.start_time, 2))
+            return 'success'
+
+
+
+
+
+            # if self.position_reached == True and self.alignement_reached == True:
+            #     if self.cam_bottom == True :
+            #         userdata.angle = self.average_angle
+            #         userdata.output_trajectory = userdata.input_trajectory
+            #         userdata.camera = 1
+            #     self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+            #     return 'success'
+            # elif self.alignement_reached == False:
+            #     if self.cam_bottom:
+            #         userdata.output_trajectory = self.align_bottom_with_vision()
+            #     else:
+            #         userdata.output_trajectory = self.align_front_with_vision()
+            #     self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+            #     return 'align'
+            # elif self.position_reached == False:
+            #     userdata.output_trajectory = self.position_with_vision()
+            #     self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+            #     return 'move'
+            # else:
+            #     self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 4))
+            #     return 'failed'
         if actual > self.param_timeout :
             self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 3))
             return 'search'

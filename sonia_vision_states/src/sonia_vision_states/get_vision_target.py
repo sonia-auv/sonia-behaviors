@@ -145,11 +145,8 @@ class get_vision_target(EventState):
         self.get_sift_data = rospy.Subscriber(userdata.sift_filterchain, VisionTarget, self.sift_vision_cb)
         self.get_simple_data = rospy.Subscriber(userdata.simple_filterchain, VisionTarget, self.simple_vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
-        Logger.log('here 1', Logger.REPORT_HINT) 
         self.start_time = time()
-        Logger.log('here 2', Logger.REPORT_HINT) 
         self.timeout_pub.publish(navUtils.missionTimerFunc("get_vision_target", self.param_timeout, self.start_time, 1))
-        Logger.log('here 3', Logger.REPORT_HINT) 
 
         self.nombre_enter += 1
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
@@ -171,34 +168,45 @@ class get_vision_target(EventState):
     def deep_vision_cb(self, vision_data):
         self.append_vision(self.deep_vision, vision_data, self.deep_target)
 
-        if  len(self.deep_vision.x) == self.param_deep_number_of_average:
+        if  len(self.deep_vision) == self.param_deep_number_of_average:
             self.get_deep_data.unregister()
-            self.deep_target = self.parse_vision_data(vision_data.header, vision_data.desc_1, vision_data.desc_2)
+            self.deep_target = self.parse_vision_data(self.deep_vision, vision_data.header, vision_data.desc_1, vision_data.desc_2)
             self.deep_parse_data = True
     
     def sift_vision_cb(self, vision_data):
         self.append_vision(self.sift_vision, vision_data, self.sift_target)
 
-        if  len(self.sift_vision.x) == self.param_sift_number_of_average:
+        if  len(self.sift_vision) == self.param_sift_number_of_average:
             self.get_sift_data.unregister()
-            self.sift_target = self.parse_vision_data(vision_data.header, vision_data.desc_1, vision_data.desc_2)
+            self.sift_target = self.parse_vision_data(self.sift_vision, vision_data.header, vision_data.desc_1, vision_data.desc_2)
             self.sift_parse_data = True
 
     def simple_vision_cb(self, vision_data):
         self.append_vision(self.simple_vision, vision_data, self.simple_target)
 
-        if  len(self.simple_vision.x) == self.param_simple_number_of_average:
+        if  len(self.simple_vision) == self.param_simple_number_of_average:
             self.get_simple_data.unregister()
-            self.simple_target = self.parse_vision_data(vision_data.header, vision_data.desc_1, vision_data.desc_2)
+            self.simple_target = self.parse_vision_data(self.simple_vision, vision_data.header, vision_data.desc_1, vision_data.desc_2)
             self.simple_parse_data = True
 
-    def parse_vision_data(self, header, desc_1, desc_2):
+    def parse_vision_data(self, vision_list, header, desc_1, desc_2):
         temp_target = VisionTarget()
-        temp_target.x = sum(self.vision_x_pixel)/len(self.vision_x_pixel)
-        temp_target.y = sum(self.vision_y_pixel)/len(self.vision_y_pixel)
-        temp_target.width = sum(self.vision_width_pixel)/len(self.vision_width_pixel)
-        temp_target.height = sum(self.vision_height_pixel)/len(self.vision_height_pixel)
-        temp_target.angle = sum(self.vision_angle)/len(self.vision_angle)
+        sum_x = 0.
+        sum_y = 0.
+        sum_width = 0.
+        sum_height = 0.
+        sum_angle = 0.
+        for i in range(len(vision_list)):
+            sum_x += vision_list[i].x
+            sum_y += vision_list[i].y
+            sum_width += vision_list[i].width
+            sum_height += vision_list[i].height
+            sum_angle += vision_list[i].angle
+        temp_target.x = sum_x/len(vision_list)
+        temp_target.y = sum_y/len(vision_list)
+        temp_target.width = sum_width/len(vision_list)
+        temp_target.height = sum_height/len(vision_list)
+        temp_target.angle = sum_angle/len(vision_list)
         temp_target.header = header
         temp_target.desc_1 = desc_1
         temp_target.desc_2 = desc_2
@@ -258,7 +266,7 @@ class get_vision_target(EventState):
         else:
             self.alignement_reached = False
         
-        self.parse_data = True
+        #self.parse_data = True
 
     def align_front_with_vision(self):
         Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
@@ -332,8 +340,11 @@ class get_vision_target(EventState):
 
     def execute(self, userdata):
         actual = time() - self.start_time
-        if self.simple_parse_data == True:
-            self.parse_data = False
+        if self.simple_parse_data and self.sift_parse_data and self.deep_parse_data:
+            self.simple_parse_data = False
+            self.sift_parse_data = False
+            self.deep_parse_data = False
+            self.compare()
             if self.position_reached == True and self.alignement_reached == True:
                 if self.cam_bottom == True :
                     userdata.angle = self.average_angle
