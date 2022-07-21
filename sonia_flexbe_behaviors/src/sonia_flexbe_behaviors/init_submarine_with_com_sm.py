@@ -12,7 +12,6 @@ from sonia_com_states.choose_your_character import choose_your_character
 from sonia_com_states.init_mission_list import init_mission_list
 from sonia_hardware_states.wait_mission import wait_mission
 from sonia_navigation_states.set_control_mode import set_control_mode
-from sonia_navigation_states.set_initial_position import set_initial_position
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,7 +33,6 @@ class init_submarine_with_comSM(Behavior):
 		self.name = 'init_submarine_with_com'
 
 		# parameters of this behavior
-		self.add_parameter('simulation', False)
 		self.add_parameter('sub_init_array', '1,1,1,0,0,0,0,1,1,1,1')
 		self.add_parameter('other_sub_init_array', '1,1,0,1,1,1,1,0,0,0,0')
 		self.add_parameter('submarine', 'AUV8')
@@ -61,11 +59,11 @@ class init_submarine_with_comSM(Behavior):
 
 
 		with _state_machine:
-			# x:118 y:117
-			OperatableStateMachine.add('initial condition',
-										set_initial_position(simulation=self.simulation),
-										transitions={'continue': 'choose_com_mission'},
-										autonomy={'continue': Autonomy.Off})
+			# x:115 y:347
+			OperatableStateMachine.add('choose_com_mission',
+										choose_your_character(submarine=self.submarine),
+										transitions={'auv8': 'init_mission_com_auv8', 'auv7': 'init_mission_com_auv7'},
+										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 
 			# x:388 y:479
 			OperatableStateMachine.add('init_mission_com_auv7',
@@ -90,12 +88,6 @@ class init_submarine_with_comSM(Behavior):
 										wait_mission(),
 										transitions={'continue': 'set control mode'},
 										autonomy={'continue': Autonomy.Off})
-
-			# x:115 y:347
-			OperatableStateMachine.add('choose_com_mission',
-										choose_your_character(submarine=self.submarine),
-										transitions={'auv8': 'init_mission_com_auv8', 'auv7': 'init_mission_com_auv7'},
-										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 
 
 		return _state_machine

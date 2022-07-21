@@ -16,8 +16,6 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
-
 		<param type="text" name="sub_init_array" default="1,1,1,0,0,0,0,1,1,1,1" label="sub_init_array" hint="Sets the initial mission to do" />
 
 		<param type="text" name="other_sub_init_array" default="1,1,0,1,1,1,1,0,0,0,0" label="other_sub_init_array" hint="Sets the initial mission for the other sub to do" />

@@ -65,7 +65,7 @@ class TrickshotwithcomSM(Behavior):
 
 			# x:626 y:71
 			OperatableStateMachine.add('success_trickshot',
-										send_update(mission=3, state=2),
+										send_update(mission=2, state=2),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off})
 
@@ -77,7 +77,7 @@ class TrickshotwithcomSM(Behavior):
 
 			# x:455 y:163
 			OperatableStateMachine.add('Failed_trickshot',
-										send_update(mission=3, state=-1),
+										send_update(mission=2, state=-1),
 										transitions={'continue': 'failed'},
 										autonomy={'continue': Autonomy.Off})
 
