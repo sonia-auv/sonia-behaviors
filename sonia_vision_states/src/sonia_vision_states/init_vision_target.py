@@ -2,12 +2,10 @@
 #-*- coding: utf-8 -*-
 
 from time import time
-import rospy
 
 from flexbe_core import EventState, Logger
-from sonia_common.msg import VisionTarget
 
-class init_trajectory(EventState):
+class init_vision_target(EventState):
 
     '''
         Create the object for the trajectory list
@@ -19,7 +17,7 @@ class init_trajectory(EventState):
 
     def __init__(self):
         
-        super(init_trajectory, self).__init__(outcomes=['continue'],
+        super(init_vision_target, self).__init__(outcomes=['continue'],
                                               output_keys=['target_list'])
 
     def execute(self, userdata):
