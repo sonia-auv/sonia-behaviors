@@ -88,7 +88,7 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 			# x:368 y:61
 			OperatableStateMachine.add('vision_buoys',
 										self.use_behavior(vision_buoysSM, 'vision_buoys',
-											parameters={'camera_no': 1, 'center_bounding_box_width': 50, 'center_bounding_box_height': 50}),
+											parameters={'camera_no': 1}),
 										transitions={'finished': 'avoid_buoys_after_collision', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
