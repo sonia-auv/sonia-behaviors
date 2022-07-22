@@ -202,12 +202,12 @@ class get_simple_vision_target(EventState):
             mouvement_x = 0
             Logger.log('X already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+            mouvement_x = numpy.sign(self.average_x_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
         if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
             mouvement_y = 0
             Logger.log('Y already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+            mouvement_y = numpy.sign(self.average_y_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
 
         Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
         Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)
