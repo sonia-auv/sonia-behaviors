@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_hydro">
+
+	<executable package_path="sonia_flexbe_behaviors.test_hydro_sm" class="test_hydroSM" />
+	<tagstring>hydro</tagstring>
+	<author>GS</author>
+	<date>Thu Jul 21 2022</date>
+	<description>
+		hydro
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="frequency" default="25000" label="frequency" hint="Sets the frequency">
+			<option value="25000" />
+			<option value="30000" />
+			<option value="35000" />
+			<option value="40000" />
+		</param>
+
+	</params>
+
+
+</behavior>
