@@ -111,11 +111,13 @@ class get_simple_vision_target(EventState):
 
         self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
-        self.start_time = time()
-        self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 1))
-
+        
+        Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
         self.nombre_enter += 1
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
+        
+        self.start_time = time()
+        self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 1))
 
     def position_cb(self, data):
         self.position_z = data.pose.pose.position.z
