@@ -1,3 +1,6 @@
+#!/usr/bin/env python 
+#-*- coding: utf-8 -*-
+
 import rospy
 import math
 from time import time
@@ -7,10 +10,11 @@ import sonia_navigation_states.modules.navigation_utilities as navUtils
 from flexbe_core import EventState, Logger
 from sonia_common.msg import MultiAddPose, PingAngles
 
-class hydro(EventState):
+class get_angle_from_hydro(EventState):
 
-    def __init__(self, frequency = 25000, speed=0, precision=0, long_rotation=False, timeout = 10, frequency_timeout = 10):
-        super(hydro, self).__init__(outcomes=['continue', 'failed'], output_keys=['angle'])
+    def __init__(self, frequency = 25000, timeout = 10, frequency_timeout = 10):
+        super(get_angle_from_hydro, self).__init__(outcomes=['continue', 'failed'],
+                                                     output_keys=['angle'])
         self.hydro_angle = -1
         self.hydro_freq = -1
         self.launch_time = 0
@@ -47,15 +51,13 @@ class hydro(EventState):
 
     def execute(self, userdata):
         if self.is_alive and self.frequency_match:
-            Logger.log(' yaw = ' + str(self.pose.orientation.z), Logger.REPORT_HINT)
-            userdata.angle = self.pose.orientation.z
+            userdata.angle = self.hydro_angle
             return 'continue'
         elif not self.frequency_match and self.is_alive:
             Logger.log('Frequency not wanted detected by hydro : ' + str(self.hydro_freq), Logger.REPORT_HINT)
             return 'failed'
         else :
             return 'failed'
-
 
     def on_exit(self, userdata):
         self.get_hydro_data_sub.unregister()

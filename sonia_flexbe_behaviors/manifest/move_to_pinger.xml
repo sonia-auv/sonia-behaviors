@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_to_pinger">
+
+	<executable package_path="sonia_flexbe_behaviors.move_to_pinger_sm" class="move_to_pingerSM" />
+	<tagstring>hydro</tagstring>
+	<author>GS</author>
+	<date>Fri Jul 22 2022</date>
+	<description>
+		Detect location of pinger and move to it
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="frequency" default="25000" label="frequency" hint="Sets the frequency">
+			<option value="25000" />
+			<option value="30000" />
+			<option value="35000" />
+			<option value="40000" />
+		</param>
+
+	</params>
+
+
+</behavior>
