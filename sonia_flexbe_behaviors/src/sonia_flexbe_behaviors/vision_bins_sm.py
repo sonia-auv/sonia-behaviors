@@ -37,11 +37,11 @@ class vision_binsSM(Behavior):
 		self.name = 'vision_bins'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_cover')
-		self.add_parameter('target', 'bins_cover')
+		self.add_parameter('filterchain', 'simple_bin')
+		self.add_parameter('target', 'cover')
 		self.add_parameter('camera_no', 2)
-		self.add_parameter('bounding_box_width', 60)
-		self.add_parameter('bounding_box_height', 60)
+		self.add_parameter('bounding_box_width', 200)
+		self.add_parameter('bounding_box_height', 200)
 		self.add_parameter('center_bb_height', 50)
 		self.add_parameter('center_bb_width', 50)
 		self.add_parameter('max_mouvement', 1.0)

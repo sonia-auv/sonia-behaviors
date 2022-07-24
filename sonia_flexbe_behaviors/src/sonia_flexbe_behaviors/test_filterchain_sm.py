@@ -58,7 +58,7 @@ class test_filterchainSM(Behavior):
 		with _state_machine:
 			# x:95 y:87
 			OperatableStateMachine.add('test start buoy',
-										start_filter_chain(param_node_name='simple_buoy', header_name=self.target, camera_no=self.cam_numero, param_cmd=1),
+										start_filter_chain(param_node_name='simple_buoy', header_name=self.target, camera_no=self.cam_numero),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})

@@ -71,7 +71,7 @@ class vision_tablesSM(Behavior):
 		with _state_machine:
 			# x:65 y:163
 			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=1),
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
@@ -105,14 +105,14 @@ class vision_tablesSM(Behavior):
 
 			# x:765 y:550
 			OperatableStateMachine.add('stop_lost_target',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'lost_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:292 y:277
 			OperatableStateMachine.add('stop_success',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})

@@ -60,7 +60,7 @@ class search_pathSM(Behavior):
 		with _state_machine:
 			# x:17 y:105
 			OperatableStateMachine.add('start_path_filter',
-										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no, param_cmd=1),
+										start_filter_chain(param_node_name=self.filterchain_name, header_name=self.header_name, camera_no=self.camera_no),
 										transitions={'continue': 'search_zigzag', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})

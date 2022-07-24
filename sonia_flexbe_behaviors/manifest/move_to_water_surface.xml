@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_to_water_surface">
+
+	<executable package_path="sonia_flexbe_behaviors.move_to_water_surface_sm" class="move_to_water_surfaceSM" />
+	<tagstring></tagstring>
+	<author>Willy Kao</author>
+	<date>Sat Jul 23 2022</date>
+	<description>
+		Submarine goes up to the surface of the water.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
