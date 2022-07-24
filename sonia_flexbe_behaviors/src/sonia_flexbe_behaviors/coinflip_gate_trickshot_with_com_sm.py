@@ -39,7 +39,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('submarine', 'AUV8')
 		self.add_parameter('distance_to_gate', 4)
-		self.add_parameter('dive_depth', 1)
+		self.add_parameter('dive_depth', 1.5)
 		self.add_parameter('has_com', True)
 
 		# references to used behaviors

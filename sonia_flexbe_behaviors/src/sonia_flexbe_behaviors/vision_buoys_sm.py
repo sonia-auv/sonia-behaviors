@@ -38,13 +38,13 @@ class vision_buoysSM(Behavior):
 		self.name = 'vision_buoys'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simple_buoy_badge')
+		self.add_parameter('filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'obstacle')
+		self.add_parameter('target', 'Badge')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
-		self.add_parameter('center_bounding_box_width', 50)
-		self.add_parameter('center_bounding_box_height', 50)
+		self.add_parameter('center_bounding_box_width', 100)
+		self.add_parameter('center_bounding_box_height', 100)
 		self.add_parameter('max_mouvement', 1)
 		self.add_parameter('min_mouvement', 0.25)
 
@@ -62,7 +62,7 @@ class vision_buoysSM(Behavior):
 
 
 	def create(self):
-		# x:1644 y:503, x:829 y:841, x:456 y:420
+		# x:1593 y:558, x:829 y:841, x:456 y:420
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -79,7 +79,7 @@ class vision_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
-			# x:1301 y:458
+			# x:1156 y:437
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
@@ -130,17 +130,17 @@ class vision_buoysSM(Behavior):
 			# x:1382 y:77
 			OperatableStateMachine.add('stop_filter_success',
 										stop_filter_chain(),
-										transitions={'continue': 'finished', 'failed': 'finished'},
+										transitions={'continue': 'check_collision', 'failed': 'check_collision'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:996 y:393
+			# x:869 y:363
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:1128 y:765
+			# x:1544 y:382
 			OperatableStateMachine.add('check_collision',
 										self.use_behavior(check_collisionSM, 'check_collision'),
 										transitions={'failed': 'failed', 'target_reached': 'finished'},

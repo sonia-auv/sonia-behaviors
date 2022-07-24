@@ -26,7 +26,7 @@
 			<max value="5" />
 		</param>
 
-		<param type="numeric" name="distance_down_after_collision" default="2" label="distance_down_after_collision" hint="Sets the distance_down_after_collision">
+		<param type="numeric" name="distance_down_after_collision" default="0" label="distance_down_after_collision" hint="Sets the distance_down_after_collision">
 			<min value="0" />
 			<max value="4" />
 		</param>

@@ -65,7 +65,7 @@ class vision_buoys_checkSM(Behavior):
 		with _state_machine:
 			# x:30 y:40
 			OperatableStateMachine.add('start_deep',
-										start_filter_chain(filterchain='deep_compe_front', target='Badge', camera_no=3),
+										start_filter_chain(filterchain='deep_compe_front', target='Badge', camera_no=1),
 										transitions={'continue': 'start_sift', 'failed': 'start_sift'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'deep_filterchain', 'camera_no': 'camera_no', 'target': 'deep_target'})
@@ -79,7 +79,7 @@ class vision_buoys_checkSM(Behavior):
 
 			# x:235 y:38
 			OperatableStateMachine.add('get_deep',
-										get_vision_target_list(number_of_average=10, timeout=3),
+										get_vision_target_list(number_of_average=10, timeout=15),
 										transitions={'success': 'get_sift', 'lost_target': 'get_sift'},
 										autonomy={'success': Autonomy.Off, 'lost_target': Autonomy.Off},
 										remapping={'filterchain': 'deep_filterchain', 'camera_no': 'camera_no', 'target': 'deep_target', 'target_list_in': 'target_list', 'camera': 'camera', 'target_list_out': 'target_list'})
@@ -122,20 +122,20 @@ class vision_buoys_checkSM(Behavior):
 			# x:32 y:537
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
-										transitions={'finished': 'search_zigzag', 'failed': 'stop_deep_failed', 'lost_target': 'stop_deep_failed', 'controller_error': 'stop_deep_error'},
+										transitions={'finished': 'get_deep', 'failed': 'stop_deep_failed', 'lost_target': 'stop_deep_failed', 'controller_error': 'stop_deep_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'deep_target', 'filterchain': 'deep_filterchain'})
 
 			# x:30 y:132
 			OperatableStateMachine.add('start_sift',
-										start_filter_chain(filterchain='sift_front', target='makeGrade_badge', camera_no=3),
+										start_filter_chain(filterchain='sift_front', target='makeGrade_badge', camera_no=1),
 										transitions={'continue': 'start_simple', 'failed': 'start_simple'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'sift_filterchain', 'camera_no': 'camera_no', 'target': 'sift_target'})
 
 			# x:30 y:224
 			OperatableStateMachine.add('start_simple',
-										start_filter_chain(filterchain='simulation_badge', target='badge', camera_no=3),
+										start_filter_chain(filterchain='simple_buoy_badge', target='badge', camera_no=1),
 										transitions={'continue': 'init_traj', 'failed': 'init_traj'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'simple_filterchain', 'camera_no': 'camera_no', 'target': 'simple_target'})
