@@ -57,6 +57,8 @@
 			<max value="600" />
 		</param>
 
+		<param type="boolean" name="activate_vision_path" default="False" label="activate_vision_path" hint="Sets the activate_vision_path" />
+
 	</params>
 
 
