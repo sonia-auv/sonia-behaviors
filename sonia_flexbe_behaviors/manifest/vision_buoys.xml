@@ -12,8 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_zigzag" />
 	<contains name="check_collision" />
+	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
@@ -56,6 +56,8 @@
 			<min value="0" />
 			<max value="1" />
 		</param>
+
+		<param type="boolean" name="activate_vision_buoys" default="True" label="activate_vision_buoys" hint="Sets the activate_vision_buoys" />
 
 	</params>
 

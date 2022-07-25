@@ -48,7 +48,7 @@ class vision_pathSM(Behavior):
 		self.add_parameter('bounding_box_width', 50)
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
-		self.add_parameter('activate_vision_path', False)
+		self.add_parameter('activate_vision_path', True)
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')

@@ -14,5 +14,11 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="activate_drop_auv7" default="True" label="activate_drop_auv7" hint="Sets the activate_drop_auv7" />
+
+	</params>
+
 
 </behavior>
