@@ -36,7 +36,7 @@ class CoinFlipGateSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
+		self.add_parameter('dive_depth', 1.5)
 		self.add_parameter('distance_to_gate', 4)
 
 		# references to used behaviors

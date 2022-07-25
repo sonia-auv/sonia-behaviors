@@ -66,7 +66,7 @@ class straight_pathSM(Behavior):
 		with _state_machine:
 			# x:14 y:254
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera, param_cmd=1),
+										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera),
 										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
@@ -121,21 +121,21 @@ class straight_pathSM(Behavior):
 
 			# x:504 y:552
 			OperatableStateMachine.add('stop_filter_fail',
-										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera, param_cmd=2),
+										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera),
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:767 y:362
 			OperatableStateMachine.add('stop_filter_lost',
-										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera, param_cmd=2),
+										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
 
 			# x:997 y:598
 			OperatableStateMachine.add('stop_filter_success',
-										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera, param_cmd=2),
+										start_filter_chain(param_node_name=self.path_filterchain, header_name=self.path_header, camera_no=self.path_camera),
 										transitions={'continue': 'finished', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})

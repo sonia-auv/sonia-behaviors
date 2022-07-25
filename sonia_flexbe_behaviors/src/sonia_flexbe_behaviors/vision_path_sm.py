@@ -84,6 +84,11 @@ class vision_pathSM(Behavior):
 			OperatableStateMachine.add('align',
 										send_to_planner(),
 										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
+
+			# x:14 y:254
+			OperatableStateMachine.add('start path filter',
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'output_trajectory'})
 

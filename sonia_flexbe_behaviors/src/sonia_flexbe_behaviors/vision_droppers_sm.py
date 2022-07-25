@@ -38,8 +38,8 @@ class vision_droppersSM(Behavior):
 		self.name = 'vision_droppers'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_bins_barrel')
-		self.add_parameter('target', 'barrel')
+		self.add_parameter('filterchain', 'deep_compe_bottom')
+		self.add_parameter('target', 'Notepad')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_height', 90)
 		self.add_parameter('bounding_box_width', 115)
