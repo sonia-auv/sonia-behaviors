@@ -25,7 +25,7 @@ class start_filter_chain(EventState):
     '''
     def __init__(self, filterchain, target, camera_no):
         super(start_filter_chain, self).__init__(   outcomes=['continue', 'failed'],
-                                                    output_keys=['filterchain', 'camera_no', 'target'])
+                                                    output_keys=['topic', 'filterchain', 'camera_no', 'target'])
         self.execute_vision_cmd = None
         self.camera_no = camera_no
         self.filterchain = filterchain
@@ -68,7 +68,8 @@ class start_filter_chain(EventState):
         return 'continue'
 
     def on_exit(self, userdata):
-        userdata.filterchain = '/proc_image_processing/' + self.filterchain + '_result'
+        userdata.topic = '/proc_image_processing/' + self.filterchain + '_result'
+        userdata.filterchain = self.filterchain
         userdata.camera_no = self.camera_no
         userdata.target = self.param_target
         if self.result == 'failed' :

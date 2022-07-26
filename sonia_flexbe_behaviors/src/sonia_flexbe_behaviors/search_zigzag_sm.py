@@ -48,9 +48,9 @@ class search_zigzagSM(Behavior):
 
 	def create(self):
 		# x:892 y:251, x:370 y:336, x:479 y:203, x:450 y:260
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'], input_keys=['target', 'filterchain'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'], input_keys=['target', 'topic'])
 		_state_machine.userdata.target = ''
-		_state_machine.userdata.filterchain = ''
+		_state_machine.userdata.topic = ''
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -58,7 +58,7 @@ class search_zigzagSM(Behavior):
 		# [/MANUAL_CREATE]
 
 		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266
-		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target', 'filterchain'], conditions=[
+		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target', 'topic'], conditions=[
 										('lost_target', [('zigzag', 'finished')]),
 										('failed', [('zigzag', 'failed')]),
 										('finished', [('find_target', 'continue')])
@@ -76,7 +76,7 @@ class search_zigzagSM(Behavior):
 										find_vision_target(number_samples=10),
 										transitions={'continue': 'finished'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'target': 'target'})
+										remapping={'topic': 'topic', 'target': 'target'})
 
 
 
@@ -86,7 +86,7 @@ class search_zigzagSM(Behavior):
 										_sm_container_0,
 										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'lost_target'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:602 y:323
 			OperatableStateMachine.add('is_moving',

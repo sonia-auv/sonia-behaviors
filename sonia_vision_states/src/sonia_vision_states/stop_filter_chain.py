@@ -62,6 +62,6 @@ class stop_filter_chain(EventState):
         if self.result == 'failed' :
             Logger.log('Error in stop_filter_chain state, more info in console', Logger.REPORT_HINT)
         else:
-            Logger.log('Filter chain stopped : %s' %userdata.filterchain, Logger.REPORT_HINT)
+            Logger.log('Filterchain stopped : %s' %userdata.filterchain, Logger.REPORT_HINT)
         pass
  

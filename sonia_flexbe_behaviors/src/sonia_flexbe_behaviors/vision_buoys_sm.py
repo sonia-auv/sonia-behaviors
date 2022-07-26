@@ -77,7 +77,7 @@ class vision_buoysSM(Behavior):
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
 			# x:1156 y:437
 			OperatableStateMachine.add('check_moving',
@@ -90,7 +90,7 @@ class vision_buoysSM(Behavior):
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'topic': 'topic', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
 
 			# x:225 y:72
 			OperatableStateMachine.add('init',
@@ -111,7 +111,7 @@ class vision_buoysSM(Behavior):
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:524 y:586
 			OperatableStateMachine.add('stop_filter_fail',
