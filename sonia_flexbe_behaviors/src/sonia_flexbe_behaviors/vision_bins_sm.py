@@ -12,6 +12,7 @@ from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
@@ -91,6 +92,12 @@ class vision_binsSM(Behavior):
 										transitions={'stopped': 'get_bins', 'moving': 'wait_align', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
+			# x:380 y:611
+			OperatableStateMachine.add('check_moving2',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'wait_surface', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
 			# x:20 y:330
 			OperatableStateMachine.add('find_bins',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
@@ -105,12 +112,26 @@ class vision_binsSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
+			# x:29 y:545
+			OperatableStateMachine.add('go_to_surface',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.1, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=4, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'planner'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory', 'trajectory': 'input_trajectory'})
+
 			# x:108 y:202
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'get_bins'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_trajectory'})
+
+			# x:126 y:635
+			OperatableStateMachine.add('planner',
+										send_to_planner(),
+										transitions={'continue': 'wait_surface', 'failed': 'planner'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory'})
 
 			# x:536 y:310
 			OperatableStateMachine.add('search_zigzag',
@@ -126,10 +147,10 @@ class vision_binsSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:313 y:247
+			# x:191 y:292
 			OperatableStateMachine.add('stop_success',
 										stop_filter_chain(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'go_to_surface', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
@@ -137,6 +158,12 @@ class vision_binsSM(Behavior):
 			OperatableStateMachine.add('wait_align',
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:273 y:511
+			OperatableStateMachine.add('wait_surface',
+										wait_target_reached(timeout=5),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'check_moving2', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 
