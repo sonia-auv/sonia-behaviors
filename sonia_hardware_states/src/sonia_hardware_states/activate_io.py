@@ -41,7 +41,7 @@ class activate_io(EventState):
         self.action_pub.publish(ActuatorDoAction(self.element, self.side, self.action))
         self.time_start = time()
         self.timeout_pub.publish(missionTimerFunc(f"activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 1))
-        rospy.loginfo(f'Action : {int(self.element)} is launch')
+        Logger.log(f'Action : {self.element} is launched', Logger.REPORT_HINT)
 
     def reply_cb(self, data):
         if data.element == self.element and self.side == data.side:
