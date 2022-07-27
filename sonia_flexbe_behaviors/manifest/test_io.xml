@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_io">
+
+	<executable package_path="sonia_flexbe_behaviors.test_io_sm" class="test_ioSM" />
+	<tagstring>io test</tagstring>
+	<author>sonia</author>
+	<date>Wed Jul 27 2022</date>
+	<description>
+		test the io by droping droppers after pulling kill-mission
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
