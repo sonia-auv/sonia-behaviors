@@ -24,7 +24,9 @@
 			<option value="sift_bottom" />
 		</param>
 
-		<param type="text" name="target" default="pipe straight" label="target" hint="Sets the header name to filter the vision target message" />
+		<param type="enum" name="vision_path_target" default="path" label="vision_path_target" hint="Sets the header name to filter the vision target message">
+			<option value="path" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />

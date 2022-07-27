@@ -39,7 +39,7 @@ class vision_droppersSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('vision_droppers_filterchain', 'deep_compe_bottom')
-		self.add_parameter('target', 'Notepad')
+		self.add_parameter('vision_droppers_target', 'Barrel')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_height', 90)
 		self.add_parameter('bounding_box_width', 115)
@@ -93,7 +93,7 @@ class vision_droppersSM(Behavior):
 
 			# x:43 y:170
 			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.vision_droppers_filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_droppers_filterchain, target=self.vision_droppers_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})

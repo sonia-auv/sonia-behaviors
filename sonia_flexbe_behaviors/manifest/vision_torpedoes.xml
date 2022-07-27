@@ -23,7 +23,9 @@
 			<option value="simple_buoy" />
 		</param>
 
-		<param type="text" name="target" default="" label="target" hint="Sets the target" />
+		<param type="enum" name="torpedoes_target" default="aDefinir" label="torpedoes_target" hint="Sets the torpedoes_target">
+			<option value="aDefinir" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
