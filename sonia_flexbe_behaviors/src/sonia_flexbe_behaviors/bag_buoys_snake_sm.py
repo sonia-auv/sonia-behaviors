@@ -28,15 +28,15 @@ from sonia_vision_states.stop_rosbag_record import stop_rosbag_record
 Created on Sun May 15 2022
 @author: Willy Kao
 '''
-class mission_bags_buoysSM(Behavior):
+class bag_buoys_snakeSM(Behavior):
 	'''
-	Mission to create bags for the buoys
+	The sub moves in "snake" where its initial position is close to the buoys and goes backward.
 	'''
 
 
 	def __init__(self):
-		super(mission_bags_buoysSM, self).__init__()
-		self.name = 'mission_bags_buoys'
+		super(bag_buoys_snakeSM, self).__init__()
+		self.name = 'bag_buoys_snake'
 
 		# parameters of this behavior
 		self.add_parameter('initial_depth', 0)
@@ -70,8 +70,8 @@ class mission_bags_buoysSM(Behavior):
 			# x:91 y:32
 			OperatableStateMachine.add('wait_mission',
 										wait_mission(),
-										transitions={'continue': 'set_planner_mode', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										transitions={'continue': 'set_planner_mode'},
+										autonomy={'continue': Autonomy.Off})
 
 			# x:533 y:212
 			OperatableStateMachine.add('go_backward_2',
