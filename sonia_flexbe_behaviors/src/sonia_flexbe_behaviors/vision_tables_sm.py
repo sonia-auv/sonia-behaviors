@@ -36,7 +36,7 @@ class vision_tablesSM(Behavior):
 		self.name = 'vision_tables'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simple_tables')
+		self.add_parameter('vision_tables_filterchain', 'deep_compe_bottom')
 		self.add_parameter('target', 'tables')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 100)
@@ -71,7 +71,7 @@ class vision_tablesSM(Behavior):
 		with _state_machine:
 			# x:65 y:163
 			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
@@ -105,14 +105,14 @@ class vision_tablesSM(Behavior):
 
 			# x:765 y:550
 			OperatableStateMachine.add('stop_lost_target',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'lost_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:292 y:277
 			OperatableStateMachine.add('stop_success',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})

@@ -35,7 +35,7 @@ class vision_torpedoesSM(Behavior):
 		self.name = 'vision_torpedoes'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simulation_gman')
+		self.add_parameter('torpedoes_filterchain', 'deep_compe_front')
 		self.add_parameter('target', '')
 		self.add_parameter('camera_no', 1)
 		self.add_parameter('bounding_box_width', 0)
@@ -65,7 +65,7 @@ class vision_torpedoesSM(Behavior):
 		with _state_machine:
 			# x:59 y:81
 			OperatableStateMachine.add('detect_gman',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=1),
+										start_filter_chain(filterchain=self.torpedoes_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
@@ -93,21 +93,21 @@ class vision_torpedoesSM(Behavior):
 
 			# x:182 y:195
 			OperatableStateMachine.add('stop_filter_failed',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
+										start_filter_chain(filterchain=self.torpedoes_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:697 y:462
 			OperatableStateMachine.add('stop_filter_lost_target',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
+										start_filter_chain(filterchain=self.torpedoes_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:757 y:32
 			OperatableStateMachine.add('stop_filter_success',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no, param_cmd=2),
+										start_filter_chain(filterchain=self.torpedoes_filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'finished', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})

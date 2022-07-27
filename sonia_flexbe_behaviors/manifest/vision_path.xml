@@ -18,7 +18,11 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simple_pipe_straight" label="filterchain" hint="Sets the filterchain name to start the vision target" />
+		<param type="enum" name="vision_path_filterchain" default="deep_compe_bottom" label="vision_path_filterchain" hint="Sets the filterchain name to start the vision target">
+			<option value="deep_compe_bottom" />
+			<option value="deep_simulation_bottom" />
+			<option value="sift_bottom" />
+		</param>
 
 		<param type="text" name="target" default="pipe straight" label="target" hint="Sets the header name to filter the vision target message" />
 

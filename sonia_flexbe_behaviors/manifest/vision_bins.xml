@@ -17,7 +17,12 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simple_bin" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="vision_bins_filterchain" default="deep_compe_bottom" label="vision_bins_filterchain" hint="Sets the vision_bins_filterchain">
+			<option value="deep_compe_bottom" />
+			<option value="deep_simulation_bottom" />
+			<option value="sift_bottom" />
+			<option value="simple_bin" />
+		</param>
 
 		<param type="text" name="target" default="cover" label="target" hint="Sets the target" />
 
