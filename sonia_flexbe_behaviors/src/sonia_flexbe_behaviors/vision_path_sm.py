@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
+from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
@@ -47,6 +48,7 @@ class vision_pathSM(Behavior):
 		self.add_parameter('bounding_box_width', 50)
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
+		self.add_parameter('activate_vision_path', True)
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')
@@ -72,12 +74,23 @@ class vision_pathSM(Behavior):
 
 
 		with _state_machine:
+			# x:30 y:40
+			OperatableStateMachine.add('activation',
+										activate_behavior(activate=self.activate_vision_path),
+										transitions={'activate': 'start path filter', 'desactivate': 'finished'},
+										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
+
+			# x:827 y:257
+			OperatableStateMachine.add('align',
+										send_to_planner(),
+										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
+
 			# x:14 y:254
 			OperatableStateMachine.add('start path filter',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'input_traj': 'output_trajectory'})
 
 			# x:486 y:36
 			OperatableStateMachine.add('get_target',
@@ -146,6 +159,13 @@ class vision_pathSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'filterchain': 'filterchain'})
 
+			# x:14 y:254
+			OperatableStateMachine.add('start path filter',
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+
 			# x:504 y:552
 			OperatableStateMachine.add('stop_filter_fail',
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
@@ -184,13 +204,6 @@ class vision_pathSM(Behavior):
 										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'stop_filter_success', 'target_not_reached': 'is_moving_rotation', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:827 y:257
-			OperatableStateMachine.add('align',
-										send_to_planner(),
-										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'output_trajectory'})
 
 
 		return _state_machine

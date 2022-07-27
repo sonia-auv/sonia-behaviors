@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.search_square_sm import search_squareSM
+from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
@@ -46,6 +47,7 @@ class vision_droppersSM(Behavior):
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('max_mouvement', 0.5)
 		self.add_parameter('min_mouvement', 0.1)
+		self.add_parameter('activate_vision_droppers', True)
 
 		# references to used behaviors
 		self.add_behavior(search_squareSM, 'search_square')
@@ -70,18 +72,31 @@ class vision_droppersSM(Behavior):
 
 
 		with _state_machine:
-			# x:43 y:170
-			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
-										transitions={'continue': 'init_traj', 'failed': 'failed'},
+			# x:35 y:65
+			OperatableStateMachine.add('activation',
+										activate_behavior(activate=self.activate_vision_droppers),
+										transitions={'activate': 'find_bins', 'desactivate': 'finished'},
+										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
+
+			# x:424 y:220
+			OperatableStateMachine.add('align',
+										send_to_planner(),
+										transitions={'continue': 'wait_align', 'failed': 'stop_lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'input_traj': 'input_trajectory'})
 
 			# x:621 y:375
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=30, tolerance=0.1),
 										transitions={'stopped': 'get_bins', 'moving': 'wait_align', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:43 y:170
+			OperatableStateMachine.add('find_bins',
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										transitions={'continue': 'init_traj', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:646 y:37
 			OperatableStateMachine.add('get_bins',
@@ -90,7 +105,7 @@ class vision_droppersSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
-			# x:131 y:40
+			# x:214 y:31
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'get_bins'},
@@ -123,13 +138,6 @@ class vision_droppersSM(Behavior):
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:424 y:220
-			OperatableStateMachine.add('align',
-										send_to_planner(),
-										transitions={'continue': 'wait_align', 'failed': 'stop_lost_target'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'input_trajectory'})
 
 
 		return _state_machine

@@ -31,6 +31,8 @@
 			<max value="4" />
 		</param>
 
+		<param type="boolean" name="activate_avoid_buoys_after_collision" default="True" label="activate_avoid_buoys_after_collision" hint="Sets the activate_avoid_buoys_after_collision" />
+
 	</params>
 
 
