@@ -8,8 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.is_moving import is_moving
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -55,7 +56,7 @@ class moveSM(Behavior):
 
 
 	def create(self):
-		# x:472 y:473, x:460 y:310
+		# x:472 y:473, x:474 y:560
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -72,10 +73,16 @@ class moveSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
+			# x:213 y:501
+			OperatableStateMachine.add('are_you_moving',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'send', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
 			# x:115 y:386
 			OperatableStateMachine.add('send',
 										send_to_planner(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'finished', 'failed': 'are_you_moving'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'move'})
 
