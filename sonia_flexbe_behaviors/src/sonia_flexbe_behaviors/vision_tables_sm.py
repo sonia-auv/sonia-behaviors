@@ -12,6 +12,7 @@ from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
+from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
@@ -75,7 +76,7 @@ class vision_tablesSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('activation',
 										activate_behavior(activate=self.activate_vision_tables),
-										transitions={'activate': 'find_bins', 'desactivate': 'finished'},
+										transitions={'activate': 'find_bins', 'desactivate': 'activation'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
 			# x:844 y:31
@@ -105,6 +106,13 @@ class vision_tablesSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
+			# x:202 y:425
+			OperatableStateMachine.add('go_to_surface',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.1, orientationX=0.0, orientationY=0.0, orientationZ=0., frame=4, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'send_to_planner'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory', 'trajectory': 'input_trajectory'})
+
 			# x:175 y:40
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
@@ -119,6 +127,13 @@ class vision_tablesSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'filterchain': 'filterchain'})
 
+			# x:0 y:492
+			OperatableStateMachine.add('send_to_planner',
+										send_to_planner(),
+										transitions={'continue': 'target_reached', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory'})
+
 			# x:796 y:400
 			OperatableStateMachine.add('stop_lost_target',
 										stop_filter_chain(),
@@ -129,15 +144,27 @@ class vision_tablesSM(Behavior):
 			# x:313 y:247
 			OperatableStateMachine.add('stop_success',
 										stop_filter_chain(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'go_to_surface', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
+
+			# x:215 y:590
+			OperatableStateMachine.add('target_reached',
+										wait_target_reached(timeout=5),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'you_moving_bro', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:603 y:101
 			OperatableStateMachine.add('wait_align',
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:473 y:496
+			OperatableStateMachine.add('you_moving_bro',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'target_reached', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine
