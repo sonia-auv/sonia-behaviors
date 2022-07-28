@@ -16,9 +16,13 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simulation_gman" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="vision_torpedoes_filterchain" default="simulation_gman" label="vision_torpedoes_filterchain" hint="Sets the vision_torpedoes_filterchain">
+			<option value="simulation_gman" />
+		</param>
 
-		<param type="text" name="target" default="" label="target" hint="Sets the target" />
+		<param type="enum" name="vision_torpedoes_target" default="gman" label="vision_torpedoes_target" hint="Sets the vision_torpedoes_target">
+			<option value="gman" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />

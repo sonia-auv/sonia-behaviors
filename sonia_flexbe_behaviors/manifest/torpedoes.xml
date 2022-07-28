@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="torpedoes">
+
+	<executable package_path="sonia_flexbe_behaviors.torpedoes_sm" class="torpedoesSM" />
+	<tagstring>torpedoes auv8</tagstring>
+	<author>GS</author>
+	<date>Wed Jul 27 2022</date>
+	<description>
+		align and shoot
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_torpedoes" />
+	<contains name="launch_AUV8" />
+
+	<!-- Available Parameters -->
+
+</behavior>
