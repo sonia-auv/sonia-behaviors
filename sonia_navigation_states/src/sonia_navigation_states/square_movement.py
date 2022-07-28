@@ -55,20 +55,20 @@ class square_movement(EventState):
 
 
         #first mouvement (move forward)
-        new_traj.pose.append(navUtils.addpose(self.boxX/2, 0, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(self.boxX/2, 0, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
-        new_traj.pose.append(navUtils.addpose(0, self.boxY/2, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(0, self.boxY/2, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
-        new_traj.pose.append(navUtils.addpose(-self.boxX, 0, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(-self.boxX, 0, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
-        new_traj.pose.append(navUtils.addpose(0, -self.boxY, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(0, -self.boxY, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
-        new_traj.pose.append(navUtils.addpose(self.boxX, 0, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(self.boxX, 0, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
-        new_traj.pose.append(navUtils.addpose(0, self.boxY/2, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(0, self.boxY/2, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
         #last mouvement (move backward)
-        new_traj.pose.append(navUtils.addpose(-self.boxX/2, 0, 0, 0, 0, 0, self.speed, 0, self.radius, False))
+        new_traj.pose.append(navUtils.addpose(-self.boxX/2, 0, 0, 0, 0, 1, self.speed, 0, self.radius, False))
 
         # print debug
         Logger.log('Square movement has succesfully generated.', Logger.REPORT_HINT)
