@@ -12,9 +12,9 @@ from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_sonar_states.start_bundle import start_bundle
-from sonia_sonar_states.start_stop_sonar import start_stop_sonar
-from sonia_sonar_states.stop_bundle import stop_bundle
+from sonia_mapping_states.start_bundle import start_bundle
+from sonia_mapping_states.start_stop_sonar import start_stop_sonar
+from sonia_mapping_states.stop_bundle import stop_bundle
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -29,8 +29,7 @@ class sonar_end_2_endSM(Behavior):
 	'''
 	sonar end 2 end
 	'''
-
-
+	
 	def __init__(self):
 		super(sonar_end_2_endSM, self).__init__()
 		self.name = 'sonar_end_2_end'
@@ -116,7 +115,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:322 y:81
 			OperatableStateMachine.add('start bundle',
-										start_bundle(target='Buoys', resetBundle=True),
+										start_bundle(sonarBundle=True, hydroBundle=False, sonarTarget='Buoys', resetSonarBundle=True, resetHydroBundle=False),
 										transitions={'continue': 'init1'},
 										autonomy={'continue': Autonomy.Off})
 
