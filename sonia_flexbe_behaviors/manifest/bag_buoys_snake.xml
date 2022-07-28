@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="mission_bags_buoys">
+<behavior name="bag_buoys_snake">
 
-	<executable package_path="sonia_flexbe_behaviors.mission_bags_buoys_sm" class="mission_bags_buoysSM" />
+	<executable package_path="sonia_flexbe_behaviors.bag_buoys_snake_sm" class="bag_buoys_snakeSM" />
 	<tagstring>deep_learning</tagstring>
 	<author>Willy Kao</author>
 	<date>Sun May 15 2022</date>
 	<description>
-		Mission to create bags for the buoys
+		The sub moves in "snake" where its initial position is close to the buoys and goes backward.
 	</description>
 
 

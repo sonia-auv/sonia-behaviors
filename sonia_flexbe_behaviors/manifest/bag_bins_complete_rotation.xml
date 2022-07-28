@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="bag_bins_complete_rotation">
+
+	<executable package_path="sonia_flexbe_behaviors.bag_bins_complete_rotation_sm" class="bag_bins_complete_rotationSM" />
+	<tagstring>deep_learning</tagstring>
+	<author>Willy Kao</author>
+	<date>Wed May 18 2022</date>
+	<description>
+		The sub does a complete rotation of 360 degrees in every level.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="pointX" default="0.16818" label="pointX" hint="Sets the pointX">
+			<min value="0" />
+			<max value="0.3" />
+		</param>
+
+		<param type="numeric" name="depth_incrementation" default="0.5" label="depth_incrementation" hint="Sets the depth_incrementation">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="pointY" default="0" label="pointY" hint="Sets the pointY">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>
