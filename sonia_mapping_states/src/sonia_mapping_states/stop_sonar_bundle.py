@@ -60,7 +60,7 @@ class stop_sonar_bundle(EventState):
             return 'time_out'
 
     def on_exit(self, userdata):
-        if(self.resetSonarBundle):
+        if self.resetSonarBundle:
             self.clearSonarBundlePub.publish(data=True)
 
     def obstacleCallback(self, data):

@@ -60,7 +60,7 @@ class stop_hydro_bundle(EventState):
             return 'time_out'
 
     def on_exit(self, userdata):
-        if(self.resetHydroBundle):
+        if self.resetHydroBundle:
             self.clearHydroBundlePub.publish(data=True)
 
     def obstacleCallback(self, data):
