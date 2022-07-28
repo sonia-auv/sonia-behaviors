@@ -62,7 +62,7 @@ class launch_AUV8SM(Behavior):
 		with _state_machine:
 			# x:43 y:50
 			OperatableStateMachine.add('activation',
-										activate_behavior(activate=self.activate_drop_auv8),
+										activate_behavior(activate=self.activate_launch_auv8),
 										transitions={'activate': 'init', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
