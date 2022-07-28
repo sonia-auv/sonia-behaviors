@@ -39,9 +39,9 @@ class vision_buoysSM(Behavior):
 		self.name = 'vision_buoys'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'deep_compe_front')
+		self.add_parameter('vision_buoys_filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'Badge')
+		self.add_parameter('vision_buoys_target', 'Gun')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 100)
@@ -64,7 +64,6 @@ class vision_buoysSM(Behavior):
 
 
 	def create(self):
-
 		# x:1454 y:39, x:829 y:841, x:456 y:420
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
@@ -95,17 +94,11 @@ class vision_buoysSM(Behavior):
 
 			# x:43 y:367
 			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_buoys_filterchain, target=self.vision_buoys_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
-			# x:1156 y:437
-			OperatableStateMachine.add('check_moving',
-										is_moving(timeout=15, tolerance=0.1),
-										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
-										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
-                    
 			# x:916 y:57
 			OperatableStateMachine.add('get_target',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
@@ -141,7 +134,7 @@ class vision_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:270 y:230
+			# x:346 y:246
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
@@ -161,11 +154,6 @@ class vision_buoysSM(Behavior):
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:1544 y:382
-			OperatableStateMachine.add('check_collision',
-										self.use_behavior(check_collisionSM, 'check_collision'),
-										transitions={'failed': 'failed', 'target_reached': 'finished'},
-										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
 
 		return _state_machine
 

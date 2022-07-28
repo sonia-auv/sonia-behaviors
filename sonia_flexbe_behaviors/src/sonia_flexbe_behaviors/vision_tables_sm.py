@@ -41,7 +41,7 @@ class vision_tablesSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('filterchain', 'simple_tables')
-		self.add_parameter('target', 'cover')
+		self.add_parameter('vision_tables_target', 'tables')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 10)
 		self.add_parameter('bounding_box_height', 10)
@@ -77,6 +77,12 @@ class vision_tablesSM(Behavior):
 
 
 		with _state_machine:
+			# x:65 y:163
+			OperatableStateMachine.add('find_bins',
+										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.vision_tables_target, camera_no=self.camera_no),
+										transitions={'continue': 'init_traj', 'failed': 'failed'},
+                    autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'input_trajectory'})
 			# x:30 y:40
 			OperatableStateMachine.add('activation',
 										activate_behavior(activate=self.activate_vision_tables),

@@ -18,12 +18,17 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="filterchain" default="simple_tables" label="filterchain" hint="Sets the filterchain">
+		<param type="enum" name="vision_tables_filterchain" default="simple_tables" label="vision_tables_filterchain" hint="Sets the vision_tables_filterchain">
+			<option value="deep_compe_bottom" />
+			<option value="deep_simulation_bottom" />
+			<option value="sift_bottom" />
 			<option value="simple_tables" />
-			<option value="simulation_tables" />
+      <option value="simulation_tables" />
 		</param>
 
-		<param type="text" name="target" default="cover" label="target" hint="Sets the target" />
+		<param type="enum" name="vision_tables_target" default="tables" label="vision_tables_target" hint="Sets the vision_tables_target">
+			<option value="tables" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
