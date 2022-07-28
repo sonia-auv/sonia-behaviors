@@ -126,7 +126,7 @@ class vision_binsSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:313 y:247
+			# x:191 y:292
 			OperatableStateMachine.add('stop_success',
 										stop_filter_chain(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
