@@ -39,9 +39,9 @@ class vision_buoysSM(Behavior):
 		self.name = 'vision_buoys'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'deep_compe_front')
+		self.add_parameter('vision_buoys_filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'Badge')
+		self.add_parameter('vision_buoys_target', 'Gun')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 100)
@@ -94,7 +94,7 @@ class vision_buoysSM(Behavior):
 
 			# x:43 y:367
 			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_buoys_filterchain, target=self.vision_buoys_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
@@ -134,7 +134,7 @@ class vision_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:270 y:230
+			# x:346 y:246
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},

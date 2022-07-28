@@ -39,8 +39,8 @@ class vision_pathSM(Behavior):
 		self.name = 'vision_path'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simple_pipe_straight')
-		self.add_parameter('target', 'pipe straight')
+		self.add_parameter('vision_path_filterchain', 'deep_compe_bottom')
+		self.add_parameter('vision_path_target', 'path')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('min_mouvement', 0.1)
 		self.add_parameter('max_mouvement', 0.5)
@@ -84,11 +84,6 @@ class vision_pathSM(Behavior):
 			OperatableStateMachine.add('align',
 										send_to_planner(),
 										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
-
-			# x:14 y:254
-			OperatableStateMachine.add('start path filter',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
-										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'output_trajectory'})
 
@@ -161,28 +156,28 @@ class vision_pathSM(Behavior):
 
 			# x:14 y:254
 			OperatableStateMachine.add('start path filter',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:504 y:552
 			OperatableStateMachine.add('stop_filter_fail',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:767 y:362
 			OperatableStateMachine.add('stop_filter_lost',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:997 y:598
 			OperatableStateMachine.add('stop_filter_success',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'move', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})

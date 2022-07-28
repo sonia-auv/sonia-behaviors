@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="dry_test">
+
+	<executable package_path="sonia_flexbe_behaviors.dry_test_sm" class="dry_testSM" />
+	<tagstring>io test</tagstring>
+	<author>sonia</author>
+	<date>Wed Jul 27 2022</date>
+	<description>
+		dry test the mission/kill switch by dropping droppers
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

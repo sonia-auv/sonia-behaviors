@@ -18,14 +18,21 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="deep_compe_front" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="vision_buoys_filterchain" default="deep_compe_front" label="vision_buoys_filterchain" hint="Sets the vision_buoys_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_simulation_front" />
+			<option value="sift_front" />
+			<option value="simple_buoy" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="text" name="target" default="Badge" label="target" hint="Sets the target" />
+		<param type="enum" name="vision_buoys_target" default="Gun" label="vision_buoys_target" hint="Sets the vision_buoys_target">
+			<option value="Gun" />
+		</param>
 
 		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
