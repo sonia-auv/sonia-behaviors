@@ -122,7 +122,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:569 y:421
 			OperatableStateMachine.add('stop sonar',
-										start_stop_sonar(startStop=True),
+										start_stop_sonar(startStop=False),
 										transitions={'continue': 'init2'},
 										autonomy={'continue': Autonomy.Off})
 

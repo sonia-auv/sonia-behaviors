@@ -35,7 +35,7 @@ class start_bundle(EventState):
         # Publishers
         self.startSonarBundlePub = rospy.Publisher('/proc_mapping/sonar/start', String, queue_size= 1)
         self.clearSonarBundlePub = rospy.Publisher('/proc_mapping/sonar/clear_bundle', Bool, queue_size= 1)
-        self.startHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/start', String, queue_size= 1)
+        self.startHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/start', Bool, queue_size= 1)
         self.clearHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/clear_bundle', Bool, queue_size= 1)
         
     def execute(self, userdata):

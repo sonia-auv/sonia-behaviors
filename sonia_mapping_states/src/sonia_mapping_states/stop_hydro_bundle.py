@@ -25,7 +25,7 @@ class stop_hydro_bundle(EventState):
         <= time_out            Indicates that the proc_mapping didn't find the object you specified within an appropriate delay.
     '''
 
-    def __init__(self, hydroObstacleID = 6, resetHydroBundle = False):
+    def __init__(self, hydroObstacleID = 5, resetHydroBundle = False):
         super(stop_hydro_bundle, self).__init__(outcomes=['found', 'not_found', 'time_out'])
         
         # State attributes
