@@ -1,59 +1,69 @@
 #!/usr/bin/env python 
 #-*- coding: utf-8 -*-
 
+from time import time
 import rospy
 
 from flexbe_core import EventState, Logger
-from sonia_common.srv import ActuatorDoActionSrv, ActuatorDoActionSrvRequest
+from sonia_common.msg import ActuatorDoAction, ActuatorSendReply, MissionTimer
+from sonia_navigation_states.modules.navigation_utilities import missionTimerFunc
 
 class activate_io(EventState):
 
     '''
         State to active the IOs of the submarine (arm not supported yet)
 
-        -- element              uint8       1 : torpedos
-                                            2 : droppers
-                                            3 : arm
-        -- side                 uint8       1 : port
-                                            2 : starboard
+        -- element              uint8       {torpedo:0, dropper:1, arm:2}
+        -- side                 uint8       {port:0, starboard:1} {arm_close:0, arm_open:1}
+        -- action               uint8       {reset:0, launch/drop/exec:1}
 
         <= continue                         Activation of the element successful
-        <= failed                           Failed to activate the element (service issue)
+        <= failed                           Failed to activate the element (Most likely due to kill switch being on)
+        <= timed out                        Activation timed out
 
     '''
 
-    def __init__(self, element, side, timeout=10):
-        super(activate_io, self).__init__(outcomes=['continue', 'failed'])
+    def __init__(self, element, side, action, timeout=8):
+        super(activate_io, self).__init__(outcomes=['continue', 'failed', 'timeout'])
         
-        self.start_time = None
-        self.do_action = None
-        self.param_side = side
-        self.param_element = element
+        self.time_start = None
+        self.element = element
+        self.side = side
+        self.action = action
         self.timeout = timeout
+        self.response = ''
 
-        self.action = ActuatorDoActionSrvRequest()
-        self.action_side = {'1': self.action.SIDE_PORT, '2': self.action.SIDE_STARBOARD}
-        self.action_element = {'1': self.action.ELEMENT_TORPEDO, '2': self.action.ELEMENT_DROPPER, '3': self.action.ELEMENT_ARM}
+        self.action_pub = rospy.Publisher('/provider_actuators/do_action_to_actuators', ActuatorDoAction, queue_size=2)
+        self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
     def on_enter(self, userdata):
-        try:
-            rospy.wait_for_service('/proc_actuators/cm_action_srv', self.timeout)
-            self.do_action = rospy.ServiceProxy('/proc_actuators/cm_action_srv', ActuatorDoActionSrv)
-            # rospy.wait_for_service('/provider_actuators/do_action_srv', self.timeout)
-            # self.do_action = rospy.ServiceProxy('/provider_actuators/do_action_srv', ActuatorDoActionSrv)
-        except rospy.ServiceException as exc:
-            rospy.loginfo('Service is not available : ' + str(exc))
-            return 'failed'
+        self.action_sub = rospy.Subscriber('/provider_actuators/do_action_from_actuators', ActuatorSendReply, self.reply_cb)
+        self.action_pub.publish(ActuatorDoAction(self.element, self.side, self.action))
+        self.time_start = time()
+        self.timeout_pub.publish(missionTimerFunc(f"activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 1))
+        Logger.log(f'Action : {self.element} is launched', Logger.REPORT_HINT)
 
-        try:
-            self.do_action(self.action_element[str(int(self.param_element))], self.action_side[str(int(self.param_side))], self.action.ACTION_DROPPER_LAUNCH)
-        except rospy.ServiceException as exc:
-            rospy.loginfo('Service did not process request : ' + str(exc))
-            return 'failed'
+    def reply_cb(self, data):
+        if data.element == self.element and self.side == data.side:
+            if data.response == ActuatorSendReply.RESPONSE_FAILURE:
+                self.timeout_pub.publish(missionTimerFunc("activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 4))
+                self.response = 'failed'
+            elif data.response == ActuatorSendReply.RESPONSE_SUCCESS:
+                self.timeout_pub.publish(missionTimerFunc("activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 2))
+                self.response = 'continue'
+            elif data.response == ActuatorSendReply.RESPONSE_TIMED_OUT:
+                self.timeout_pub.publish(missionTimerFunc("activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 3))
+                self.response = 'timeout'
+            else:
+                Logger.log(f"/provider_actuators/do_action_from_actuators sent a message with the response code {data.response} which should not exist", Logger.REPORT_ERROR)
 
     def execute(self, userdata):
-        rospy.loginfo('Action : %i is launch' % int(self.param_element))
-        return 'continue'
+        if self.response != "":
+            return self.response
+        if time() - self.time_start >= self.timeout:
+            self.timeout_pub.publish(missionTimerFunc("activate_io (element{self.element}, side{self.side})", self.timeout, str(self.time_start), 3))
+            Logger.log('Timeout Reached', Logger.REPORT_HINT)
+            return 'timeout'
 
     def end(self, userdata):
-        pass
+        self.action_sub.unregister()

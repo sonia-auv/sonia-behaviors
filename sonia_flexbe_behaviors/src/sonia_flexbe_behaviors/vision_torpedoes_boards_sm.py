@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.check_collision_sm import check_collisionSM
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
@@ -25,23 +24,23 @@ from sonia_vision_states.stop_filter_chain import stop_filter_chain
 
 
 '''
-Created on Tue Jul 12 2022
-@author: CS
+Created on 27/08/2022
+@author: GS
 '''
-class vision_buoysSM(Behavior):
+class vision_torpedoes_boardsSM(Behavior):
 	'''
-	Detect the buoy and align
+	Detect the torpedoes and align
 	'''
 
 
 	def __init__(self):
-		super(vision_buoysSM, self).__init__()
-		self.name = 'vision_buoys'
+		super(vision_torpedoes_boardsSM, self).__init__()
+		self.name = 'vision_torpedoes_boards'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'deep_compe_front')
+		self.add_parameter('vision_torpedoes_boards_filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('target', 'Badge')
+		self.add_parameter('vision_torpedoes_boards_target', 'gman')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 100)
@@ -51,7 +50,6 @@ class vision_buoysSM(Behavior):
 		self.add_parameter('activate_vision_buoys', True)
 
 		# references to used behaviors
-		self.add_behavior(check_collisionSM, 'check_collision')
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
@@ -80,13 +78,7 @@ class vision_buoysSM(Behavior):
 										transitions={'activate': 'filter_chain', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
-			# x:1128 y:765
-			OperatableStateMachine.add('check_collision',
-										self.use_behavior(check_collisionSM, 'check_collision'),
-										transitions={'failed': 'failed', 'target_reached': 'finished'},
-										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
-
-			# x:1040 y:474
+			# x:1122 y:502
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
@@ -94,7 +86,7 @@ class vision_buoysSM(Behavior):
 
 			# x:43 y:367
 			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_torpedoes_boards_filterchain, target=self.vision_torpedoes_boards_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
@@ -144,7 +136,7 @@ class vision_buoysSM(Behavior):
 			# x:1241 y:115
 			OperatableStateMachine.add('stop_filter_success',
 										stop_filter_chain(),
-										transitions={'continue': 'check_collision', 'failed': 'check_collision'},
+										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 

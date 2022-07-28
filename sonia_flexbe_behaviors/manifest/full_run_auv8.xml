@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="full_run_AUV8">
+
+	<executable package_path="sonia_flexbe_behaviors.full_run_auv8_sm" class="full_run_AUV8SM" />
+	<tagstring>pool auv8</tagstring>
+	<author>GS</author>
+	<date>27/08/2022</date>
+	<description>
+		Missions for AUV8 : align torpedoes and launch torpedoes
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_buoys" />
+	<contains name="vision_droppers" />
+	<contains name="launch_AUV8" />
+
+	<!-- Available Parameters -->
+
+</behavior>
