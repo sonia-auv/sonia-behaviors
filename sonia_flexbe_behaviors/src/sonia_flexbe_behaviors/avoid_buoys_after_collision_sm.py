@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
@@ -36,8 +37,9 @@ class avoid_buoys_after_collisionSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('distance_up_after_collision', 1)
 		self.add_parameter('distance_forward_after_collision', 3)
-		self.add_parameter('distance_down_after_collision', 0)
-
+    		self.add_parameter('distance_down_after_collision', 0)
+		self.add_parameter('activate_avoid_buoys_after_collision', True)
+		
 		# references to used behaviors
 
 		# Additional initialization code can be added inside the following tags
@@ -50,7 +52,7 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 
 	def create(self):
-		# x:1246 y:147, x:832 y:306
+		# x:1229 y:33, x:832 y:306
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -60,12 +62,18 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 
 		with _state_machine:
-			# x:76 y:306
-			OperatableStateMachine.add('init_traj',
-										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'go_up'},
+			# x:30 y:40
+			OperatableStateMachine.add('activation',
+										activate_behavior(activate=self.activate_avoid_buoys_after_collision),
+										transitions={'activate': 'init_traj', 'desactivate': 'finished'},
+										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
+
+			# x:488 y:311
+			OperatableStateMachine.add('go_down',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=self.distance_down_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'planner'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 			# x:171 y:134
 			OperatableStateMachine.add('go_up',
@@ -73,6 +81,13 @@ class avoid_buoys_after_collisionSM(Behavior):
 										transitions={'continue': 'move_forward'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+
+			# x:76 y:306
+			OperatableStateMachine.add('init_traj',
+										init_trajectory(interpolation_method=0),
+										transitions={'continue': 'go_up'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'trajectory'})
 
 			# x:949 y:261
 			OperatableStateMachine.add('is_moving',
@@ -99,13 +114,6 @@ class avoid_buoys_after_collisionSM(Behavior):
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'finished', 'target_not_reached': 'is_moving', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:488 y:311
-			OperatableStateMachine.add('go_down',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=self.distance_down_after_collision, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'planner'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 
 		return _state_machine

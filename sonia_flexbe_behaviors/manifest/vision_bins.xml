@@ -17,9 +17,16 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simple_bin" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="vision_bins_filterchain" default="deep_compe_bottom" label="vision_bins_filterchain" hint="Sets the vision_bins_filterchain">
+			<option value="deep_compe_bottom" />
+			<option value="deep_simulation_bottom" />
+			<option value="sift_bottom" />
+			<option value="simple_bin" />
+		</param>
 
-		<param type="text" name="target" default="cover" label="target" hint="Sets the target" />
+		<param type="enum" name="vision_bins_target" default="Barrel" label="vision_bins_target" hint="Sets the vision_bins_target">
+			<option value="Barrel" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
@@ -55,6 +62,8 @@
 			<min value="0" />
 			<max value="1" />
 		</param>
+
+		<param type="boolean" name="activate_vision_bins" default="True" label="activate_vision_bins" hint="Sets the activate_vision_bins" />
 
 	</params>
 

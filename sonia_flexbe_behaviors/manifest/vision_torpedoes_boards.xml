@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="vision_buoys">
+<behavior name="vision_torpedoes_boards">
 
-	<executable package_path="sonia_flexbe_behaviors.vision_buoys_sm" class="vision_buoysSM" />
-	<tagstring>pool</tagstring>
-	<author>CS</author>
-	<date>Tue Jul 12 2022</date>
+	<executable package_path="sonia_flexbe_behaviors.vision_torpedoes_boards_sm" class="vision_torpedoes_boardsSM" />
+	<tagstring>pool auv8</tagstring>
+	<author>GS</author>
+	<date>27/08/2022</date>
 	<description>
-		Detect the buoy and align
+		Detect the torpedoes and align
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="check_collision" />
 	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="vision_buoys_filterchain" default="deep_compe_front" label="vision_buoys_filterchain" hint="Sets the vision_buoys_filterchain">
+		<param type="enum" name="vision_torpedoes_boards_filterchain" default="deep_compe_front" label="vision_torpedoes_boards_filterchain" hint="Sets the vision_torpedoes_boards_filterchain">
 			<option value="deep_compe_front" />
-			<option value="deep_simulation_front" />
-			<option value="sift_front" />
+			<option value="deep_align_front" />
 			<option value="simple_buoy" />
+			<option value="simple_sift" />
+			<option value="simulation_gman" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
@@ -30,8 +30,9 @@
 			<max value="4" />
 		</param>
 
-		<param type="enum" name="vision_buoys_target" default="Gun" label="vision_buoys_target" hint="Sets the vision_buoys_target">
-			<option value="Gun" />
+		<param type="enum" name="vision_torpedoes_boards_target" default="gman" label="vision_torpedoes_boards_target" hint="Sets the vision_torpedoes_boards_target">
+			<option value="gman" />
+			<option value="Badge" />
 		</param>
 
 		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">

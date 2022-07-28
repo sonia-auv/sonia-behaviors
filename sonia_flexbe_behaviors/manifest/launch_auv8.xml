@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="launch_AUV8">
+
+	<executable package_path="sonia_flexbe_behaviors.launch_auv8_sm" class="launch_AUV8SM" />
+	<tagstring>task</tagstring>
+	<author>GS</author>
+	<date>27/08/2022</date>
+	<description>
+		Shift and launch torpedoes for AUV8
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="activate_launch_auv8" default="True" label="activate_launch_auv8" hint="Sets the activate_launch_auv8" />
+
+	</params>
+
+
+</behavior>

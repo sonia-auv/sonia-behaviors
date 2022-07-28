@@ -16,9 +16,17 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simulation_gman" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="torpedoes_filterchain" default="deep_compe_front" label="torpedoes_filterchain" hint="Sets the torpedoes_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_simulation_front" />
+			<option value="sift_front" />
+			<option value="simple_buoy" />
+		</param>
 
-		<param type="text" name="target" default="" label="target" hint="Sets the target" />
+		<param type="enum" name="torpedoes_target" default="aDefinir" label="torpedoes_target" hint="Sets the torpedoes_target">
+			<option value="G-Man" />
+      <option value="Bootlegger" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
