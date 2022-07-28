@@ -15,7 +15,7 @@ from geometry_msgs.msg import Point, Vector3
 class get_simple_vision_target(EventState):
 
     '''
-        Get the movement target from vision filterchain
+        Get the movement target from vision topic
 
         -- center_bounding_box_pixel_height     uint16          Height of center bounding box for alignement on target in pixel
         -- center_bounding_box_pixel_width      uint16          Width of center bounding box for alignement on target in pixel
@@ -34,7 +34,7 @@ class get_simple_vision_target(EventState):
                                                                 1 : slow
                                                                 2 : fast
 
-        ># filterchain                  string          Topic to listen to get the target
+        ># topic                        string          Topic to listen to get the target
         ># camera_no                    uint8           1 : front 
                                                         2 : bottom
                                                         3 : front simulation
@@ -56,7 +56,7 @@ class get_simple_vision_target(EventState):
     def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'input_trajectory'],
+                                                input_keys = ['topic', 'camera_no', 'target', 'input_trajectory'],
                                                 output_keys = ['output_trajectory', 'camera', 'angle'])
 
         self.param_center_bbp_height = center_bounding_box_pixel_height
@@ -109,7 +109,7 @@ class get_simple_vision_target(EventState):
         else :
             self.cam_bottom = False
 
-        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
+        self.get_vision_data = rospy.Subscriber(userdata.topic, VisionTarget, self.vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
         
         Logger.log('Checking for position and alignement', Logger.REPORT_HINT)

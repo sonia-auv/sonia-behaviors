@@ -15,12 +15,12 @@ from geometry_msgs.msg import Point, Vector3
 class get_vision_target_list(EventState):
 
     '''
-        Get the movement target from vision filterchain
+        Get the movement target from vision topic
 
         -- number_of_average                    uint8           Number of image to average before creating a pose
         -- timeout                              uint8           Time to stop looking at this position
 
-        ># filterchain                          string          Topic to listen to get the target
+        ># topic                                string          Topic to listen to get the target
         ># camera_no                            uint8           1 : front 
                                                                 2 : bottom
                                                                 3 : front simulation
@@ -34,13 +34,13 @@ class get_vision_target_list(EventState):
                                                                 2 : bottom AUV7
 
         <= success                                              The target has been reached. Ready for action
-        <= lost_target                                          No result from this filterchain
+        <= lost_target                                          No result from this topic
     '''     
 
     def __init__(self, number_of_average=10, timeout=10):
         
         super(get_vision_target_list, self).__init__(outcomes = ['success', 'lost_target'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'target_list_in'],
+                                                input_keys = ['topic', 'camera_no', 'target', 'target_list_in'],
                                                 output_keys = ['camera','target_list_out'])
 
 
@@ -78,7 +78,7 @@ class get_vision_target_list(EventState):
         else :
             self.cam_bottom = False
 
-        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
+        self.get_vision_data = rospy.Subscriber(userdata.topic, VisionTarget, self.vision_cb)
         self.start_time = time()
         self.timeout_pub.publish(navUtils.missionTimerFunc("get_vision_target_list", self.param_timeout, self.start_time, 1))
 
