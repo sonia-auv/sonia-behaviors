@@ -74,9 +74,9 @@ class drop_AUV8SM(Behavior):
 
 			# x:761 y:390
 			OperatableStateMachine.add('drop',
-										activate_io(element=2, side=1, timeout=10),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										activate_io(element=1, side=0, action=1, timeout=10),
+										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': '2nd_drop_attempt'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
 			# x:124 y:140
 			OperatableStateMachine.add('init',
@@ -104,6 +104,12 @@ class drop_AUV8SM(Behavior):
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'drop', 'target_not_reached': 'check', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:963 y:524
+			OperatableStateMachine.add('2nd_drop_attempt',
+										activate_io(element=1, side=0, action=1, timeout=8),
+										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'finished'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
 
 		return _state_machine
