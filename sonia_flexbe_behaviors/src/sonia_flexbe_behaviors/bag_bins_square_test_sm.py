@@ -23,15 +23,15 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 Created on Wed Jul 27 2022
 @author: WK
 '''
-class test_testSM(Behavior):
+class bag_bins_square_testSM(Behavior):
 	'''
-	test_test
+	bag_bins_square_test
 	'''
 
 
 	def __init__(self):
-		super(test_testSM, self).__init__()
-		self.name = 'test_test'
+		super(bag_bins_square_testSM, self).__init__()
+		self.name = 'bag_bins_square_test'
 
 		# parameters of this behavior
 
