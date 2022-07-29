@@ -12,10 +12,10 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="init_submarine_with_com" />
 	<contains name="CoinFlip with com" />
 	<contains name="Gate with com" />
 	<contains name="Trickshot with com" />
+	<contains name="init_submarine_with_com" />
 
 	<!-- Available Parameters -->
 	<params>
@@ -36,6 +36,8 @@
 		</param>
 
 		<param type="boolean" name="has_com" default="True" label="has_com" hint="If submarines have com" />
+
+		<param type="boolean" name="activate_coinflip_gate_trickshot_com" default="True" label="activate_coinflip_gate_trickshot_com" hint="Sets the activate_coinflip_gate_trickshot_com" />
 
 	</params>
 
