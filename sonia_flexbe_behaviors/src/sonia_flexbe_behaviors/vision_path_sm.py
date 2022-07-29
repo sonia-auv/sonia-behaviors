@@ -40,12 +40,12 @@ class vision_pathSM(Behavior):
 		self.name = 'vision_path'
 
 		# parameters of this behavior
-		self.add_parameter('vision_path_filterchain', 'deep_compe_bottom')
-		self.add_parameter('vision_path_target', 'path')
+		self.add_parameter('vision_path_filterchain', 'simple_pipe_straight')
+		self.add_parameter('vision_path_target', 'pipe straight')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('min_mouvement', 0.1)
 		self.add_parameter('max_mouvement', 0.5)
-		self.add_parameter('bounding_box_height', 300)
+		self.add_parameter('bounding_box_height', 225)
 		self.add_parameter('bounding_box_width', 50)
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)

@@ -94,7 +94,7 @@ class vision_buoysSM(Behavior):
 
 			# x:43 y:367
 			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_buoys_filterchain, target=self.vision_buoys_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
