@@ -40,8 +40,8 @@ class vision_tablesSM(Behavior):
 		self.name = 'vision_tables'
 
 		# parameters of this behavior
-		self.add_parameter('filterchain', 'simple_tables')
-		self.add_parameter('vision_tables_target', 'tables')
+		self.add_parameter('vision_tables_filterchain', 'simple_tables')
+		self.add_parameter('vision_tables_target', 'cover')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 10)
 		self.add_parameter('bounding_box_height', 10)
@@ -77,12 +77,6 @@ class vision_tablesSM(Behavior):
 
 
 		with _state_machine:
-			# x:65 y:163
-			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.vision_tables_target, camera_no=self.camera_no),
-										transitions={'continue': 'init_traj', 'failed': 'failed'},
-                    autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'input_trajectory'})
 			# x:30 y:40
 			OperatableStateMachine.add('activation',
 										activate_behavior(activate=self.activate_vision_tables),
@@ -108,19 +102,19 @@ class vision_tablesSM(Behavior):
 										transitions={'stopped': 'get_bins', 'moving': 'wait_align', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:44 y:238
+			# x:65 y:163
 			OperatableStateMachine.add('find_bins',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
+										start_filter_chain(filterchain=self.vision_tables_filterchain, target=self.vision_tables_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:718 y:279
+			# x:682 y:154
 			OperatableStateMachine.add('get_bins',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bb_height, center_bounding_box_pixel_width=self.center_bb_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
 			# x:224 y:465
 			OperatableStateMachine.add('go_to_surface',
@@ -129,7 +123,7 @@ class vision_tablesSM(Behavior):
 										transitions={'finished': 'Wait_4sec', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:175 y:40
+			# x:223 y:36
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': '1m_under_the_sea'},
@@ -148,7 +142,7 @@ class vision_tablesSM(Behavior):
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_bins', 'failed': 'failed', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:1138 y:565
 			OperatableStateMachine.add('stop_lost_target',
@@ -164,7 +158,7 @@ class vision_tablesSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:955 y:104
+			# x:928 y:120
 			OperatableStateMachine.add('wait_align',
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},

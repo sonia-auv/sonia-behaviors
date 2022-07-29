@@ -23,11 +23,12 @@
 			<option value="deep_simulation_bottom" />
 			<option value="sift_bottom" />
 			<option value="simple_tables" />
-      <option value="simulation_tables" />
+			<option value="simulation_tables" />
 		</param>
 
-		<param type="enum" name="vision_tables_target" default="tables" label="vision_tables_target" hint="Sets the vision_tables_target">
+		<param type="enum" name="vision_tables_target" default="cover" label="vision_tables_target" hint="Sets the vision_tables_target">
 			<option value="tables" />
+			<option value="cover" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
