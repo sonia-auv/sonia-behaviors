@@ -77,8 +77,8 @@ class search_tables(EventState):
             Logger.log('Adding a pose to the trajectory', Logger.REPORT_HINT)            
             new_traj.pose = list(traj.pose)
 
-        #first mouvement (1/2 stroke) + rotation 90
-        new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY/2), 0, 0, 0, -90, 1, 0, self.radius,False))
+        #first mouvement (1/2 stroke)
+        new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY/2), 0, 0, 0, 0, 1, 0, self.radius,False))
 
         # Generate point for 
         for i in range(self.fullStep):

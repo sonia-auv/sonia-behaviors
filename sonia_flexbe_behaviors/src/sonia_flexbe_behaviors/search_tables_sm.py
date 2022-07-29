@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.zigzag_sm import zigzagSM
 from sonia_flexbe_behaviors.zigzag_tables_sm import zigzag_tablesSM
 from sonia_navigation_states.is_moving import is_moving
@@ -38,6 +39,7 @@ class search_tablesSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(zigzagSM, 'Container/zigzag')
 		self.add_behavior(zigzag_tablesSM, 'Container_2/zigzag_tables')
+		self.add_behavior(moveSM, 'move')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -105,10 +107,10 @@ class search_tablesSM(Behavior):
 
 
 		with _state_machine:
-			# x:190 y:96
+			# x:75 y:177
 			OperatableStateMachine.add('Container',
 										_sm_container_1,
-										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'Container_2'},
+										transitions={'finished': 'stop', 'failed': 'failed', 'lost_target': 'move'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
 
@@ -124,6 +126,13 @@ class search_tablesSM(Behavior):
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'finished', 'moving': 'failed', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:175 y:53
+			OperatableStateMachine.add('move',
+										self.use_behavior(moveSM, 'move',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 90, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'Container_2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:613 y:158
 			OperatableStateMachine.add('stop',
