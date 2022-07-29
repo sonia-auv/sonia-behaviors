@@ -40,7 +40,7 @@ class vision_torpedoes_boardsSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('vision_torpedoes_boards_filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('vision_torpedoes_boards_target', 'gman')
+		self.add_parameter('vision_torpedoes_boards_target', 'G-Man')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 100)
@@ -62,7 +62,7 @@ class vision_torpedoes_boardsSM(Behavior):
 
 
 	def create(self):
-		# x:1454 y:39, x:829 y:841, x:456 y:420
+		# x:1454 y:39, x:1039 y:794, x:456 y:420
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
@@ -78,7 +78,7 @@ class vision_torpedoes_boardsSM(Behavior):
 										transitions={'activate': 'filter_chain', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
-			# x:1122 y:502
+			# x:960 y:578
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait_target_reached', 'error': 'stop_filter_fail'},
@@ -89,14 +89,14 @@ class vision_torpedoes_boardsSM(Behavior):
 										start_filter_chain(filterchain=self.vision_torpedoes_boards_filterchain, target=self.vision_torpedoes_boards_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
 			# x:916 y:57
 			OperatableStateMachine.add('get_target',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'topic': 'topic', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
 
 			# x:225 y:72
 			OperatableStateMachine.add('init',
@@ -105,7 +105,7 @@ class vision_torpedoes_boardsSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_trajectory'})
 
-			# x:751 y:279
+			# x:596 y:260
 			OperatableStateMachine.add('move',
 										send_to_planner(),
 										transitions={'continue': 'wait_target_reached', 'failed': 'stop_filter_fail'},
@@ -117,7 +117,7 @@ class vision_torpedoes_boardsSM(Behavior):
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:524 y:586
 			OperatableStateMachine.add('stop_filter_fail',
@@ -140,7 +140,7 @@ class vision_torpedoes_boardsSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:875 y:374
+			# x:838 y:393
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},

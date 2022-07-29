@@ -30,9 +30,9 @@
 			<max value="4" />
 		</param>
 
-		<param type="enum" name="vision_torpedoes_boards_target" default="gman" label="vision_torpedoes_boards_target" hint="Sets the vision_torpedoes_boards_target">
-			<option value="gman" />
-			<option value="Badge" />
+		<param type="enum" name="vision_torpedoes_boards_target" default="G-Man" label="vision_torpedoes_boards_target" hint="Sets the vision_torpedoes_boards_target">
+			<option value="G-Man" />
+			<option value="Bootlegger" />
 		</param>
 
 		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">
