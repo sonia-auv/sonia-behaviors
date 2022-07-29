@@ -18,14 +18,13 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="vision_path_filterchain" default="deep_compe_bottom" label="vision_path_filterchain" hint="Sets the filterchain name to start the vision target">
-			<option value="deep_compe_bottom" />
-			<option value="deep_simulation_bottom" />
-			<option value="sift_bottom" />
+		<param type="enum" name="vision_path_filterchain" default="simple_pipe_straight" label="vision_path_filterchain" hint="Sets the filterchain name to start the vision target">
+			<option value="simple_pipe_straight" />
+			<option value="simulation_pipe_straight" />
 		</param>
 
-		<param type="enum" name="vision_path_target" default="path" label="vision_path_target" hint="Sets the header name to filter the vision target message">
-			<option value="path" />
+		<param type="enum" name="vision_path_target" default="pipe straight" label="vision_path_target" hint="Sets the header name to filter the vision target message">
+			<option value="pipe straight" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
@@ -43,7 +42,7 @@
 			<max value="2" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="225" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>
