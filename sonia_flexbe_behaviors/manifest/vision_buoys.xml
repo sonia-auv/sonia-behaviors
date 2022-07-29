@@ -23,6 +23,7 @@
 			<option value="deep_simulation_front" />
 			<option value="sift_front" />
 			<option value="simple_buoy" />
+			<option value="simple_buoy_badge" />
 			<option value="simulation_badge" />
 		</param>
 
