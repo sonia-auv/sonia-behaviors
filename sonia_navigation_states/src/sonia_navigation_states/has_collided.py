@@ -26,15 +26,21 @@ class has_collided(EventState):
         
         self.launch_time = 0
         self.time_diff = 0
+        self.err_ori_x = 0
         self.err_ori_y = 0
+        self.err_ori_z = 0
         self.param_timeout = timeout
         self.param_threshold = threshold
 
     def get_traj_err_cb(self, data):
+        self.err_ori_x = data.twist.twist.angular.x
         self.err_ori_y = data.twist.twist.angular.y
-        if abs(self.err_ori_y) > self.param_threshold:
+        self.err_ori_z = data.twist.twist.angular.z
+        if abs(self.err_ori_x) > self.param_threshold or abs(self.err_ori_y) > self.param_threshold or abs(self.err_ori_z) > self.param_threshold:
             self.target_reached = True            
-        print("Orientation error y : " + str(self.err_ori_y ))
+        print("Orientation error x : " + str(self.err_ori_x))
+        print("Orientation error y : " + str(self.err_ori_y))
+        print("Orientation error z : " + str(self.err_ori_z))
 
     def on_enter(self, userdata):
         self.is_alive = True
