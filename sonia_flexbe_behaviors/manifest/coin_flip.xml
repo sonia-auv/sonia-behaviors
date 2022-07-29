@@ -26,6 +26,8 @@
 			<max value="5" />
 		</param>
 
+		<param type="boolean" name="activate_coin_flip" default="True" label="activate_coin_flip" hint="Sets the activate_coin_flip" />
+
 	</params>
 
 
