@@ -12,6 +12,7 @@ from flexbe_states.wait_state import WaitState
 from sonia_mapping_states.start_bundle import start_bundle
 from sonia_mapping_states.stop_hydro_bundle import stop_hydro_bundle
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
@@ -49,7 +50,7 @@ class hydro_end2endSM(Behavior):
 
 
 	def create(self):
-		# x:929 y:47, x:876 y:257
+		# x:931 y:187, x:598 y:38
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -61,18 +62,24 @@ class hydro_end2endSM(Behavior):
 		with _state_machine:
 			# x:30 y:40
 			OperatableStateMachine.add('start_hydro',
-										start_bundle(sonarBundle=False, hydroBundle=True, sonarTarget="", resetSonarBundle=False, resetHydroBundle=False),
+										start_bundle(sonarBundle=False, hydroBundle=True, sonarTarget="", hydroTarget=0, resetSonarBundle=False, resetHydroBundle=False),
 										transitions={'continue': 'wait'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:601 y:177
+			# x:437 y:227
 			OperatableStateMachine.add('move',
 										send_to_planner(),
-										transitions={'continue': 'wait_target', 'failed': 'failed'},
+										transitions={'continue': 'wait_target', 'failed': 'moving'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory1'})
 
-			# x:375 y:183
+			# x:697 y:252
+			OperatableStateMachine.add('moving',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'wait_target', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:210 y:229
 			OperatableStateMachine.add('set_target',
 										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=-2, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=16, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
@@ -82,22 +89,22 @@ class hydro_end2endSM(Behavior):
 			# x:380 y:40
 			OperatableStateMachine.add('stop_hydro',
 										stop_hydro_bundle(hydroObstacleID=5, resetHydroBundle=False),
-										transitions={'found': 'init_traj', 'not_found': 'finished', 'time_out': 'finished'},
+										transitions={'found': 'init_traj', 'not_found': 'failed', 'time_out': 'failed'},
 										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off})
 
 			# x:231 y:41
 			OperatableStateMachine.add('wait',
-										WaitState(wait_time=20),
+										WaitState(wait_time=30),
 										transitions={'done': 'stop_hydro'},
 										autonomy={'done': Autonomy.Off})
 
-			# x:786 y:89
+			# x:689 y:32
 			OperatableStateMachine.add('wait_target',
 										wait_target_reached(timeout=30),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'finished', 'target_not_reached': 'moving', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:176 y:183
+			# x:23 y:231
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'set_target'},

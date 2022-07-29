@@ -6,7 +6,7 @@ from time import time
 import rospy
 
 from flexbe_core import EventState, Logger
-from std_msgs.msg import Bool, String, UInt8
+from std_msgs.msg import Bool, String, UInt16
 
 class start_bundle(EventState):
 
@@ -16,7 +16,7 @@ class start_bundle(EventState):
         -- sonarBundle       bool   Indicates if you want to start the bundle recording for the sonar.
         -- hydroBundle       bool   Indicates if you want to start the bundle recording for the hydro.
         -- sonarTarget       string Name of the object that you want to start bundling.
-        -- hydroTarget       uint8  Frequency of the pinger.
+        -- hydroTarget       uint16  Frequency of the pinger.
         -- resetSonarBundle  bool   Indicates if you want to clear the current sonar bundle or not.
         -- resetHydroBundle  bool   Indicates if you want to clear the current hydro bundle or not.
 
@@ -37,7 +37,7 @@ class start_bundle(EventState):
         # Publishers
         self.startSonarBundlePub = rospy.Publisher('/proc_mapping/sonar/start', String, queue_size= 1)
         self.clearSonarBundlePub = rospy.Publisher('/proc_mapping/sonar/clear_bundle', Bool, queue_size= 1)
-        self.startHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/start', UInt8, queue_size= 1)
+        self.startHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/start', UInt16, queue_size= 1)
         self.clearHydroBundlePub = rospy.Publisher('/proc_mapping/hydro/clear_bundle', Bool, queue_size= 1)
         
     def execute(self, userdata):
