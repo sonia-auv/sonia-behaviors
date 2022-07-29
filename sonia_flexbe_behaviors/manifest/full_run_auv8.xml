@@ -3,18 +3,26 @@
 <behavior name="full_run_AUV8">
 
 	<executable package_path="sonia_flexbe_behaviors.full_run_auv8_sm" class="full_run_AUV8SM" />
-	<tagstring>pool auv8</tagstring>
+	<tagstring>auv8 compe task</tagstring>
 	<author>GS</author>
-	<date>27/08/2022</date>
+	<date>Thu Jul 28 2022</date>
 	<description>
-		Missions for AUV8 : align torpedoes and launch torpedoes
+		Main mission for AUV8
 	</description>
 
 
 	<!-- Contained Behaviors -->
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="avoid_buoys_after_collision" />
+	<contains name="coin_flip" />
+	<contains name="drop_AUV8" />
+	<contains name="move" />
+	<contains name="torpedoes" />
+	<contains name="vision_bins" />
 	<contains name="vision_buoys" />
 	<contains name="vision_droppers" />
-	<contains name="launch_AUV8" />
+	<contains name="vision_path" />
+	<contains name="vision_tables" />
 
 	<!-- Available Parameters -->
 
