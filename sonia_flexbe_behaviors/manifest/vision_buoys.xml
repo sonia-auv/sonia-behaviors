@@ -24,6 +24,7 @@
 			<option value="sift_front" />
 			<option value="simple_buoy" />
 			<option value="simple_buoy_badge" />
+			<option value="simulation_badge" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
