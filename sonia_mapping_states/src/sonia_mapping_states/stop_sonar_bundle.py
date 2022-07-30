@@ -50,7 +50,7 @@ class stop_sonar_bundle(EventState):
     def execute(self, userdata):
         time_dif = time() - self.time_launch
         # Time has to experimental values
-        if time_dif < 10:
+        if time_dif < 40:
             if self.ObstacleArray:
                 if self.ObstacleArray.obstacles[self.sonarObstacleID].is_valid:
                     return 'found'

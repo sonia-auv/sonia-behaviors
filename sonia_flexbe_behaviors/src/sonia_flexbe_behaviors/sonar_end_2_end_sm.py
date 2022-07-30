@@ -67,7 +67,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:108 y:427
 			OperatableStateMachine.add('allign',
-										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'RAM'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -95,7 +95,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:452 y:545
 			OperatableStateMachine.add('retract',
-										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'sned2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -116,7 +116,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:322 y:81
 			OperatableStateMachine.add('start bundle',
-										start_bundle(sonarBundle=True, hydroBundle=False, sonarTarget='Buoys', resetSonarBundle=True, resetHydroBundle=False),
+										start_bundle(sonarBundle=True, hydroBundle=False, sonarTarget='Buoys', hydroTarget=20, resetSonarBundle=True, resetHydroBundle=False),
 										transitions={'continue': 'init1'},
 										autonomy={'continue': Autonomy.Off})
 
@@ -153,7 +153,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:171 y:549
 			OperatableStateMachine.add('RAM',
-										manual_add_pose_to_trajectory(positionX=0.20, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.20, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'retract'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
