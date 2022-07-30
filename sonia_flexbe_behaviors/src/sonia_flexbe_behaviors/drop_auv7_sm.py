@@ -50,7 +50,7 @@ class drop_AUV7SM(Behavior):
 
 
 	def create(self):
-		# x:573 y:479, x:446 y:363
+		# x:728 y:165, x:454 y:651
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -66,13 +66,13 @@ class drop_AUV7SM(Behavior):
 										transitions={'activate': 'init', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
-			# x:564 y:245
+			# x:239 y:768
 			OperatableStateMachine.add('check',
 										is_moving(timeout=30, tolerance=0.1),
 										transitions={'stopped': 'drop', 'moving': 'wait', 'error': 'failed'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:761 y:390
+			# x:812 y:515
 			OperatableStateMachine.add('drop',
 										activate_io(element=1, side=0, action=1, timeout=10),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': '2nd_drop'},
@@ -85,27 +85,27 @@ class drop_AUV7SM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:352 y:118
+			# x:131 y:338
 			OperatableStateMachine.add('move',
 										send_to_planner(),
 										transitions={'continue': 'wait', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:143 y:210
+			# x:88 y:242
 			OperatableStateMachine.add('shift',
-										manual_add_pose_to_trajectory(positionX=-0.05545, positionY=-0.12393, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-0.05545, positionY=-0.12393, positionZ=0.2, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:601 y:67
+			# x:121 y:516
 			OperatableStateMachine.add('wait',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'drop', 'target_not_reached': 'check', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:931 y:495
+			# x:593 y:256
 			OperatableStateMachine.add('2nd_drop',
 										activate_io(element=1, side=0, action=1, timeout=8),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'finished'},

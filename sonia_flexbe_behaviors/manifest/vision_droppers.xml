@@ -24,8 +24,9 @@
 			<option value="simple_bin" />
 		</param>
 
-		<param type="enum" name="vision_droppers_target" default="Barrel" label="vision_droppers_target" hint="Sets the vision_droppers_target">
-			<option value="Barrel" />
+		<param type="enum" name="vision_droppers_target" default="Notepad" label="vision_droppers_target" hint="Sets the vision_droppers_target">
+			<option value="Notepad" />
+			<option value="Phone" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">

@@ -38,7 +38,7 @@ class vision_binsSM(Behavior):
 		self.name = 'vision_bins'
 
 		# parameters of this behavior
-		self.add_parameter('vision_bins_filterchain', 'deep_compe_bottom')
+		self.add_parameter('vision_bins_filterchain', 'simple_bin')
 		self.add_parameter('vision_bins_target', 'cover')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 200)
