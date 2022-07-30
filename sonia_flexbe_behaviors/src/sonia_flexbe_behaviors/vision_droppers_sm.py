@@ -39,7 +39,7 @@ class vision_droppersSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('vision_droppers_filterchain', 'deep_compe_bottom')
-		self.add_parameter('vision_droppers_target', 'Barrel')
+		self.add_parameter('vision_droppers_target', 'Notepad')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_height', 90)
 		self.add_parameter('bounding_box_width', 115)
@@ -96,14 +96,14 @@ class vision_droppersSM(Behavior):
 										start_filter_chain(filterchain=self.vision_droppers_filterchain, target=self.vision_droppers_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:646 y:37
 			OperatableStateMachine.add('get_bins',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_square'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
 			# x:214 y:31
 			OperatableStateMachine.add('init_traj',
@@ -117,7 +117,7 @@ class vision_droppersSM(Behavior):
 										self.use_behavior(search_squareSM, 'search_square'),
 										transitions={'finished': 'get_bins', 'failed': 'stop_lost_target', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:225 y:531
 			OperatableStateMachine.add('stop_lost_target',

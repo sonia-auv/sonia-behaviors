@@ -7,7 +7,7 @@
 	<author>CS</author>
 	<date>Wed Jul 13 2022</date>
 	<description>
-		Behavior to detect the gman.
+		Behavior to detect the hole.
 	</description>
 
 
@@ -16,7 +16,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="torpedoes_filterchain" default="deep_compe_front" label="torpedoes_filterchain" hint="Sets the torpedoes_filterchain">
+		<param type="enum" name="torpedoes_filterchain" default="simple_torpedoes_star" label="torpedoes_filterchain" hint="Sets the torpedoes_filterchain">
 			<option value="deep_compe_front" />
 			<option value="deep_simulation_front" />
 			<option value="sift_front" />

@@ -12,7 +12,7 @@ from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_vision_states.get_simple_vision_target import get_simple_vision_target
+from sonia_vision_states.get_front_vision_target import get_front_vision_target
 from sonia_vision_states.start_filter_chain import start_filter_chain
 from sonia_vision_states.stop_filter_chain import stop_filter_chain
 # Additional imports can be added inside the following tags
@@ -27,7 +27,7 @@ Created on Wed Jul 13 2022
 '''
 class vision_torpedoesSM(Behavior):
 	'''
-	Behavior to detect the gman.
+	Behavior to detect the hole.
 	'''
 
 
@@ -36,7 +36,7 @@ class vision_torpedoesSM(Behavior):
 		self.name = 'vision_torpedoes'
 
 		# parameters of this behavior
-		self.add_parameter('torpedoes_filterchain', 'deep_compe_front')
+		self.add_parameter('torpedoes_filterchain', 'simple_torpedoes_star')
 		self.add_parameter('torpedoes_target', 'torpedoes')
 		self.add_parameter('camera_no', 1)
 		self.add_parameter('torpedoes_bounding_box_width', 300)
@@ -75,9 +75,9 @@ class vision_torpedoesSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:560 y:66
-			OperatableStateMachine.add('get_gman',
-										get_simple_vision_target(center_bounding_box_pixel_height=self.torpedoes_center_bounding_box_height, center_bounding_box_pixel_width=self.torpedoes_center_bounding_box_width, bounding_box_pixel_height=self.torpedoes_bounding_box_height, bounding_box_pixel_width=self.torpedoes_bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.torpedoes_max_mouv, min_mouvement=self.torpedoes_min_mouv, long_rotation=False, timeout=10, speed_profile=0),
+			# x:495 y:46
+			OperatableStateMachine.add('get_target',
+										get_front_vision_target(center_bounding_box_pixel_height=self.torpedoes_center_bounding_box_height, center_bounding_box_pixel_width=self.torpedoes_center_bounding_box_width, bounding_box_pixel_height=self.torpedoes_bounding_box_height, bounding_box_pixel_width=self.torpedoes_bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.torpedoes_max_mouv, min_mouvement=self.torpedoes_min_mouv, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_failed', 'search': 'stop_filter_lost'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
@@ -85,7 +85,7 @@ class vision_torpedoesSM(Behavior):
 			# x:239 y:56
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'get_gman'},
+										transitions={'continue': 'get_target'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
@@ -120,13 +120,13 @@ class vision_torpedoesSM(Behavior):
 			# x:576 y:324
 			OperatableStateMachine.add('wait_reach',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'get_gman', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
+										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:857 y:336
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
-										transitions={'stopped': 'get_gman', 'moving': 'wait_reach', 'error': 'controller_error'},
+										transitions={'stopped': 'get_target', 'moving': 'wait_reach', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 

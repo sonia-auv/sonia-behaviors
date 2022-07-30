@@ -32,22 +32,22 @@
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="min_mouvement" default="0.1" label="min_mouvement" hint="Sets the min_mouvement">
+		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
 			<min value="0" />
 			<max value="1" />
 		</param>
 
-		<param type="numeric" name="max_mouvement" default="0.5" label="max_mouvement" hint="Sets the max_mouvement">
+		<param type="numeric" name="max_mouvement" default="1.2" label="max_mouvement" hint="Sets the max_mouvement">
 			<min value="0" />
 			<max value="2" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="225" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="200" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_width" default="50" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="bounding_box_width" default="30" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
 			<max value="600" />
 		</param>
@@ -63,6 +63,11 @@
 		</param>
 
 		<param type="boolean" name="activate_vision_path" default="True" label="activate_vision_path" hint="Sets the activate_vision_path" />
+
+		<param type="numeric" name="move_after_path" default="2.0" label="move_after_path" hint="Sets the move_after_path">
+			<min value="0" />
+			<max value="10" />
+		</param>
 
 	</params>
 

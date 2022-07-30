@@ -8,12 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.activate_behavior import activate_behavior
-from sonia_hardware_states.activate_io import activate_io
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
-from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
+from sonia_navigation_states.search_swipe import search_swipe
 from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.set_control_mode import set_control_mode
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -22,21 +21,25 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Tue Jul 12 2022
+Created on Sat Jul 30 2022
 @author: CS
 '''
-class drop_AUV7SM(Behavior):
+class swipeSM(Behavior):
 	'''
-	Shift and drop for AUV7
+	swipe around yaw axis
 	'''
 
 
 	def __init__(self):
-		super(drop_AUV7SM, self).__init__()
-		self.name = 'drop_AUV7'
+		super(swipeSM, self).__init__()
+		self.name = 'swipe'
 
 		# parameters of this behavior
-		self.add_parameter('activate_drop_auv7', True)
+		self.add_parameter('yaw', 180)
+		self.add_parameter('boxX', 5.0)
+		self.add_parameter('boxY', 2.0)
+		self.add_parameter('stroke', 0.5)
+		self.add_parameter('side', False)
 
 		# references to used behaviors
 
@@ -50,7 +53,7 @@ class drop_AUV7SM(Behavior):
 
 
 	def create(self):
-		# x:728 y:165, x:454 y:651
+		# x:904 y:63, x:288 y:201
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -60,56 +63,44 @@ class drop_AUV7SM(Behavior):
 
 
 		with _state_machine:
-			# x:100 y:58
-			OperatableStateMachine.add('activation',
-										activate_behavior(activate=self.activate_drop_auv7),
-										transitions={'activate': 'init', 'desactivate': 'finished'},
-										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
+			# x:30 y:40
+			OperatableStateMachine.add('set_mode_10',
+										set_control_mode(mode=10, timeout=2),
+										transitions={'continue': 'init', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:239 y:768
-			OperatableStateMachine.add('check',
-										is_moving(timeout=30, tolerance=0.1),
-										transitions={'stopped': 'drop', 'moving': 'wait', 'error': 'failed'},
-										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:812 y:515
-			OperatableStateMachine.add('drop',
-										activate_io(element=1, side=0, action=1, timeout=10),
-										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': '2nd_drop'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
-
-			# x:48 y:149
+			# x:34 y:320
 			OperatableStateMachine.add('init',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'shift'},
+										transitions={'continue': 'swipe'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:131 y:338
+			# x:464 y:433
 			OperatableStateMachine.add('move',
 										send_to_planner(),
-										transitions={'continue': 'wait', 'failed': 'failed'},
+										transitions={'continue': 'wait_target_reached', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:88 y:242
-			OperatableStateMachine.add('shift',
-										manual_add_pose_to_trajectory(positionX=-0.05545, positionY=-0.12393, positionZ=0.2, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+			# x:66 y:441
+			OperatableStateMachine.add('swipe',
+										search_swipe(boxX=self.boxX, boxY=self.boxY, yaw=self.yaw, stroke=self.stroke, side=self.side),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:121 y:516
-			OperatableStateMachine.add('wait',
+			# x:706 y:255
+			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'drop', 'target_not_reached': 'check', 'error': 'failed'},
+										transitions={'target_reached': 'finished', 'target_not_reached': 'check', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:593 y:256
-			OperatableStateMachine.add('2nd_drop',
-										activate_io(element=1, side=0, action=1, timeout=8),
-										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'finished'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
+			# x:375 y:43
+			OperatableStateMachine.add('check',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'wait_target_reached', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine

@@ -43,13 +43,14 @@ class vision_pathSM(Behavior):
 		self.add_parameter('vision_path_filterchain', 'simple_pipe_straight')
 		self.add_parameter('vision_path_target', 'pipe straight')
 		self.add_parameter('camera_no', 2)
-		self.add_parameter('min_mouvement', 0.1)
-		self.add_parameter('max_mouvement', 0.5)
-		self.add_parameter('bounding_box_height', 225)
-		self.add_parameter('bounding_box_width', 50)
+		self.add_parameter('min_mouvement', 0.25)
+		self.add_parameter('max_mouvement', 1.2)
+		self.add_parameter('bounding_box_height', 200)
+		self.add_parameter('bounding_box_width', 30)
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('activate_vision_path', True)
+		self.add_parameter('move_after_path', 2.0)
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')
@@ -66,7 +67,9 @@ class vision_pathSM(Behavior):
 
 	def create(self):
 		# x:30 y:741, x:171 y:605, x:326 y:355
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'], output_keys=['angle', 'camera'])
+		_state_machine.userdata.angle = 0
+		_state_machine.userdata.camera = 2
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -117,7 +120,7 @@ class vision_pathSM(Behavior):
 			# x:303 y:656
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': self.move_after_path, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'finished', 'failed': 'finished'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
@@ -155,7 +158,7 @@ class vision_pathSM(Behavior):
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
-                    
+
 			# x:431 y:294
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),

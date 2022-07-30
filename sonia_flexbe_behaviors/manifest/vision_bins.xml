@@ -17,7 +17,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="vision_bins_filterchain" default="deep_compe_bottom" label="vision_bins_filterchain" hint="Sets the vision_bins_filterchain">
+		<param type="enum" name="vision_bins_filterchain" default="simple_bin" label="vision_bins_filterchain" hint="Sets the vision_bins_filterchain">
 			<option value="deep_compe_bottom" />
 			<option value="deep_simulation_bottom" />
 			<option value="sift_bottom" />

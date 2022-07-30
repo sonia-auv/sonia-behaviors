@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="path_buoy_path">
+
+	<executable package_path="sonia_flexbe_behaviors.path_buoy_path_sm" class="path_buoy_pathSM" />
+	<tagstring>pool</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		test for path gestion
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_path" />
+	<contains name="vision_buoys" />
+	<contains name="path2" />
+
+	<!-- Available Parameters -->
+
+</behavior>
