@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_hydro_heading">
+
+	<executable package_path="sonia_flexbe_behaviors.test_hydro_heading_sm" class="test_hydro_headingSM" />
+	<tagstring>test</tagstring>
+	<author>GS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		test heading
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
