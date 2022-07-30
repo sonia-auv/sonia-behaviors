@@ -155,7 +155,7 @@ class vision_pathSM(Behavior):
 										transitions={'continue': 'failed', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
-
+                    
 			# x:431 y:294
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),

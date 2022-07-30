@@ -10,7 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from flexbe_states.wait_state import WaitState
 from sonia_flexbe_behaviors.move_sm import moveSM
-from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
+from sonia_flexbe_behaviors.search_tables_sm import search_tablesSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
@@ -55,7 +55,7 @@ class vision_tablesSM(Behavior):
 		self.add_behavior(moveSM, '1m_under_the_sea')
 		self.add_behavior(moveSM, 'go_to_surface')
 		self.add_behavior(moveSM, 'move')
-		self.add_behavior(search_zigzagSM, 'search_zigzag')
+		self.add_behavior(search_tablesSM, 'search_tables')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -112,7 +112,7 @@ class vision_tablesSM(Behavior):
 			# x:682 y:154
 			OperatableStateMachine.add('get_bins',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bb_height, center_bounding_box_pixel_width=self.center_bb_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
-										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_zigzag'},
+										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_tables'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
@@ -137,9 +137,9 @@ class vision_tablesSM(Behavior):
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:985 y:392
-			OperatableStateMachine.add('search_zigzag',
-										self.use_behavior(search_zigzagSM, 'search_zigzag'),
+			# x:942 y:392
+			OperatableStateMachine.add('search_tables',
+										self.use_behavior(search_tablesSM, 'search_tables'),
 										transitions={'finished': 'get_bins', 'failed': 'failed', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
@@ -167,7 +167,7 @@ class vision_tablesSM(Behavior):
 			# x:484 y:23
 			OperatableStateMachine.add('1m_under_the_sea',
 										self.use_behavior(moveSM, '1m_under_the_sea',
-											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0.5, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'get_bins', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

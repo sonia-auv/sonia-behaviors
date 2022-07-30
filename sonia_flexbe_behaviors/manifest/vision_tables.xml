@@ -13,7 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="move" />
-	<contains name="search_zigzag" />
+	<contains name="search_tables" />
 
 	<!-- Available Parameters -->
 	<params>
