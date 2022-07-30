@@ -13,7 +13,7 @@ class start_stop_sonar(EventState):
     '''
         State to start or stop the sonar pings.
 
-        -- startStop            Start (true) or stop (false) the pings.
+        -- startStop   bool     Start (true) or stop (false) the pings.
 
         <= continue             Indicates that the ping are started/stopped.
     '''

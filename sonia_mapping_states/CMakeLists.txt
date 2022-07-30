@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(sonia_sonar_states)
+project(sonia_mapping_states)
 
 find_package(catkin REQUIRED)
 

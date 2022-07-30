@@ -65,7 +65,7 @@ class wait_target_reached(EventState):
                     Logger.log("Target couldn't be reached", Logger.REPORT_HINT)
                     return 'target_not_reached'
         else:
-            Logger.log("Problem with the controller", Logger.REPORT_HINT)
+            Logger.log("Problem with the controller (not started or no mode chosen).", Logger.REPORT_HINT)
             return 'error'
 
     def on_exit(self, userdata):

@@ -4,7 +4,7 @@ from distutils.core import setup
 from catkin_pkg.python_setup import generate_distutils_setup
 
 d = generate_distutils_setup(
-    packages = ['sonia_sonar_states'],
+    packages = ['sonia_mapping_states'],
     package_dir = {'': 'src'}
 )
 
