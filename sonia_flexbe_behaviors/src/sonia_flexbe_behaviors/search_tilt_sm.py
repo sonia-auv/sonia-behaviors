@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_tiltdown_turn_tiltup_sm import move_tiltdown_turn_tiltupSM
+from sonia_flexbe_behaviors.full_turn_tilted_sm import full_turn_tiltedSM
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
@@ -35,7 +35,7 @@ class search_tiltSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(move_tiltdown_turn_tiltupSM, 'Container/move_tiltdown_turn_tiltup')
+		self.add_behavior(full_turn_tiltedSM, 'Container/full_turn_tilted')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -60,18 +60,18 @@ class search_tiltSM(Behavior):
 		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266
 		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target', 'topic'], conditions=[
 										('finished', [('find_target', 'continue')]),
-										('lost_target', [('move_tiltdown_turn_tiltup', 'finished')]),
-										('failed', [('move_tiltdown_turn_tiltup', 'failed')])
+										('lost_target', [('full_turn_tilted', 'finished')]),
+										('failed', [('full_turn_tilted', 'failed')])
 										])
 
 		with _sm_container_0:
 			# x:30 y:40
-			OperatableStateMachine.add('move_tiltdown_turn_tiltup',
-										self.use_behavior(move_tiltdown_turn_tiltupSM, 'Container/move_tiltdown_turn_tiltup'),
+			OperatableStateMachine.add('full_turn_tilted',
+										self.use_behavior(full_turn_tiltedSM, 'Container/full_turn_tilted'),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:244 y:254
+			# x:41 y:156
 			OperatableStateMachine.add('find_target',
 										find_vision_target(number_samples=10),
 										transitions={'continue': 'finished'},

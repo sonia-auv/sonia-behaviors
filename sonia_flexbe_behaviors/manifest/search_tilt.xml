@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move_tiltdown_turn_tiltup" />
+	<contains name="full_turn_tilted" />
 
 	<!-- Available Parameters -->
 
