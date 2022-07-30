@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.launch_auv8_sm import launch_AUV8SM
+from sonia_flexbe_behaviors.vision_torpedoes_boards_sm import vision_torpedoes_boardsSM
 from sonia_flexbe_behaviors.vision_torpedoes_sm import vision_torpedoesSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -35,6 +36,7 @@ class torpedoesSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(launch_AUV8SM, 'launch_AUV8')
 		self.add_behavior(vision_torpedoesSM, 'vision_torpedoes')
+		self.add_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -46,7 +48,7 @@ class torpedoesSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
+		# x:733 y:223, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,12 +59,18 @@ class torpedoesSM(Behavior):
 
 		with _state_machine:
 			# x:30 y:40
+			OperatableStateMachine.add('vision_torpedoes_boards',
+										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards'),
+										transitions={'finished': 'vision_torpedoes', 'failed': 'failed', 'lost_target': 'vision_torpedoes'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
+			# x:270 y:51
 			OperatableStateMachine.add('vision_torpedoes',
 										self.use_behavior(vision_torpedoesSM, 'vision_torpedoes'),
 										transitions={'finished': 'launch_AUV8', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:200 y:208
+			# x:469 y:112
 			OperatableStateMachine.add('launch_AUV8',
 										self.use_behavior(launch_AUV8SM, 'launch_AUV8'),
 										transitions={'finished': 'finished', 'failed': 'failed'},

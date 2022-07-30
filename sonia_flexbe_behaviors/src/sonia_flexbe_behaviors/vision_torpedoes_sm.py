@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.search_torpedoes_sm import search_torpedoesSM
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
@@ -47,6 +48,7 @@ class vision_torpedoesSM(Behavior):
 		self.add_parameter('torpedoes_min_mouv', 0.1)
 
 		# references to used behaviors
+		self.add_behavior(search_torpedoesSM, 'search_torpedoes')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -58,7 +60,7 @@ class vision_torpedoesSM(Behavior):
 
 
 	def create(self):
-		# x:997 y:12, x:130 y:400, x:946 y:249, x:787 y:442
+		# x:997 y:12, x:130 y:400, x:1112 y:253, x:787 y:442
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
@@ -78,7 +80,7 @@ class vision_torpedoesSM(Behavior):
 			# x:495 y:46
 			OperatableStateMachine.add('get_target',
 										get_front_vision_target(center_bounding_box_pixel_height=self.torpedoes_center_bounding_box_height, center_bounding_box_pixel_width=self.torpedoes_center_bounding_box_width, bounding_box_pixel_height=self.torpedoes_bounding_box_height, bounding_box_pixel_width=self.torpedoes_bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.torpedoes_max_mouv, min_mouvement=self.torpedoes_min_mouv, long_rotation=False, timeout=10, speed_profile=0),
-										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_failed', 'search': 'stop_filter_lost'},
+										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_failed', 'search': 'search_torpedoes'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
 
@@ -96,6 +98,13 @@ class vision_torpedoesSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
+			# x:806 y:90
+			OperatableStateMachine.add('search_torpedoes',
+										self.use_behavior(search_torpedoesSM, 'search_torpedoes'),
+										transitions={'finished': 'get_target', 'failed': 'failed', 'lost_target': 'stop_filter_lost', 'controller_error': 'controller_error'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
+										remapping={'target': 'target', 'topic': 'topic'})
+
 			# x:197 y:179
 			OperatableStateMachine.add('stop_filter_failed',
 										stop_filter_chain(),
@@ -103,7 +112,7 @@ class vision_torpedoesSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:801 y:117
+			# x:857 y:237
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
@@ -123,7 +132,7 @@ class vision_torpedoesSM(Behavior):
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:857 y:336
+			# x:618 y:171
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait_reach', 'error': 'controller_error'},
