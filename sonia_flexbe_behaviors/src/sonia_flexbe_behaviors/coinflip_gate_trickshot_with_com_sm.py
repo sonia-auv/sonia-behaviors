@@ -39,7 +39,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('submarine', 'AUV8')
-		self.add_parameter('distance_to_gate', 4)
+		self.add_parameter('distance_to_gate', 2)
 		self.add_parameter('dive_depth', 1.5)
 		self.add_parameter('has_com', True)
 		self.add_parameter('activate_coinflip_gate_trickshot_com', True)
@@ -60,7 +60,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 
 	def create(self):
-		# x:951 y:333, x:513 y:177, x:342 y:136
+		# x:951 y:333, x:513 y:177, x:361 y:142
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'failed_start_control'])
 
 		# Additional creation code can be added inside the following tags
@@ -79,7 +79,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 			# x:80 y:205
 			OperatableStateMachine.add('CoinFlip with com',
 										self.use_behavior(CoinFlipwithcomSM, 'CoinFlip with com',
-											parameters={'orientation_to_gate': 0, 'dive_depth': self.dive_depth}),
+											parameters={'dive_depth': self.dive_depth}),
 										transitions={'finished': 'Choose_sub', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
