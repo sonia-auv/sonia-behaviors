@@ -41,7 +41,7 @@ class vision_buoysSM(Behavior):
 		# parameters of this behavior
 		self.add_parameter('vision_buoys_filterchain', 'deep_compe_front')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('vision_buoys_target', 'Gun')
+		self.add_parameter('vision_buoys_target', 'Badge')
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 350)
 		self.add_parameter('center_bounding_box_width', 100)

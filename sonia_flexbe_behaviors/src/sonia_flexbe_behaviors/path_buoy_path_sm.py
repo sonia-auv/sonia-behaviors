@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_flexbe_behaviors.avoid_buoys_after_collision_sm import avoid_buoys_after_collisionSM
 from sonia_flexbe_behaviors.path2_sm import path2SM
 from sonia_flexbe_behaviors.vision_buoys_sm import vision_buoysSM
 from sonia_flexbe_behaviors.vision_path_sm import vision_pathSM
@@ -23,7 +24,7 @@ Created on Sat Jul 30 2022
 '''
 class path_buoy_pathSM(Behavior):
 	'''
-	test for path gestion
+	path_buoy_path
 	'''
 
 
@@ -34,6 +35,7 @@ class path_buoy_pathSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
+		self.add_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision')
 		self.add_behavior(path2SM, 'path2')
 		self.add_behavior(vision_buoysSM, 'vision_buoys')
 		self.add_behavior(vision_pathSM, 'vision_path')
@@ -48,7 +50,7 @@ class path_buoy_pathSM(Behavior):
 
 
 	def create(self):
-		# x:753 y:122, x:343 y:360
+		# x:887 y:214, x:343 y:360
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 		_state_machine.userdata.pose_x = 0
 		_state_machine.userdata.pose_y = 0
@@ -68,18 +70,24 @@ class path_buoy_pathSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'angle': 'angle', 'camera': 'camera'})
 
-			# x:247 y:31
-			OperatableStateMachine.add('vision_buoys',
-										self.use_behavior(vision_buoysSM, 'vision_buoys'),
-										transitions={'finished': 'path2', 'failed': 'failed', 'lost_target': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
-
-			# x:531 y:138
+			# x:609 y:218
 			OperatableStateMachine.add('path2',
 										self.use_behavior(path2SM, 'path2'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'angle': 'angle', 'pose_x': 'pose_x', 'pose_y': 'pose_y', 'pose_z': 'pose_z', 'camera': 'camera'})
+
+			# x:247 y:31
+			OperatableStateMachine.add('vision_buoys',
+										self.use_behavior(vision_buoysSM, 'vision_buoys'),
+										transitions={'finished': 'avoid_buoys_after_collision', 'failed': 'failed', 'lost_target': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
+			# x:499 y:32
+			OperatableStateMachine.add('avoid_buoys_after_collision',
+										self.use_behavior(avoid_buoys_after_collisionSM, 'avoid_buoys_after_collision'),
+										transitions={'finished': 'path2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 
 		return _state_machine

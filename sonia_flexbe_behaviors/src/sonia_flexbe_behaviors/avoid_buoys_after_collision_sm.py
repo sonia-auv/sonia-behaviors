@@ -36,10 +36,10 @@ class avoid_buoys_after_collisionSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('distance_up_after_collision', 1)
-		self.add_parameter('distance_forward_after_collision', 3)
+		self.add_parameter('distance_forward_after_collision', 2.0)
 		self.add_parameter('distance_down_after_collision', 0)
 		self.add_parameter('activate_avoid_buoys_after_collision', True)
-		
+
 		# references to used behaviors
 
 		# Additional initialization code can be added inside the following tags

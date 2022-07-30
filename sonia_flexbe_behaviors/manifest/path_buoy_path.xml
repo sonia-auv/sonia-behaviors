@@ -7,14 +7,15 @@
 	<author>CS</author>
 	<date>Sat Jul 30 2022</date>
 	<description>
-		test for path gestion
+		path_buoy_path
 	</description>
 
 
 	<!-- Contained Behaviors -->
 	<contains name="vision_path" />
-	<contains name="vision_buoys" />
 	<contains name="path2" />
+	<contains name="vision_buoys" />
+	<contains name="avoid_buoys_after_collision" />
 
 	<!-- Available Parameters -->
 
