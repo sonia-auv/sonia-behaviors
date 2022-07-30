@@ -74,12 +74,11 @@ class vision_buoysSM(Behavior):
 
 
 		with _state_machine:
-			# x:43 y:367
-			OperatableStateMachine.add('filter_chain',
-										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.camera_no),
-										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
+			# x:30 y:40
+			OperatableStateMachine.add('activate_vision_buoys',
+										activate_behavior(activate=True),
+										transitions={'activate': 'filter_chain', 'desactivate': 'finished'},
+										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
 			# x:1128 y:765
 			OperatableStateMachine.add('check_collision',
@@ -98,7 +97,7 @@ class vision_buoysSM(Behavior):
 										start_filter_chain(filterchain=self.vision_buoys_filterchain, target=self.vision_buoys_target, camera_no=self.camera_no),
 										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
 			# x:916 y:57
 			OperatableStateMachine.add('get_target',
@@ -135,7 +134,7 @@ class vision_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:346 y:246
+			# x:290 y:303
 			OperatableStateMachine.add('stop_filter_lost',
 										stop_filter_chain(),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},

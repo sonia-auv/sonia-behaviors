@@ -22,6 +22,7 @@
 			<option value="deep_simulation_bottom" />
 			<option value="sift_bottom" />
 			<option value="simple_bin" />
+			<option value="simulation_bin" />
 		</param>
 
 		<param type="enum" name="vision_bins_target" default="cover" label="vision_bins_target" hint="Sets the vision_bins_target">

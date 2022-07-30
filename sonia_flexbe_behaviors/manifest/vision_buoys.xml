@@ -23,6 +23,8 @@
 			<option value="deep_simulation_front" />
 			<option value="sift_front" />
 			<option value="simple_buoy" />
+			<option value="simple_buoy_badge" />
+			<option value="simulation_badge" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
@@ -32,6 +34,7 @@
 
 		<param type="enum" name="vision_buoys_target" default="Gun" label="vision_buoys_target" hint="Sets the vision_buoys_target">
 			<option value="Gun" />
+			<option value="Badge" />
 		</param>
 
 		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">

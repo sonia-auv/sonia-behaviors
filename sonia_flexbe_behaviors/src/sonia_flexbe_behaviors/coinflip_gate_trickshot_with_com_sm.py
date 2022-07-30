@@ -16,6 +16,7 @@ from sonia_flexbe_behaviors.coinflip_with_com_sm import CoinFlipwithcomSM
 from sonia_flexbe_behaviors.gate_with_com_sm import GatewithcomSM
 from sonia_flexbe_behaviors.init_submarine_with_com_sm import init_submarine_with_comSM
 from sonia_flexbe_behaviors.trickshot_with_com_sm import TrickshotwithcomSM
+from sonia_flexbe_states.activate_behavior import activate_behavior
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -41,6 +42,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 		self.add_parameter('distance_to_gate', 4)
 		self.add_parameter('dive_depth', 1.5)
 		self.add_parameter('has_com', True)
+		self.add_parameter('activate_coinflip_gate_trickshot_com', True)
 
 		# references to used behaviors
 		self.add_behavior(CoinFlipwithcomSM, 'CoinFlip with com')
@@ -58,7 +60,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 
 	def create(self):
-		# x:951 y:333, x:513 y:177, x:450 y:48
+		# x:951 y:333, x:513 y:177, x:342 y:136
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'failed_start_control'])
 
 		# Additional creation code can be added inside the following tags
@@ -68,21 +70,20 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 
 		with _state_machine:
-			# x:72 y:40
-			OperatableStateMachine.add('init_submarine_with_com',
-										self.use_behavior(init_submarine_with_comSM, 'init_submarine_with_com',
-											parameters={'sub_init_array': "1,1,1,0,0,0,0,1,1,1,1", 'other_sub_init_array': "1,1,0,1,1,1,1,0,0,0,0", 'submarine': self.submarine}),
-										transitions={'finished': 'CoinFlip with com', 'failed_start_control': 'failed_start_control'},
-										autonomy={'finished': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
+			# x:65 y:40
+			OperatableStateMachine.add('activate',
+										activate_behavior(activate=self.activate_coinflip_gate_trickshot_com),
+										transitions={'activate': 'init_submarine_with_com', 'desactivate': 'finished'},
+										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
-			# x:86 y:161
+			# x:80 y:205
 			OperatableStateMachine.add('CoinFlip with com',
 										self.use_behavior(CoinFlipwithcomSM, 'CoinFlip with com',
 											parameters={'orientation_to_gate': 0, 'dive_depth': self.dive_depth}),
 										transitions={'finished': 'Choose_sub', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:317 y:397
+			# x:425 y:399
 			OperatableStateMachine.add('Gate with com',
 										self.use_behavior(GatewithcomSM, 'Gate with com',
 											parameters={'distance_to_gate': self.distance_to_gate}),
@@ -108,19 +109,26 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 										transitions={'auv8': 'Move_now', 'auv7': 'finished'},
 										autonomy={'auv8': Autonomy.Off, 'auv7': Autonomy.Off})
 
-			# x:585 y:390
+			# x:67 y:118
+			OperatableStateMachine.add('init_submarine_with_com',
+										self.use_behavior(init_submarine_with_comSM, 'init_submarine_with_com',
+											parameters={'sub_init_array': "1,1,1,0,0,0,0,1,1,1,1", 'other_sub_init_array': "1,1,0,1,1,1,1,0,0,0,0", 'submarine': self.submarine}),
+										transitions={'finished': 'CoinFlip with com', 'failed_start_control': 'failed_start_control'},
+										autonomy={'finished': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
+
+			# x:685 y:382
 			OperatableStateMachine.add('taking_over_trickshot',
 										takeover_mission(mission_id=2, has_com=self.has_com),
 										transitions={'takeover': 'Trickshot with com (takeover)', 'no_takeover': 'finished', 'assigned': 'Trickshot with com (takeover)'},
 										autonomy={'takeover': Autonomy.Off, 'no_takeover': Autonomy.Off, 'assigned': Autonomy.Off})
 
-			# x:55 y:421
+			# x:204 y:421
 			OperatableStateMachine.add('waiting_for_friend',
 										synchro_receive(has_com=self.has_com, timeout=45),
 										transitions={'continue': 'Gate with com', 'timeout': 'Gate with com'},
 										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
 
-			# x:76 y:274
+			# x:134 y:309
 			OperatableStateMachine.add('Choose_sub',
 										choose_your_character(submarine=self.submarine),
 										transitions={'auv8': 'Gate with com', 'auv7': 'waiting_for_friend'},
