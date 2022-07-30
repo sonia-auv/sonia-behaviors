@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="AUV8_SEMIFINAL">
+
+	<executable package_path="sonia_flexbe_behaviors.auv8_semifinal_sm" class="AUV8_SEMIFINALSM" />
+	<tagstring>compe</tagstring>
+	<author>GS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		Full run for AUV8
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="move" />
+	<contains name="torpedoes" />
+	<contains name="vision_tables" />
+	<contains name="vision_torpedoes_boards" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="angle_after_path" default="10" label="angle_after_path" hint="Sets the angle_after_path">
+			<option value="10" />
+			<option value="-10" />
+		</param>
+
+	</params>
+
+
+</behavior>

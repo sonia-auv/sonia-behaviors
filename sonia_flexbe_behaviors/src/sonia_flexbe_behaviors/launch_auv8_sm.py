@@ -37,9 +37,9 @@ class launch_AUV8SM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('activate_launch_auv8', True)
-		self.add_parameter('self.launch_x', 0.3)
-		self.add_parameter('self.launch_y', 0.06965)
-		self.add_parameter('self.launch_z', -0.1)
+		self.add_parameter('launch_x', 0.3)
+		self.add_parameter('launch_y', 0.07)
+		self.add_parameter('launch_z', -0.1)
 
 		# references to used behaviors
 
@@ -97,7 +97,7 @@ class launch_AUV8SM(Behavior):
 
 			# x:64 y:348
 			OperatableStateMachine.add('shift',
-										manual_add_pose_to_trajectory(positionX=self.self.launch_x, positionY=self.self.launch_y, positionZ=self.self.launch_z, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=self.launch_x, positionY=self.launch_y, positionZ=self.launch_z, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
