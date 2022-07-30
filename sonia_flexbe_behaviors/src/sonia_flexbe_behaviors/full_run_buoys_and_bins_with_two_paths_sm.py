@@ -73,7 +73,7 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 										start_filter_chain(filterchain='simple_rotate', target='no_target', camera_no=2),
 										transitions={'continue': 'CoinFlip-Gate-Trickshot with com', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'rotate_filterchain', 'camera_no': 'rotate_camera_no', 'target': 'rotate_target'})
+										remapping={'topic': 'topic', 'filterchain': 'rotate_filterchain', 'camera_no': 'rotate_camera_no', 'target': 'rotate_target'})
 
 			# x:927 y:57
 			OperatableStateMachine.add('avoid_buoys_after_collision',
@@ -111,20 +111,21 @@ class full_run_buoys_and_bins_with_two_pathsSM(Behavior):
 			# x:51 y:60
 			OperatableStateMachine.add('vision_path',
 										self.use_behavior(vision_pathSM, 'vision_path',
-											parameters={'filterchain': "simple_pipe_straight", 'target': "pipe straight", 'camera_no': 2}),
+											parameters={'camera_no': 2}),
 										transitions={'finished': 'vision_buoys', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:944 y:213
 			OperatableStateMachine.add('vision_path_2',
 										self.use_behavior(vision_pathSM, 'vision_path_2',
-											parameters={'filterchain': "simple_pipe_straight", 'target': "pipe straight", 'camera_no': 2}),
+											parameters={'camera_no': 2}),
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:43 y:224
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
-										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com'),
+										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com',
+											parameters={'distance_to_gate': 2}),
 										transitions={'finished': 'vision_path', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
