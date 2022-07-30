@@ -40,7 +40,7 @@ class vision_pathSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('vision_path_filterchain', 'deep_compe_bottom')
-		self.add_parameter('vision_path_target', 'path')
+		self.add_parameter('vision_path_target', 'pipe straight')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('min_mouvement', 0.1)
 		self.add_parameter('max_mouvement', 0.5)
@@ -85,7 +85,7 @@ class vision_pathSM(Behavior):
 										send_to_planner(),
 										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'input_traj': 'output_trajectory'})
 
 			# x:371 y:47
 			OperatableStateMachine.add('get_target',
@@ -94,14 +94,14 @@ class vision_pathSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'output_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
-			# x:159 y:45
+			# x:182 y:177
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'get_target'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:829 y:280
+			# x:829 y:319
 			OperatableStateMachine.add('is_moving',
 										is_moving(timeout=30, tolerance=0.1),
 										transitions={'stopped': 'get_target', 'moving': 'wait', 'error': 'stop_filter_fail'},
@@ -134,7 +134,7 @@ class vision_pathSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:391 y:211
+			# x:362 y:134
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
@@ -146,7 +146,7 @@ class vision_pathSM(Behavior):
 										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:504 y:552
 			OperatableStateMachine.add('stop_filter_fail',
@@ -155,7 +155,7 @@ class vision_pathSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:468 y:327
+			# x:587 y:333
 			OperatableStateMachine.add('stop_filter_lost',
 										start_filter_chain(filterchain=self.vision_path_filterchain, target=self.vision_path_target, camera_no=self.camera_no),
 										transitions={'continue': 'lost_target', 'failed': 'lost_target'},
@@ -180,12 +180,6 @@ class vision_pathSM(Behavior):
 										wait_target_reached(timeout=15),
 										transitions={'target_reached': 'stop_filter_success', 'target_not_reached': 'is_moving_rotation', 'error': 'stop_filter_fail'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
-			# x:590 y:205
-			OperatableStateMachine.add('align',
-										send_to_planner(),
-										transitions={'continue': 'is_moving', 'failed': 'stop_filter_lost'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'output_trajectory'})
 
 
 		return _state_machine

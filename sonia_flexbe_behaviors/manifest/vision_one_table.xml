@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_one_table">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_one_table_sm" class="vision_one_tableSM" />
+	<tagstring>pool</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		Find one table under the octagon.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_square" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="one_table_activate_vision" default="True" label="one_table_activate_vision" hint="Sets the one_table_activate_vision" />
+
+		<param type="enum" name="one_table_filterchain" default="simple_one_table" label="one_table_filterchain" hint="Sets the one_table_filterchain">
+			<option value="simple_one_table" />
+			<option value="simulation_one_table" />
+		</param>
+
+		<param type="enum" name="one_table_target" default="Table" label="one_table_target" hint="Sets the one_table_target">
+			<option value="Table" />
+		</param>
+
+		<param type="numeric" name="one_table_camera" default="2" label="one_table_camera" hint="Sets the one_table_camera">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+		<param type="numeric" name="one_table_bounding_box_height" default="100" label="one_table_bounding_box_height" hint="Sets the one_table_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="one_table_bounding_box_width" default="100" label="one_table_bounding_box_width" hint="Sets the one_table_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="one_table_center_bounding_box_height" default="100" label="one_table_center_bounding_box_height" hint="Sets the one_table_center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="one_table_center_bounding_box_width" default="100" label="one_table_center_bounding_box_width" hint="Sets the one_table_center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="one_table_max_mouv" default="1.0" label="one_table_max_mouv" hint="Sets the one_table_max_mouv">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="one_table_min_mouv" default="0.1" label="one_table_min_mouv" hint="Sets the one_table_min_mouv">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>

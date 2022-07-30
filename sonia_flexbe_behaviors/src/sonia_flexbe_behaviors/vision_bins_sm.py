@@ -39,7 +39,7 @@ class vision_binsSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('vision_bins_filterchain', 'deep_compe_bottom')
-		self.add_parameter('vision_bins_target', 'Barrel')
+		self.add_parameter('vision_bins_target', 'cover')
 		self.add_parameter('camera_no', 2)
 		self.add_parameter('bounding_box_width', 200)
 		self.add_parameter('bounding_box_height', 200)
@@ -62,7 +62,7 @@ class vision_binsSM(Behavior):
 
 
 	def create(self):
-		# x:464 y:143, x:140 y:454, x:590 y:631, x:771 y:240
+		# x:193 y:141, x:140 y:454, x:590 y:631, x:809 y:319
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
@@ -96,14 +96,14 @@ class vision_binsSM(Behavior):
 										start_filter_chain(filterchain=self.vision_bins_filterchain, target=self.vision_bins_target, camera_no=self.camera_no),
 										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:383 y:31
+			# x:399 y:46
 			OperatableStateMachine.add('get_bins',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bb_height, center_bounding_box_pixel_width=self.center_bb_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_success', 'align': 'align', 'move': 'align', 'failed': 'failed', 'search': 'search_zigzag'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
+										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'input_trajectory', 'camera': 'camera', 'angle': 'angle'})
 
 			# x:108 y:202
 			OperatableStateMachine.add('init_traj',
@@ -112,28 +112,28 @@ class vision_binsSM(Behavior):
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'input_trajectory'})
 
-			# x:536 y:310
+			# x:490 y:354
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
 										transitions={'finished': 'get_bins', 'failed': 'failed', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
-										remapping={'target': 'target', 'filterchain': 'filterchain'})
+										remapping={'target': 'target', 'topic': 'topic'})
 
-			# x:796 y:400
+			# x:874 y:432
 			OperatableStateMachine.add('stop_lost_target',
 										stop_filter_chain(),
 										transitions={'continue': 'lost_target', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:191 y:292
+			# x:197 y:31
 			OperatableStateMachine.add('stop_success',
 										stop_filter_chain(),
-										transitions={'continue': 'finished', 'failed': 'failed'},
+										transitions={'continue': 'finished', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
-			# x:603 y:101
+			# x:727 y:142
 			OperatableStateMachine.add('wait_align',
 										wait_target_reached(timeout=30),
 										transitions={'target_reached': 'get_bins', 'target_not_reached': 'check_moving', 'error': 'controller_error'},

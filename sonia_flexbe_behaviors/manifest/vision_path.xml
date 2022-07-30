@@ -22,10 +22,13 @@
 			<option value="deep_compe_bottom" />
 			<option value="deep_simulation_bottom" />
 			<option value="sift_bottom" />
+			<option value="simulation_add_pose" />
+			<option value="simulation_vision_path" />
+			<option value="simulation_pipe_straight" />
 		</param>
 
-		<param type="enum" name="vision_path_target" default="path" label="vision_path_target" hint="Sets the header name to filter the vision target message">
-			<option value="path" />
+		<param type="enum" name="vision_path_target" default="pipe straight" label="vision_path_target" hint="Sets the header name to filter the vision target message">
+			<option value="pipe straight" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">

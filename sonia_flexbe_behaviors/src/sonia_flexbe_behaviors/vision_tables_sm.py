@@ -167,7 +167,7 @@ class vision_tablesSM(Behavior):
 			# x:484 y:23
 			OperatableStateMachine.add('1m_under_the_sea',
 										self.use_behavior(moveSM, '1m_under_the_sea',
-											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0.5, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'get_bins', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
