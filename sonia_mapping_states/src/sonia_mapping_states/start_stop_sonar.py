@@ -19,7 +19,6 @@ class start_stop_sonar(EventState):
     '''
 
     def __init__(self, startStop = True):
-        
         super(start_stop_sonar, self).__init__(outcomes=['continue'])
         self.time_launch = time()
         self.startStop = startStop
