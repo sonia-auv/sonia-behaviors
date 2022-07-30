@@ -8,12 +8,11 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_states.activate_behavior import activate_behavior
-from sonia_hardware_states.activate_io import activate_io
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
-from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
+from sonia_navigation_states.search_swipe import search_swipe
 from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.set_control_mode import set_control_mode
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -22,24 +21,25 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on 27/08/2022
-@author: GS
+Created on Sat Jul 30 2022
+@author: CS
 '''
-class launch_AUV8SM(Behavior):
+class swipeSM(Behavior):
 	'''
-	Shift and launch torpedoes for AUV8
+	swipe around yaw axis
 	'''
 
 
 	def __init__(self):
-		super(launch_AUV8SM, self).__init__()
-		self.name = 'launch_AUV8'
+		super(swipeSM, self).__init__()
+		self.name = 'swipe'
 
 		# parameters of this behavior
-		self.add_parameter('activate_launch_auv8', True)
-		self.add_parameter('self.launch_x', 0.3)
-		self.add_parameter('self.launch_y', 0.06965)
-		self.add_parameter('self.launch_z', -0.1)
+		self.add_parameter('yaw', 180)
+		self.add_parameter('boxX', 5.0)
+		self.add_parameter('boxY', 2.0)
+		self.add_parameter('stroke', 0.5)
+		self.add_parameter('side', False)
 
 		# references to used behaviors
 
@@ -53,7 +53,7 @@ class launch_AUV8SM(Behavior):
 
 
 	def create(self):
-		# x:573 y:479, x:446 y:363
+		# x:904 y:63, x:288 y:201
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -63,50 +63,44 @@ class launch_AUV8SM(Behavior):
 
 
 		with _state_machine:
-			# x:43 y:50
-			OperatableStateMachine.add('activation',
-										activate_behavior(activate=self.activate_launch_auv8),
-										transitions={'activate': 'init', 'desactivate': 'finished'},
-										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
+			# x:30 y:40
+			OperatableStateMachine.add('set_mode_10',
+										set_control_mode(mode=10, timeout=2),
+										transitions={'continue': 'init', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
-			# x:564 y:245
-			OperatableStateMachine.add('check',
-										is_moving(timeout=30, tolerance=0.1),
-										transitions={'stopped': 'launch', 'moving': 'wait', 'error': 'failed'},
-										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
-
-			# x:124 y:140
+			# x:34 y:320
 			OperatableStateMachine.add('init',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'shift'},
+										transitions={'continue': 'swipe'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:864 y:334
-			OperatableStateMachine.add('launch',
-										activate_io(element=0, side=0, action=1, timeout=10),
-										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
-
-			# x:352 y:118
+			# x:464 y:433
 			OperatableStateMachine.add('move',
 										send_to_planner(),
-										transitions={'continue': 'wait', 'failed': 'failed'},
+										transitions={'continue': 'wait_target_reached', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:64 y:348
-			OperatableStateMachine.add('shift',
-										manual_add_pose_to_trajectory(positionX=self.self.launch_x, positionY=self.self.launch_y, positionZ=self.self.launch_z, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+			# x:66 y:441
+			OperatableStateMachine.add('swipe',
+										search_swipe(boxX=self.boxX, boxY=self.boxY, yaw=self.yaw, stroke=self.stroke, side=self.side),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
-			# x:601 y:67
-			OperatableStateMachine.add('wait',
+			# x:706 y:255
+			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'launch', 'target_not_reached': 'check', 'error': 'failed'},
+										transitions={'target_reached': 'finished', 'target_not_reached': 'check', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:375 y:43
+			OperatableStateMachine.add('check',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'wait_target_reached', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 
 		return _state_machine

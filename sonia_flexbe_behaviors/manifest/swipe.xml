@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="swipe">
+
+	<executable package_path="sonia_flexbe_behaviors.swipe_sm" class="swipeSM" />
+	<tagstring>move</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		swipe around yaw axis
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="yaw" default="180" label="yaw" hint="Sets the yaw">
+			<min value="0" />
+			<max value="360" />
+		</param>
+
+		<param type="numeric" name="boxX" default="5.0" label="boxX" hint="Sets the boxX">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+		<param type="numeric" name="boxY" default="2.0" label="boxY" hint="Sets the boxY">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+		<param type="numeric" name="stroke" default="0.5" label="stroke" hint="Sets the stroke">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="boolean" name="side" default="False" label="side" hint="Sets the first side (left = True, right = False)" />
+
+	</params>
+
+
+</behavior>

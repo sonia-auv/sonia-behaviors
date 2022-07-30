@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
+from sonia_flexbe_behaviors.search_torpedoes_sm import search_torpedoesSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
@@ -42,7 +42,7 @@ class vision_torpedoes_boardsSM(Behavior):
 		self.add_parameter('camera_no', 1)
 		self.add_parameter('vision_torpedoes_boards_target', 'G-Man')
 		self.add_parameter('bounding_box_width', 200)
-		self.add_parameter('bounding_box_height', 350)
+		self.add_parameter('bounding_box_height', 300)
 		self.add_parameter('center_bounding_box_width', 100)
 		self.add_parameter('center_bounding_box_height', 100)
 		self.add_parameter('max_mouvement', 1)
@@ -50,7 +50,7 @@ class vision_torpedoes_boardsSM(Behavior):
 		self.add_parameter('activate_vision_buoys', True)
 
 		# references to used behaviors
-		self.add_behavior(search_zigzagSM, 'search_zigzag')
+		self.add_behavior(search_torpedoesSM, 'search_torpedoes')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -94,7 +94,7 @@ class vision_torpedoes_boardsSM(Behavior):
 			# x:916 y:57
 			OperatableStateMachine.add('get_target',
 										get_simple_vision_target(center_bounding_box_pixel_height=self.center_bounding_box_height, center_bounding_box_pixel_width=self.center_bounding_box_width, bounding_box_pixel_height=self.bounding_box_height, bounding_box_pixel_width=self.bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.max_mouvement, min_mouvement=self.min_mouvement, long_rotation=False, timeout=10, speed_profile=0),
-										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_zigzag'},
+										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_fail', 'search': 'search_torpedoes'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'front', 'target': 'target', 'input_trajectory': 'input_trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
 
@@ -112,9 +112,9 @@ class vision_torpedoes_boardsSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:483 y:157
-			OperatableStateMachine.add('search_zigzag',
-										self.use_behavior(search_zigzagSM, 'search_zigzag'),
+			# x:482 y:113
+			OperatableStateMachine.add('search_torpedoes',
+										self.use_behavior(search_torpedoesSM, 'search_torpedoes'),
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})

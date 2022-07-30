@@ -64,6 +64,11 @@
 
 		<param type="boolean" name="activate_vision_path" default="True" label="activate_vision_path" hint="Sets the activate_vision_path" />
 
+		<param type="numeric" name="move_after_path" default="2.0" label="move_after_path" hint="Sets the move_after_path">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
 	</params>
 
 

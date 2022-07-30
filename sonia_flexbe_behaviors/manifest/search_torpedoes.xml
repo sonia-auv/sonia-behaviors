@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_torpedoes">
+
+	<executable package_path="sonia_flexbe_behaviors.search_torpedoes_sm" class="search_torpedoesSM" />
+	<tagstring>pool</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		swipe around yaw axis to look for torpedoes
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="swipe" />
+
+	<!-- Available Parameters -->
+
+</behavior>

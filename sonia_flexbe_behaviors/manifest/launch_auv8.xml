@@ -18,6 +18,21 @@
 
 		<param type="boolean" name="activate_launch_auv8" default="True" label="activate_launch_auv8" hint="Sets the activate_launch_auv8" />
 
+		<param type="numeric" name="self.launch_x" default="0.3" label="self.launch_x" hint="Sets the self.launch_x">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="self.launch_y" default="0.06965" label="self.launch_y" hint="Sets the self.launch_y">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="self.launch_z" default="-0.1" label="self.launch_z" hint="Sets the self.launch_z">
+			<min value="-1" />
+			<max value="1" />
+		</param>
+
 	</params>
 
 

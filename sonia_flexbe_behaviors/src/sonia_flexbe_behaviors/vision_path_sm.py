@@ -50,6 +50,7 @@ class vision_pathSM(Behavior):
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('activate_vision_path', True)
+		self.add_parameter('move_after_path', 2.0)
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')
@@ -119,7 +120,7 @@ class vision_pathSM(Behavior):
 			# x:303 y:656
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionX': 2, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': self.move_after_path, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'finished', 'failed': 'finished'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
