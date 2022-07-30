@@ -182,12 +182,12 @@ class get_front_vision_target(EventState):
             mouvement_x = 0
             Logger.log('X already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(2*self.average_x_pixel/(self.param_image_width)))
+            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(self.param_max_mouvement*self.average_x_pixel/(self.param_image_width)))
         if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
             mouvement_y = 0
             Logger.log('Y already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs(self.average_y_pixel/(self.param_image_height)))
+            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs(self.param_max_mouvement*self.average_y_pixel/(self.param_image_height)))
 
         Logger.log('Déplacement y : %f' %mouvement_x, Logger.REPORT_HINT)
         Logger.log('Déplacement z : %f' %mouvement_y, Logger.REPORT_HINT)

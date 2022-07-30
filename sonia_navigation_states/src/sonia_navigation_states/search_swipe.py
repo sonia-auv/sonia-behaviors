@@ -62,8 +62,8 @@ class search_swipe(EventState):
         self.direction_side = side
 
         # Compute trajectory parameters
-        self.fullStep = int(math.floor(self.boxX/self.stroke))
-        self.residue = self.boxX % self.stroke
+        self.fullStep = int(math.floor(abs(self.boxX/self.stroke)))
+        self.residue = abs(self.boxX) % self.stroke
 
     def execute(self, userdata):
 
@@ -79,9 +79,9 @@ class search_swipe(EventState):
             new_traj.pose = list(traj.pose)
 
         #first mouvement (1/2 stroke)
-        new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
-        new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw), 0, 0, 0, 1, 0, self.radius,False))
-        new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
+        new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
+        new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw), 1, 0, self.radius,False))
+        new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
 
         new_traj.pose.append(navUtils.addpose(0, self.get_move_direction()*(self.boxY/2), 0, 0, 0, 0, 1, 0, self.radius,False))
 
@@ -91,15 +91,15 @@ class search_swipe(EventState):
         # Generate point for 
         for i in range(self.fullStep):
 
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
 
             new_traj.pose.append(navUtils.addpose(0, self.get_move_direction()*(self.boxY), 0, 0, 0, 0, 1, 0, self.radius,False))
             
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
 
             # move sub foward
             new_traj.pose.append(navUtils.addpose(self.stroke, 0, 0, 0, 0, 0, 1, 0, self.radius,False))
@@ -107,19 +107,21 @@ class search_swipe(EventState):
         # add resudue point if needed
         if self.residue > 0 :
             
+            Logger.log('Ce IIIIII', Logger.REPORT_HINT)
             i+=1
+            Logger.log('ah non', Logger.REPORT_HINT)
             # move sub foward
             new_traj.pose.append(navUtils.addpose(self.residue, 0, 0, 0, 0, 0, 1, 0, self.radius,False))
 
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
             # move sub sideway
             new_traj.pose.append(navUtils.addpose(0, self.get_move_direction()*(self.boxY), 0, 0, 0, 0, 1, 0, self.radius,False))
 
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw), 0, 0, 0, 1, 0, self.radius,False))
-            new_traj.pose.append(navUtils.addpose(0, 0,self.get_swipe_direction()*(self.yaw/2), 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw), 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, 0, 0, 0, 0, self.get_swipe_direction()*(self.yaw/2), 1, 0, self.radius,False))
 
         # print debug
         Logger.log('Zigzag search has succesfully generated ' + str(i) + ' waypoints', Logger.REPORT_HINT)
