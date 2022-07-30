@@ -9,10 +9,10 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.input_key_add_pose import input_key_add_pose
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_navigation_states.yaw_orbit_from_given_point_and_angle import yaw_orbit_from_given_point_and_angle
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -48,9 +48,12 @@ class path2SM(Behavior):
 
 	def create(self):
 		# x:878 y:46, x:523 y:472
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['angle'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], input_keys=['angle', 'pose_x', 'pose_y', 'pose_z', 'camera'])
 		_state_machine.userdata.angle = 0
 		_state_machine.userdata.camera = 2
+		_state_machine.userdata.pose_x = 0
+		_state_machine.userdata.pose_y = 0
+		_state_machine.userdata.pose_z = 0
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -62,7 +65,7 @@ class path2SM(Behavior):
 			# x:190 y:94
 			OperatableStateMachine.add('init',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'rotate_from_path1'},
+										transitions={'continue': 'rotate_after_path1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
@@ -73,12 +76,12 @@ class path2SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:190 y:239
-			OperatableStateMachine.add('rotate_from_path1',
-										yaw_orbit_from_given_point_and_angle(pointX=0, pointY=0),
+			# x:156 y:321
+			OperatableStateMachine.add('rotate_after_path1',
+										input_key_add_pose(orientationX=0.0, orientationY=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'move'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'trajectory', 'camera': 'camera', 'angle': 'angle', 'trajectory': 'trajectory'})
+										remapping={'input_traj': 'trajectory', 'pose_x': 'pose_x', 'pose_y': 'pose_y', 'pose_z': 'pose_z', 'angle': 'angle', 'trajectory': 'trajectory'})
 
 			# x:715 y:175
 			OperatableStateMachine.add('wait',
