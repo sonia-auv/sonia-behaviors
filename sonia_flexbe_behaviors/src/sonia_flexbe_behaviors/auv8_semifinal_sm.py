@@ -11,7 +11,6 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_flexbe_behaviors.coinflip_gate_trickshot_with_com_sm import CoinFlipGateTrickshotwithcomSM
 from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.torpedoes_sm import torpedoesSM
-from sonia_flexbe_behaviors.vision_tables_sm import vision_tablesSM
 from sonia_flexbe_behaviors.vision_torpedoes_boards_sm import vision_torpedoes_boardsSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -34,13 +33,12 @@ class AUV8_SEMIFINALSM(Behavior):
 		self.name = 'AUV8_SEMIFINAL'
 
 		# parameters of this behavior
-		self.add_parameter('angle_after_path', 10)
+		self.add_parameter('angle_after_path', 45)
 
 		# references to used behaviors
 		self.add_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com')
 		self.add_behavior(moveSM, 'move')
 		self.add_behavior(torpedoesSM, 'torpedoes')
-		self.add_behavior(vision_tablesSM, 'vision_tables')
 		self.add_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards')
 
 		# Additional initialization code can be added inside the following tags
@@ -65,32 +63,28 @@ class AUV8_SEMIFINALSM(Behavior):
 		with _state_machine:
 			# x:30 y:40
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
-										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com'),
+										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com',
+											parameters={'submarine': "AUV8", 'dive_depth': 1.5, 'has_com': True}),
 										transitions={'finished': 'move', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
 			# x:376 y:48
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': self.angle_after_path, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'vision_torpedoes_boards', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:994 y:65
 			OperatableStateMachine.add('torpedoes',
 										self.use_behavior(torpedoesSM, 'torpedoes'),
-										transitions={'finished': 'vision_tables', 'failed': 'failed'},
+										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:1110 y:383
-			OperatableStateMachine.add('vision_tables',
-										self.use_behavior(vision_tablesSM, 'vision_tables'),
-										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
 			# x:638 y:49
 			OperatableStateMachine.add('vision_torpedoes_boards',
-										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards'),
+										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards',
+											parameters={'vision_torpedoes_boards_target': "G-Man", 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
 										transitions={'finished': 'torpedoes', 'failed': 'failed', 'lost_target': 'torpedoes'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 

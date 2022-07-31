@@ -15,13 +15,12 @@
 	<contains name="CoinFlip-Gate-Trickshot with com" />
 	<contains name="move" />
 	<contains name="torpedoes" />
-	<contains name="vision_tables" />
 	<contains name="vision_torpedoes_boards" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="angle_after_path" default="10" label="angle_after_path" hint="Sets the angle_after_path">
+		<param type="numeric" name="angle_after_path" default="45" label="angle_after_path" hint="Sets the angle_after_path">
 			<min value="-180" />
 			<max value="180" />
 		</param>
