@@ -27,3 +27,10 @@ def missionTimerFunc(mission, timeout, uniqueID, status):
         buffer.uniqueID = str(uniqueID)
         buffer.status = status
         return buffer
+
+class vision_pixel:
+        x = 0.
+        y = 0.
+        width = 0.
+        height = 0.
+        angle = 0.

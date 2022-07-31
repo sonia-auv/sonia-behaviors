@@ -26,11 +26,6 @@
 			<max value="25" />
 		</param>
 
-		<param type="numeric" name="radius" default="0.0" label="radius" hint="Sets the radius">
-			<min value="0" />
-			<max value="1" />
-		</param>
-
 	</params>
 
 

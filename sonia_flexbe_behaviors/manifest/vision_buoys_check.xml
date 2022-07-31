@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_buoys_check">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_buoys_check_sm" class="vision_buoys_checkSM" />
+	<tagstring>test</tagstring>
+	<author>CS</author>
+	<date>Thu Jul 21 2022</date>
+	<description>
+		test check
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_zigzag" />
+
+	<!-- Available Parameters -->
+
+</behavior>

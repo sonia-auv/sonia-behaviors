@@ -80,7 +80,7 @@ class yaw_orbit_from_given_point_and_angle(EventState):
             new_traj.pose = list(traj.pose)
 
         # compute parameter
-        ppt = 8 # point per turn
+        ppt = 4 # point per turn
         radstep = (2*math.pi)/ppt 
         degstep = 360.0 / ppt
 

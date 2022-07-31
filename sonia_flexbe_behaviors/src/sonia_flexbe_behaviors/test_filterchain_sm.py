@@ -8,7 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_hardware_states.activate_io import activate_io
 from sonia_vision_states.start_filter_chain import start_filter_chain
+from sonia_vision_states.stop_filter_chain import stop_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -30,9 +32,9 @@ class test_filterchainSM(Behavior):
 		self.name = 'test_filterchain'
 
 		# parameters of this behavior
-		self.add_parameter('cam_numero', 0)
-		self.add_parameter('filterchain', '')
-		self.add_parameter('target', '')
+		self.add_parameter('cam_numero', 1)
+		self.add_parameter('filterchain', 'simulation_cover')
+		self.add_parameter('target', 'test')
 
 		# references to used behaviors
 
@@ -46,7 +48,7 @@ class test_filterchainSM(Behavior):
 
 
 	def create(self):
-		# x:30 y:365, x:130 y:365
+		# x:369 y:392, x:112 y:203
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -56,12 +58,25 @@ class test_filterchainSM(Behavior):
 
 
 		with _state_machine:
-			# x:95 y:87
+			# x:136 y:46
 			OperatableStateMachine.add('test start buoy',
-										start_filter_chain(param_node_name='simple_buoy', header_name=self.target, camera_no=self.cam_numero, param_cmd=1),
+										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.cam_numero),
+										transitions={'continue': 'wait_', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'node': 'node', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+
+			# x:372 y:95
+			OperatableStateMachine.add('wait_',
+										activate_io(element=1, side=1, timeout=5),
+										transitions={'continue': 'stop_deep', 'failed': 'stop_deep'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+
+			# x:356 y:271
+			OperatableStateMachine.add('stop_deep',
+										stop_filter_chain(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no', 'header_name': 'header_name'})
+										remapping={'node': 'filterchain', 'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
 
 		return _state_machine

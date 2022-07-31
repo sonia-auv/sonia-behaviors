@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="bag_buoys_snake">
+
+	<executable package_path="sonia_flexbe_behaviors.bag_buoys_snake_sm" class="bag_buoys_snakeSM" />
+	<tagstring>deep_learning</tagstring>
+	<author>Willy Kao</author>
+	<date>Sun May 15 2022</date>
+	<description>
+		The sub moves in "snake" where its initial position is close to the buoys and goes backward.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="initial_depth" default="0" label="initial_depth" hint="Sets the initial_depth">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="initial_backward_length" default="0" label="initial_backward_length" hint="Sets the initial_backward_length">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="backward_length_in_between_arcs" default="0" label="backward_length_in_between_arcs" hint="Sets the backward_length_in_between_arcs">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="arc_angle" default="0" label="arc_angle" hint="Sets the arc_angle">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="numeric" name="orbit_speed" default="0" label="orbit_speed" hint="Sets the orbit_speed">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>

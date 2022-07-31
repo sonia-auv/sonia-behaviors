@@ -53,17 +53,18 @@ class takeover_mission(EventState):
         if self.has_com == False:
             return 'no_takeover'
 
-        if self.message_received == True and self.message_received_other == True:
+        if self.message_received == True:
             if self.array[self.mission_id] > 0:
                 Logger.log('Mission already assigned to the submarine', Logger.REPORT_HINT)
                 return 'assigned'
-            elif self.other_array[self.mission_id] > 0:
-                Logger.log('Mission is not yet failed or has been completed for the other submarine', Logger.REPORT_HINT)
-                return 'no_takeover'
-            else:
-                Logger.log('Mission tranfered to the submarine', Logger.REPORT_HINT)
-                self.update_array.publish(comUtils.update_mission_array(self.mission_id, 1))
-                return 'takeover'
+            if self.message_received_other == True:
+                if self.other_array[self.mission_id] > 0:
+                    Logger.log('Mission is not yet failed or has been completed for the other submarine', Logger.REPORT_HINT)
+                    return 'no_takeover'
+                else:
+                    Logger.log('Mission tranfered to the submarine', Logger.REPORT_HINT)
+                    self.update_array.publish(comUtils.update_mission_array(self.mission_id, 1))
+                    return 'takeover'
 
     def on_exit(self, userdata):
         self.receive_array.unregister()

@@ -35,7 +35,7 @@ class GatewithcomSM(Behavior):
 		self.name = 'Gate with com'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_gate', 4)
+		self.add_parameter('distance_to_gate', 3.5)
 
 		# references to used behaviors
 

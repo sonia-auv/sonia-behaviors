@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="path2">
+
+	<executable package_path="sonia_flexbe_behaviors.path2_sm" class="path2SM" />
+	<tagstring>pool</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		Invert direction after getting path 1 orientation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

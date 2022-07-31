@@ -7,32 +7,62 @@
 	<author>CS</author>
 	<date>Wed Jul 13 2022</date>
 	<description>
-		Behavior to detect the gman.
+		Behavior to detect the hole.
 	</description>
 
 
 	<!-- Contained Behaviors -->
+	<contains name="search_torpedoes" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simulation_gman" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="torpedoes_filterchain" default="simple_torpedoes_star" label="torpedoes_filterchain" hint="Sets the torpedoes_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_simulation_front" />
+			<option value="sift_front" />
+			<option value="simple_buoy" />
+			<option value="simulation_torpedoes_star" />
+			<option value="simple_torpedoes_star" />
+		</param>
 
-		<param type="text" name="target" default="" label="target" hint="Sets the target" />
+		<param type="enum" name="torpedoes_target" default="torpedoes" label="torpedoes_target" hint="Sets the torpedoes_target">
+			<option value="torpedoes" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="bounding_box_width" default="0" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="torpedoes_bounding_box_width" default="300" label="torpedoes_bounding_box_width" hint="Sets the torpedoes_bounding_box_width">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="0" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="torpedoes_bounding_box_height" default="300" label="torpedoes_bounding_box_height" hint="Sets the torpedoes_bounding_box_height">
 			<min value="0" />
 			<max value="600" />
+		</param>
+
+		<param type="numeric" name="torpedoes_center_bounding_box_height" default="100" label="torpedoes_center_bounding_box_height" hint="Sets the torpedoes_center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="torpedoes_center_bounding_box_width" default="100" label="torpedoes_center_bounding_box_width" hint="Sets the torpedoes_center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="torpedoes_max_mouv" default="0.5" label="torpedoes_max_mouv" hint="Sets the torpedoes_max_mouv">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="torpedoes_min_mouv" default="0.1" label="torpedoes_min_mouv" hint="Sets the torpedoes_min_mouv">
+			<min value="0" />
+			<max value="1" />
 		</param>
 
 	</params>

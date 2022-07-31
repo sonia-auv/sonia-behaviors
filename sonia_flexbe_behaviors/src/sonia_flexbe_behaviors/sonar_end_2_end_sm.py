@@ -8,13 +8,13 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_mapping_states.start_bundle import start_bundle
+from sonia_mapping_states.start_stop_sonar import start_stop_sonar
+from sonia_mapping_states.stop_sonar_bundle import stop_sonar_bundle
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_sonar_states.start_bundle import start_bundle
-from sonia_sonar_states.start_stop_sonar import start_stop_sonar
-from sonia_sonar_states.stop_bundle import stop_bundle
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -67,7 +67,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:108 y:427
 			OperatableStateMachine.add('allign',
-										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'RAM'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -95,7 +95,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:452 y:545
 			OperatableStateMachine.add('retract',
-										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=-1.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'sned2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -116,26 +116,26 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:322 y:81
 			OperatableStateMachine.add('start bundle',
-										start_bundle(target='Buoys', resetBundle=True),
+										start_bundle(sonarBundle=True, hydroBundle=False, sonarTarget='Buoys', hydroTarget=20, resetSonarBundle=True, resetHydroBundle=False),
 										transitions={'continue': 'init1'},
 										autonomy={'continue': Autonomy.Off})
 
-			# x:734 y:430
-			OperatableStateMachine.add('stop bundle',
-										stop_bundle(ObstacleID=1, resetBundle=False),
-										transitions={'found': 'stop sonar', 'not_found': 'failed', 'time_out': 'failed'},
-										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off})
-
 			# x:569 y:421
 			OperatableStateMachine.add('stop sonar',
-										start_stop_sonar(startStop=True),
+										start_stop_sonar(startStop=False),
 										transitions={'continue': 'init2'},
 										autonomy={'continue': Autonomy.Off})
+
+			# x:734 y:430
+			OperatableStateMachine.add('stop sonar bundle',
+										stop_sonar_bundle(sonarObstacleID=1, resetSonarBundle=False),
+										transitions={'found': 'stop sonar', 'not_found': 'failed', 'time_out': 'failed'},
+										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off})
 
 			# x:731 y:326
 			OperatableStateMachine.add('tg',
 										wait_target_reached(timeout=30),
-										transitions={'target_reached': 'stop bundle', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'stop sonar bundle', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:876 y:531
@@ -153,7 +153,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:171 y:549
 			OperatableStateMachine.add('RAM',
-										manual_add_pose_to_trajectory(positionX=0.20, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=11, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.20, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=12, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'retract'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})

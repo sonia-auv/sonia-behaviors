@@ -16,20 +16,22 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="distance_up_after_collision" default="1" label="distance_up_after_collision" hint="Sets the distance_up_after_collision">
+		<param type="numeric" name="distance_up_after_collision" default="1" label="distance_up_after_collision" hint="Sets the distance to the surface in absolute frame">
 			<min value="0" />
 			<max value="3" />
 		</param>
 
-		<param type="numeric" name="distance_forward_after_collision" default="3" label="distance_forward_after_collision" hint="Sets the distance_forward_after_collision">
+		<param type="numeric" name="distance_forward_after_collision" default="2.0" label="distance_forward_after_collision" hint="Sets the distance_forward_after_collision">
 			<min value="0" />
 			<max value="5" />
 		</param>
 
-		<param type="numeric" name="distance_down_after_collision" default="2" label="distance_down_after_collision" hint="Sets the distance_down_after_collision">
+		<param type="numeric" name="distance_down_after_collision" default="0" label="distance_down_after_collision" hint="Sets the distance_down_after_collision">
 			<min value="0" />
 			<max value="4" />
 		</param>
+
+		<param type="boolean" name="activate_avoid_buoys_after_collision" default="True" label="activate_avoid_buoys_after_collision" hint="Sets the activate_avoid_buoys_after_collision" />
 
 	</params>
 

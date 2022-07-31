@@ -36,7 +36,7 @@ class CoinFlipwithcomSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('orientation_to_gate', 0)
-		self.add_parameter('dive_depth', 1)
+		self.add_parameter('dive_depth', 1.5)
 
 		# references to used behaviors
 
@@ -69,7 +69,7 @@ class CoinFlipwithcomSM(Behavior):
 
 			# x:404 y:52
 			OperatableStateMachine.add('dive',
-										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.dive_depth, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=self.dive_depth, orientationX=0, orientationY=0, orientationZ=0, frame=4, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'turn_to_gate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'input_traj', 'trajectory': 'trajectory'})

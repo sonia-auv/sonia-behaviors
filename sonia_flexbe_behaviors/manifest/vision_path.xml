@@ -12,28 +12,61 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="move" />
 	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simple_pipe_straight" label="filterchain" hint="Sets the filterchain name to start the vision target" />
+		<param type="enum" name="vision_path_filterchain" default="simple_pipe_straight" label="vision_path_filterchain" hint="Sets the filterchain name to start the vision target">
+			<option value="simple_pipe_straight" />
+			<option value="simulation_pipe_straight" />
+		</param>
 
-		<param type="text" name="target" default="pipe straight" label="target" hint="Sets the header name to filter the vision target message" />
+		<param type="enum" name="vision_path_target" default="pipe straight" label="vision_path_target" hint="Sets the header name to filter the vision target message">
+			<option value="pipe straight" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="min_mouvement" default="0.1" label="min_mouvement" hint="Sets the min_mouvement">
+		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
 			<min value="0" />
 			<max value="1" />
 		</param>
 
-		<param type="numeric" name="max_mouvement" default="0.5" label="max_mouvement" hint="Sets the max_mouvement">
+		<param type="numeric" name="max_mouvement" default="1.2" label="max_mouvement" hint="Sets the max_mouvement">
 			<min value="0" />
 			<max value="2" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="200" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_width" default="30" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="50" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="50" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="boolean" name="activate_vision_path" default="True" label="activate_vision_path" hint="Sets the activate_vision_path" />
+
+		<param type="numeric" name="move_after_path" default="2.0" label="move_after_path" hint="Sets the move_after_path">
+			<min value="0" />
+			<max value="10" />
 		</param>
 
 	</params>

@@ -17,21 +17,29 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="text" name="filterchain" default="simulation_cover" label="filterchain" hint="Sets the filterchain" />
+		<param type="enum" name="vision_bins_filterchain" default="simple_bin" label="vision_bins_filterchain" hint="Sets the vision_bins_filterchain">
+			<option value="deep_compe_bottom" />
+			<option value="deep_simulation_bottom" />
+			<option value="sift_bottom" />
+			<option value="simple_bin" />
+			<option value="simulation_bin" />
+		</param>
 
-		<param type="text" name="target" default="bins_cover" label="target" hint="Sets the target" />
+		<param type="enum" name="vision_bins_target" default="cover" label="vision_bins_target" hint="Sets the vision_bins_target">
+			<option value="cover" />
+		</param>
 
 		<param type="numeric" name="camera_no" default="2" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="bounding_box_width" default="60" label="bounding_box_width" hint="Sets the bounding_box_width">
+		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">
 			<min value="0" />
 			<max value="600" />
 		</param>
 
-		<param type="numeric" name="bounding_box_height" default="60" label="bounding_box_height" hint="Sets the bounding_box_height">
+		<param type="numeric" name="bounding_box_height" default="200" label="bounding_box_height" hint="Sets the bounding_box_height">
 			<min value="0" />
 			<max value="600" />
 		</param>
@@ -55,6 +63,8 @@
 			<min value="0" />
 			<max value="1" />
 		</param>
+
+		<param type="boolean" name="activate_vision_bins" default="True" label="activate_vision_bins" hint="Sets the activate_vision_bins" />
 
 	</params>
 

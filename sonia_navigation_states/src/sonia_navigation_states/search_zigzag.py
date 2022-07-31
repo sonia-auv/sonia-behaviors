@@ -29,16 +29,15 @@ class search_zigzag(EventState):
                 |  |
             _v_ |___________________
                                     ___        ^ x
-                                    | ^ |       |
-                                _|   |_      |
-                                |_ sub _|     -----> y
-                                    |   |       body frame
-                                    |___|
+                                   | ^ |       |
+                                  _|   |_      |
+                                 |_ sub _|     -----> y
+                                   |   |       body frame
+                                   |___|
 
         -- boxX             uint8               Length of zigzag
         -- boxY             uint8               Width of zigzag
         -- stroke           float               Distance between changes of direction
-        -- radius           float               Radius rounds the trajectory
         -- side             bool                False = start to left, True = start to right
 
         ># input_traj       MultiAddPose        Input trajectory
@@ -48,7 +47,7 @@ class search_zigzag(EventState):
         <= continue                             End of the zigzag
     '''
 
-    def __init__(self, boxX=5, boxY=5, stroke=0.8 , radius=0.4, side = False ):
+    def __init__(self, boxX=5, boxY=5, stroke=0.8 , side = False ):
         
         super(search_zigzag, self).__init__(outcomes=['continue'],
                                                      input_keys=['input_traj'],
@@ -57,7 +56,7 @@ class search_zigzag(EventState):
         self.boxX = boxX
         self.boxY = boxY
         self.stroke = stroke
-        self.radius = radius
+        self.radius = 0
         self.side = side
 
         # Compute trajectory parameters
@@ -68,6 +67,8 @@ class search_zigzag(EventState):
 
         traj = userdata.input_traj
         new_traj = MultiAddPose()
+        # Force spline interpolation for snake
+        new_traj.interpolation_method = 2
        
         # Add previous waypoint if needed
         if not traj.pose:

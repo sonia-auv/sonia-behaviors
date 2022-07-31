@@ -37,7 +37,7 @@ class check_collisionSM(Behavior):
 		self.name = 'check_collision'
 
 		# parameters of this behavior
-		self.add_parameter('collision_threshold', 0.2)
+		self.add_parameter('collision_threshold', 0.05)
 
 		# references to used behaviors
 		self.add_behavior(touch_buoySM, 'Container/touch_buoy')

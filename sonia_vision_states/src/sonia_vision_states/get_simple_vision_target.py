@@ -15,24 +15,26 @@ from geometry_msgs.msg import Point, Vector3
 class get_simple_vision_target(EventState):
 
     '''
-        Get the movement target from vision filterchain
+        Get the movement target from vision topic
 
-        -- bounding_box_pixel_height    uint16          height of bounding box for alignement on target in pixel
-        -- bounding_box_pixel_width     uint16          Width of square bounding box for alignement on target in pixel
-        -- target_width_meter           float           Width of the target in meters
-        -- target_height_meter          float           Height of the target in meters
-        -- number_of_average            uint8           Number of image to average before creating a pose
-        -- max_mouvement                uint8           Maximum distance allowed to move
-        -- min_mouvement                float           Minimum distance for a mouvement
-        -- long_rotation                bool            False : Quick path for rotation
-                                                        True : Long path for rotation
-        -- timeout                      uint8           Time to stop looking at this position
-        -- speed_profile                uint8           Speed profile to move
-                                                        0 : normal
-                                                        1 : slow
-                                                        2 : fast
+        -- center_bounding_box_pixel_height     uint16          Height of center bounding box for alignement on target in pixel
+        -- center_bounding_box_pixel_width      uint16          Width of center bounding box for alignement on target in pixel
+        -- bounding_box_pixel_height            uint16          Height of bounding box for alignement on target in pixel
+        -- bounding_box_pixel_width             uint16          Width of bounding box for alignement on target in pixel
+        -- image_height                         float           Width of the image in pixel
+        -- image_width                          float           Height of the image in pixel
+        -- number_of_average                    uint8           Number of image to average before creating a pose
+        -- max_mouvement                        uint8           Maximum distance allowed to move
+        -- min_mouvement                        float           Minimum distance for a mouvement
+        -- long_rotation                        bool            False : Quick path for rotation
+                                                                True : Long path for rotation
+        -- timeout                              uint8           Time to stop looking at this position
+        -- speed_profile                        uint8           Speed profile to move
+                                                                0 : normal
+                                                                1 : slow
+                                                                2 : fast
 
-        ># filterchain                  string          Topic to listen to get the target
+        ># topic                        string          Topic to listen to get the target
         ># camera_no                    uint8           1 : front 
                                                         2 : bottom
                                                         3 : front simulation
@@ -54,7 +56,7 @@ class get_simple_vision_target(EventState):
     def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
         
         super(get_simple_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
-                                                input_keys = ['filterchain', 'camera_no', 'target', 'input_trajectory'],
+                                                input_keys = ['topic', 'camera_no', 'target', 'input_trajectory'],
                                                 output_keys = ['output_trajectory', 'camera', 'angle'])
 
         self.param_center_bbp_height = center_bounding_box_pixel_height
@@ -70,8 +72,6 @@ class get_simple_vision_target(EventState):
         self.param_long_rotation = long_rotation
         self.param_timeout = timeout
         self.param_speed_profile = speed_profile
-
-        Logger.log(self.param_max_mouvement, Logger.REPORT_HINT)
 
         self.timeout_pub = rospy.Publisher('/sonia_behaviors/timeout', MissionTimer, queue_size=5)
 
@@ -109,13 +109,15 @@ class get_simple_vision_target(EventState):
         else :
             self.cam_bottom = False
 
-        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
+        self.get_vision_data = rospy.Subscriber(userdata.topic, VisionTarget, self.vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
-        self.start_time = time()
-        self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 1))
-
+        
+        Logger.log('Checking for position and alignement', Logger.REPORT_HINT)
         self.nombre_enter += 1
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
+        
+        self.start_time = time()
+        self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 1))
 
     def position_cb(self, data):
         self.position_z = data.pose.pose.position.z
@@ -202,12 +204,12 @@ class get_simple_vision_target(EventState):
             mouvement_x = 0
             Logger.log('X already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+            mouvement_x = numpy.sign(self.average_x_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
         if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
             mouvement_y = 0
             Logger.log('Y already aligned', Logger.REPORT_HINT)
         else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z)))
+            mouvement_y = numpy.sign(self.average_y_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
 
         Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
         Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)

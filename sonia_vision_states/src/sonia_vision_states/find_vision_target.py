@@ -13,7 +13,7 @@ class find_vision_target(EventState):
 
         -- number_samples       uint8       Number of samples to find the target
 
-        ># filterchain          string      Topic to listen for the target
+        ># topic                string      Topic to listen for the target
         ># target               string      Target to find
 
         <= continue                         Target has been found
@@ -23,7 +23,7 @@ class find_vision_target(EventState):
     def __init__(self, number_samples):
 
         super(find_vision_target, self).__init__(outcomes = ['continue'],
-                                                 input_keys = ['filterchain', 'target'])
+                                                 input_keys = ['topic', 'target'])
         
         self.param_number_samples = number_samples
         self.start_time = 0
@@ -35,7 +35,7 @@ class find_vision_target(EventState):
     def on_enter(self, userdata): 
         self.number_of_found = 0
         self.target = userdata.target
-        self.get_vision_data = rospy.Subscriber(userdata.filterchain, VisionTarget, self.vision_cb)
+        self.get_vision_data = rospy.Subscriber(userdata.topic, VisionTarget, self.vision_cb)
         Logger.log('Checking to find the target', Logger.REPORT_HINT)
 
     def execute(self, userdata):

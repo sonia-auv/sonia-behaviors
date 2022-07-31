@@ -12,6 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
+	<contains name="trickshot" />
 
 	<!-- Available Parameters -->
 	<params>

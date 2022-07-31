@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="full_run_AUV8">
+
+	<executable package_path="sonia_flexbe_behaviors.full_run_auv8_sm" class="full_run_AUV8SM" />
+	<tagstring>auv8 compe task</tagstring>
+	<author>GS</author>
+	<date>Thu Jul 28 2022</date>
+	<description>
+		Main mission for AUV8
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="avoid_buoys_after_collision" />
+	<contains name="coin_flip" />
+	<contains name="drop_AUV8" />
+	<contains name="move" />
+	<contains name="torpedoes" />
+	<contains name="vision_bins" />
+	<contains name="vision_buoys" />
+	<contains name="vision_droppers" />
+	<contains name="vision_path" />
+	<contains name="vision_tables" />
+
+	<!-- Available Parameters -->
+
+</behavior>
