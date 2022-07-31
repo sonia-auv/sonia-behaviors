@@ -75,7 +75,7 @@ class vision_droppersSM(Behavior):
 			# x:35 y:65
 			OperatableStateMachine.add('activation',
 										activate_behavior(activate=self.activate_vision_droppers),
-										transitions={'activate': 'find_bins', 'desactivate': 'finished'},
+										transitions={'activate': 'start_simple_rotate', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
 
 			# x:424 y:220
@@ -91,10 +91,10 @@ class vision_droppersSM(Behavior):
 										transitions={'stopped': 'get_bins', 'moving': 'wait_align', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:43 y:170
+			# x:33 y:236
 			OperatableStateMachine.add('find_bins',
 										start_filter_chain(filterchain=self.vision_droppers_filterchain, target=self.vision_droppers_target, camera_no=self.camera_no),
-										transitions={'continue': 'start_simple_rotate', 'failed': 'failed'},
+										transitions={'continue': 'init_traj', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
@@ -119,10 +119,10 @@ class vision_droppersSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
 
-			# x:110 y:684
-			OperatableStateMachine.add('start_simple_rotate',
+			# x:9 y:148
+			OperatableStateMachine.add('start_simple_rotate',				
 										start_filter_chain(filterchain='simple_rotate', target='', camera_no=2),
-										transitions={'continue': 'init_traj', 'failed': 'failed'},
+										transitions={'continue': 'find_bins', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 

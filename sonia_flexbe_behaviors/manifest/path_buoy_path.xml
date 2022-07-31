@@ -13,9 +13,8 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="vision_path" />
-	<contains name="path2" />
 	<contains name="vision_buoys" />
-	<contains name="avoid_buoys_after_collision" />
+	<contains name="path2" />
 
 	<!-- Available Parameters -->
 

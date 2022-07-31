@@ -74,7 +74,7 @@ class drop_AUV7SM(Behavior):
 
 			# x:812 y:515
 			OperatableStateMachine.add('drop',
-										activate_io(element=1, side=0, action=1, timeout=10),
+										activate_io(element=1, side=1, action=1, timeout=10),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': '2nd_drop'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
@@ -107,7 +107,7 @@ class drop_AUV7SM(Behavior):
 
 			# x:593 y:256
 			OperatableStateMachine.add('2nd_drop',
-										activate_io(element=1, side=0, action=1, timeout=8),
+										activate_io(element=1, side=1, action=1, timeout=8),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
