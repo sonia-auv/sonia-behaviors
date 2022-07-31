@@ -107,9 +107,7 @@ class search_swipe(EventState):
         # add resudue point if needed
         if self.residue > 0 :
             
-            Logger.log('Ce IIIIII', Logger.REPORT_HINT)
             i+=1
-            Logger.log('ah non', Logger.REPORT_HINT)
             # move sub foward
             new_traj.pose.append(navUtils.addpose(self.residue, 0, 0, 0, 0, 0, 1, 0, self.radius,False))
 
