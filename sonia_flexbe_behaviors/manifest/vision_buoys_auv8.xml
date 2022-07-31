@@ -21,7 +21,6 @@
 		<param type="enum" name="vision_buoys_filterchain" default="deep_compe_front" label="vision_buoys_filterchain" hint="Sets the vision_buoys_filterchain">
 			<option value="deep_compe_front" />
 			<option value="deep_simulation_front" />
-			<option value="sift_front" />
 			<option value="simple_buoy" />
 			<option value="simple_buoy_badge" />
 			<option value="simulation_badge" />

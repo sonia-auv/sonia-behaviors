@@ -166,7 +166,7 @@ class vision_buoys_AUV8SM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:804 y:420
+			# x:804 y:421
 			OperatableStateMachine.add('wait_target_reached',
 										wait_target_reached(timeout=5),
 										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'stop_filter_fail'},
