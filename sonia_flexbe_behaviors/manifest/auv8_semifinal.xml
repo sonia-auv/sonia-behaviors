@@ -21,9 +21,9 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="angle_after_path" default="10" label="angle_after_path" hint="Sets the angle_after_path">
-			<option value="10" />
-			<option value="-10" />
+		<param type="numeric" name="angle_after_path" default="10" label="angle_after_path" hint="Sets the angle_after_path">
+			<min value="-180" />
+			<max value="180" />
 		</param>
 
 	</params>

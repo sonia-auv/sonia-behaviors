@@ -23,6 +23,7 @@
 			<option value="simple_buoy" />
 			<option value="simple_sift" />
 			<option value="simulation_gman" />
+			<option value="deep_simulation_front" />
 		</param>
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">

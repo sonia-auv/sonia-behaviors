@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="align_launch">
+
+	<executable package_path="sonia_flexbe_behaviors.align_launch_sm" class="align_launchSM" />
+	<tagstring>task</tagstring>
+	<author>CS</author>
+	<date>Sun Jul 31 2022</date>
+	<description>
+		shoot torpedoes
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="vision_torpedoes" />
+	<contains name="launch_AUV8" />
+
+	<!-- Available Parameters -->
+
+</behavior>
