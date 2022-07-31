@@ -16,7 +16,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="distance_to_gate" default="4" label="distance_to_gate" hint="Sets the distance_to_gate">
+		<param type="numeric" name="distance_to_gate" default="3.5" label="distance_to_gate" hint="Sets the distance_to_gate">
 			<min value="0" />
 			<max value="10" />
 		</param>

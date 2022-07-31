@@ -10,9 +10,9 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.coinflip_gate_trickshot_with_com_sm import CoinFlipGateTrickshotwithcomSM
 from sonia_flexbe_behaviors.drop_auv7_sm import drop_AUV7SM
-from sonia_flexbe_behaviors.path_buoy_path_sm import path_buoy_pathSM
 from sonia_flexbe_behaviors.square_sm import squareSM
 from sonia_flexbe_behaviors.vision_bins_sm import vision_binsSM
+from sonia_flexbe_behaviors.vision_buoys_sm import vision_buoysSM
 from sonia_flexbe_behaviors.vision_droppers_sm import vision_droppersSM
 from sonia_flexbe_behaviors.vision_path_sm import vision_pathSM
 # Additional imports can be added inside the following tags
@@ -40,12 +40,13 @@ class AUV7_SEMIFINALSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com')
 		self.add_behavior(drop_AUV7SM, 'drop_AUV7')
-		self.add_behavior(path_buoy_pathSM, 'path_buoy_path')
 		self.add_behavior(squareSM, 'square')
 		self.add_behavior(vision_binsSM, 'vision_bins')
+		self.add_behavior(vision_buoysSM, 'vision_buoys')
 		self.add_behavior(vision_droppersSM, 'vision_droppers')
 		self.add_behavior(vision_droppersSM, 'vision_droppers_2')
 		self.add_behavior(vision_pathSM, 'vision_path')
+		self.add_behavior(vision_pathSM, 'vision_path_2')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -70,19 +71,13 @@ class AUV7_SEMIFINALSM(Behavior):
 			# x:178 y:51
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
 										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com'),
-										transitions={'finished': 'path_buoy_path', 'failed': 'failed', 'failed_start_control': 'failed'},
+										transitions={'finished': 'vision_path', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
 			# x:1543 y:313
 			OperatableStateMachine.add('drop_AUV7',
 										self.use_behavior(drop_AUV7SM, 'drop_AUV7'),
 										transitions={'finished': 'square', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:195 y:192
-			OperatableStateMachine.add('path_buoy_path',
-										self.use_behavior(path_buoy_pathSM, 'path_buoy_path'),
-										transitions={'finished': 'vision_path', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:1373 y:475
@@ -97,6 +92,12 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'vision_droppers', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
+			# x:235 y:225
+			OperatableStateMachine.add('vision_buoys',
+										self.use_behavior(vision_buoysSM, 'vision_buoys'),
+										transitions={'finished': 'vision_path_2', 'failed': 'failed', 'lost_target': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
+
 			# x:329 y:548
 			OperatableStateMachine.add('vision_droppers',
 										self.use_behavior(vision_droppersSM, 'vision_droppers'),
@@ -109,9 +110,16 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:30 y:322
+			# x:31 y:165
 			OperatableStateMachine.add('vision_path',
 										self.use_behavior(vision_pathSM, 'vision_path'),
+										transitions={'finished': 'vision_buoys', 'failed': 'failed', 'lost_target': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
+										remapping={'angle': 'angle', 'camera': 'camera'})
+
+			# x:479 y:261
+			OperatableStateMachine.add('vision_path_2',
+										self.use_behavior(vision_pathSM, 'vision_path_2'),
 										transitions={'finished': 'vision_bins', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'angle': 'angle', 'camera': 'camera'})
