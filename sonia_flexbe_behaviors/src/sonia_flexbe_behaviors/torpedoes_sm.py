@@ -64,7 +64,7 @@ class torpedoesSM(Behavior):
 			OperatableStateMachine.add('vision_torpedoes_boards',
 										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards',
 											parameters={'vision_torpedoes_boards_target': "G-Man", 'bounding_box_width': 150, 'bounding_box_height': 200, 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
-										transitions={'finished': 'move', 'failed': 'failed', 'lost_target': 'move'},
+										transitions={'finished': 'move', 'failed': 'vision_torpedoes', 'lost_target': 'move'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:287 y:50

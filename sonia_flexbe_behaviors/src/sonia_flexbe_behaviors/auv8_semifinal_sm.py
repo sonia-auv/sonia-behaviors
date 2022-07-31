@@ -85,7 +85,7 @@ class AUV8_SEMIFINALSM(Behavior):
 			OperatableStateMachine.add('vision_torpedoes_boards',
 										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards',
 											parameters={'vision_torpedoes_boards_target': "G-Man", 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
-										transitions={'finished': 'torpedoes', 'failed': 'failed', 'lost_target': 'torpedoes'},
+										transitions={'finished': 'torpedoes', 'failed': 'torpedoes', 'lost_target': 'torpedoes'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 
