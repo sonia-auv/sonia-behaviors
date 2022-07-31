@@ -10,6 +10,7 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.coinflip_gate_trickshot_with_com_sm import CoinFlipGateTrickshotwithcomSM
 from sonia_flexbe_behaviors.move_sm import moveSM
+from sonia_flexbe_behaviors.sonar_table_alignement_sm import sonar_table_alignementSM
 from sonia_flexbe_behaviors.torpedoes_sm import torpedoesSM
 from sonia_flexbe_behaviors.vision_torpedoes_boards_sm import vision_torpedoes_boardsSM
 # Additional imports can be added inside the following tags
@@ -38,6 +39,7 @@ class AUV8_SEMIFINALSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com')
 		self.add_behavior(moveSM, 'move')
+		self.add_behavior(sonar_table_alignementSM, 'sonar_table_alignement')
 		self.add_behavior(torpedoesSM, 'torpedoes')
 		self.add_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards')
 
@@ -75,10 +77,16 @@ class AUV8_SEMIFINALSM(Behavior):
 										transitions={'finished': 'vision_torpedoes_boards', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
+			# x:978 y:288
+			OperatableStateMachine.add('sonar_table_alignement',
+										self.use_behavior(sonar_table_alignementSM, 'sonar_table_alignement'),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
 			# x:994 y:65
 			OperatableStateMachine.add('torpedoes',
 										self.use_behavior(torpedoesSM, 'torpedoes'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'sonar_table_alignement', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:638 y:49
