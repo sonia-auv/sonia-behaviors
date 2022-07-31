@@ -62,7 +62,7 @@ class vision_droppersSM(Behavior):
 
 
 	def create(self):
-		# x:274 y:238, x:66 y:423, x:99 y:587, x:406 y:469
+		# x:274 y:263, x:66 y:423, x:99 y:587, x:406 y:469
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
@@ -94,7 +94,7 @@ class vision_droppersSM(Behavior):
 			# x:43 y:170
 			OperatableStateMachine.add('find_bins',
 										start_filter_chain(filterchain=self.vision_droppers_filterchain, target=self.vision_droppers_target, camera_no=self.camera_no),
-										transitions={'continue': 'init_traj', 'failed': 'failed'},
+										transitions={'continue': 'start_simple_rotate', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
@@ -118,6 +118,13 @@ class vision_droppersSM(Behavior):
 										transitions={'finished': 'get_bins', 'failed': 'stop_lost_target', 'lost_target': 'stop_lost_target', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
+
+			# x:110 y:684
+			OperatableStateMachine.add('start_simple_rotate',
+										start_filter_chain(filterchain=simple_rotate, target='', camera_no=2),
+										transitions={'continue': 'init_traj', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:225 y:531
 			OperatableStateMachine.add('stop_lost_target',
