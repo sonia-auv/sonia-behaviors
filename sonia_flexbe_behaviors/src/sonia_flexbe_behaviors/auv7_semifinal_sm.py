@@ -61,7 +61,7 @@ class AUV7_SEMIFINALSM(Behavior):
 
 
 	def create(self):
-		# x:1749 y:465, x:1163 y:28
+		# x:1076 y:387, x:1163 y:28
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -71,40 +71,40 @@ class AUV7_SEMIFINALSM(Behavior):
 
 
 		with _state_machine:
-			# x:178 y:51
+			# x:171 y:31
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
 										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com',
 											parameters={'submarine': "AUV7", 'dive_depth': 1.5, 'has_com': False}),
 										transitions={'finished': 'vision_path', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
-			# x:1543 y:313
+			# x:774 y:607
 			OperatableStateMachine.add('drop_AUV7',
 										self.use_behavior(drop_AUV7SM, 'drop_AUV7'),
 										transitions={'finished': 'move', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:1374 y:415
+			# x:982 y:608
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
 											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0.2, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'square', 'failed': 'square'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:103 y:313
+			# x:211 y:411
 			OperatableStateMachine.add('move_2',
 										self.use_behavior(moveSM, 'move_2',
 											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'vision_bins', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:1273 y:553
+			# x:1089 y:471
 			OperatableStateMachine.add('square',
 										self.use_behavior(squareSM, 'square'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:298 y:399
+			# x:226 y:498
 			OperatableStateMachine.add('vision_bins',
 										self.use_behavior(vision_binsSM, 'vision_bins',
 											parameters={'vision_bins_target': "cover", 'center_bb_height': 50, 'center_bb_width': 50, 'max_mouvement': 1.0, 'min_mouvement': 0.1}),
@@ -118,21 +118,21 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'vision_path_2', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
-			# x:329 y:548
+			# x:213 y:616
 			OperatableStateMachine.add('vision_droppers',
 										self.use_behavior(vision_droppersSM, 'vision_droppers',
 											parameters={'bounding_box_height': 90, 'bounding_box_width': 115, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50, 'max_mouvement': 0.5, 'min_mouvement': 0.1}),
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'vision_droppers_2', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:946 y:305
+			# x:519 y:605
 			OperatableStateMachine.add('vision_droppers_2',
 										self.use_behavior(vision_droppersSM, 'vision_droppers_2',
 											parameters={'bounding_box_height': 90, 'bounding_box_width': 115, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50, 'max_mouvement': 0.5, 'min_mouvement': 0.1}),
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:31 y:165
+			# x:228 y:134
 			OperatableStateMachine.add('vision_path',
 										self.use_behavior(vision_pathSM, 'vision_path',
 											parameters={'vision_path_target': "pipe straight", 'min_mouvement': 0.25, 'max_mouvement': 1.2, 'bounding_box_height': 200, 'bounding_box_width': 30, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50}),
@@ -140,7 +140,7 @@ class AUV7_SEMIFINALSM(Behavior):
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'angle': 'angle', 'camera': 'camera'})
 
-			# x:479 y:261
+			# x:205 y:308
 			OperatableStateMachine.add('vision_path_2',
 										self.use_behavior(vision_pathSM, 'vision_path_2',
 											parameters={'vision_path_target': "pipe straight", 'min_mouvement': 0.25, 'max_mouvement': 1.2, 'bounding_box_height': 200, 'bounding_box_width': 30, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50}),
