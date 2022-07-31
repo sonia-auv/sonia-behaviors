@@ -34,7 +34,7 @@ class AUV8_SEMIFINALSM(Behavior):
 		self.name = 'AUV8_SEMIFINAL'
 
 		# parameters of this behavior
-		self.add_parameter('angle_after_path', '10')
+		self.add_parameter('angle_after_path', 10)
 
 		# references to used behaviors
 		self.add_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com')
