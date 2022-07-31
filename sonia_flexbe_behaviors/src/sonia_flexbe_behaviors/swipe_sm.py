@@ -35,7 +35,7 @@ class swipeSM(Behavior):
 		self.name = 'swipe'
 
 		# parameters of this behavior
-		self.add_parameter('yaw', 180)
+		self.add_parameter('yaw', 45)
 		self.add_parameter('boxX', 5.0)
 		self.add_parameter('boxY', 2.0)
 		self.add_parameter('stroke', 0.5)
