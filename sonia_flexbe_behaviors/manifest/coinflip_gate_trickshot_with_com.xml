@@ -20,12 +20,12 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="enum" name="submarine" default="AUV8" label="submarine" hint="Sets the submarine">
-			<option value="AUV8" />
+		<param type="enum" name="submarine" default="AUV7" label="submarine" hint="Sets the submarine">
 			<option value="AUV7" />
+			<option value="AUV8" />
 		</param>
 
-		<param type="numeric" name="distance_to_gate" default="3.5" label="distance_to_gate" hint="Sets the distance_to_gate">
+		<param type="numeric" name="distance_to_gate" default="5" label="distance_to_gate" hint="Sets the distance_to_gate">
 			<min value="0" />
 			<max value="10" />
 		</param>
@@ -35,7 +35,7 @@
 			<max value="5" />
 		</param>
 
-		<param type="boolean" name="has_com" default="True" label="has_com" hint="If submarines have com" />
+		<param type="boolean" name="has_com" default="False" label="has_com" hint="If submarines have com" />
 
 		<param type="boolean" name="activate_coinflip_gate_trickshot_com" default="True" label="activate_coinflip_gate_trickshot_com" hint="Sets the activate_coinflip_gate_trickshot_com" />
 

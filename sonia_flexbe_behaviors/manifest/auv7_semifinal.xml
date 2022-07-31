@@ -14,6 +14,7 @@
 	<!-- Contained Behaviors -->
 	<contains name="CoinFlip-Gate-Trickshot with com" />
 	<contains name="drop_AUV7" />
+	<contains name="move" />
 	<contains name="square" />
 	<contains name="vision_bins" />
 	<contains name="vision_buoys" />
