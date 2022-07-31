@@ -95,7 +95,7 @@ class vision_buoysSM(Behavior):
 			# x:43 y:367
 			OperatableStateMachine.add('filter_chain',
 										start_filter_chain(filterchain=self.vision_buoys_filterchain, target=self.vision_buoys_target, camera_no=self.camera_no),
-										transitions={'continue': 'start_simple_rotate', 'failed': 'stop_filter_fail'},
+										transitions={'continue': 'init', 'failed': 'stop_filter_fail'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'front', 'target': 'target'})
 
@@ -126,13 +126,6 @@ class vision_buoysSM(Behavior):
 										transitions={'finished': 'get_target', 'failed': 'stop_filter_fail', 'lost_target': 'stop_filter_lost', 'controller_error': 'stop_filter_fail'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
-
-			# x:258 y:173
-			OperatableStateMachine.add('start_simple_rotate',
-										start_filter_chain(filterchain=simple_rotate, target='', camera_no=1),
-										transitions={'continue': 'init', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:524 y:586
 			OperatableStateMachine.add('stop_filter_fail',
