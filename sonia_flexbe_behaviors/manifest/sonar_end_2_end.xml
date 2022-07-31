@@ -14,5 +14,21 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
+
+		<param type="numeric" name="dist_to_torpedoes_board" default="1" label="dist_to_torpedoes_board" hint="Sets the dist_to_torpedoes_board">
+			<min value="-10" />
+			<max value="10" />
+		</param>
+
+		<param type="numeric" name="y_offset" default="0.4" label="y_offset" hint="Sets the y_offset">
+			<min value="-10" />
+			<max value="10" />
+		</param>
+
+	</params>
+
 
 </behavior>
