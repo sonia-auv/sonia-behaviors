@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="search_torpedoes" />
+	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
 	<params>
