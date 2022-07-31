@@ -120,8 +120,8 @@ class vision_droppersSM(Behavior):
 										remapping={'target': 'target', 'topic': 'topic'})
 
 			# x:9 y:148
-			OperatableStateMachine.add('start_simple_rotate',
-										start_filter_chain(filterchain='simple_rotate', target='', camera_no=4),
+			OperatableStateMachine.add('start_simple_rotate',				
+										start_filter_chain(filterchain='simple_rotate', target='', camera_no=2),
 										transitions={'continue': 'find_bins', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
