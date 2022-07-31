@@ -96,7 +96,7 @@ class AUV8_SEMIFINAL_FULL_TASKSSM(Behavior):
 										transitions={'finished': 'finished', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:215 y:430
+			# x:215 y:431
 			OperatableStateMachine.add('vision_torpedoes_boards',
 										self.use_behavior(vision_torpedoes_boardsSM, 'vision_torpedoes_boards'),
 										transitions={'finished': 'torpedoes', 'failed': 'failed', 'lost_target': 'torpedoes'},
