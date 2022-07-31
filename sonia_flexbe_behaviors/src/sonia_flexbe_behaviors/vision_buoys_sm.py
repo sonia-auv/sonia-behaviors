@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.check_collision_sm import check_collisionSM
+from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
@@ -49,9 +49,12 @@ class vision_buoysSM(Behavior):
 		self.add_parameter('max_mouvement', 1)
 		self.add_parameter('min_mouvement', 0.25)
 		self.add_parameter('activate_vision_buoys', True)
+		self.add_parameter('vision_buoys_distance_forward', 2.5)
 
 		# references to used behaviors
-		self.add_behavior(check_collisionSM, 'check_collision')
+		self.add_behavior(moveSM, 'move_2')
+		self.add_behavior(moveSM, 'move_3')
+		self.add_behavior(moveSM, 'move_4')
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
@@ -79,12 +82,6 @@ class vision_buoysSM(Behavior):
 										activate_behavior(activate=True),
 										transitions={'activate': 'filter_chain', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
-
-			# x:1128 y:765
-			OperatableStateMachine.add('check_collision',
-										self.use_behavior(check_collisionSM, 'check_collision'),
-										transitions={'failed': 'failed', 'target_reached': 'finished'},
-										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
 
 			# x:1040 y:474
 			OperatableStateMachine.add('check_moving',
@@ -120,6 +117,27 @@ class vision_buoysSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
+			# x:1224 y:267
+			OperatableStateMachine.add('move_2',
+										self.use_behavior(moveSM, 'move_2',
+											parameters={'positionX': self.vision_buoys_distance_forward, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'move_3', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:1217 y:414
+			OperatableStateMachine.add('move_3',
+										self.use_behavior(moveSM, 'move_3',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'failed', 'failed': 'move_4'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:1243 y:550
+			OperatableStateMachine.add('move_4',
+										self.use_behavior(moveSM, 'move_4',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 2, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
 			# x:483 y:157
 			OperatableStateMachine.add('search_zigzag',
 										self.use_behavior(search_zigzagSM, 'search_zigzag'),
@@ -144,7 +162,7 @@ class vision_buoysSM(Behavior):
 			# x:1241 y:115
 			OperatableStateMachine.add('stop_filter_success',
 										stop_filter_chain(),
-										transitions={'continue': 'check_collision', 'failed': 'check_collision'},
+										transitions={'continue': 'move_2', 'failed': 'move_2'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
