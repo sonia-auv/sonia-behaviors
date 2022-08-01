@@ -56,7 +56,7 @@ class sonar_end_2_endSM(Behavior):
 
 
 	def create(self):
-		# x:1097 y:522, x:991 y:279
+		# x:1097 y:522, x:1072 y:144
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -147,8 +147,14 @@ class sonar_end_2_endSM(Behavior):
 			# x:734 y:430
 			OperatableStateMachine.add('stop sonar bundle',
 										stop_sonar_bundle(sonarObstacleID=1, resetSonarBundle=False),
-										transitions={'found': 'stop sonar', 'not_found': 'failed', 'time_out': 'failed'},
+										transitions={'found': 'stop sonar', 'not_found': 'stop_sonar2', 'time_out': 'stop_sonar2'},
 										autonomy={'found': Autonomy.Off, 'not_found': Autonomy.Off, 'time_out': Autonomy.Off})
+
+			# x:918 y:389
+			OperatableStateMachine.add('stop_sonar2',
+										start_stop_sonar(startStop=False),
+										transitions={'continue': 'failed'},
+										autonomy={'continue': Autonomy.Off})
 
 			# x:731 y:326
 			OperatableStateMachine.add('tg',

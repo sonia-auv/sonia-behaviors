@@ -113,7 +113,7 @@ class sonar_table_alignementSM(Behavior):
 
 			# x:36 y:170
 			OperatableStateMachine.add('rotate',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=3, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=2, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'go_left'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory1', 'trajectory': 'trajectory2'})
