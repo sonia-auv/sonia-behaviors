@@ -18,7 +18,11 @@
 
 		<param type="boolean" name="simulation" default="False" label="simulation" hint="Sets the simulation" />
 
+<<<<<<< HEAD
 		<param type="numeric" name="dist_to_torpedoes_board" default="1.5" label="dist_to_torpedoes_board" hint="Sets the dist_to_torpedoes_board">
+=======
+		<param type="numeric" name="dist_to_torpedoes_board" default="1.0" label="dist_to_torpedoes_board" hint="Sets the dist_to_torpedoes_board">
+>>>>>>> 7c168b27ff6e9ca9e80b9054731915c4387d527f
 			<min value="-10" />
 			<max value="10" />
 		</param>
