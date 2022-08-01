@@ -176,7 +176,7 @@ class get_front_vision_target_rotation(EventState):
             rotation_z = 0
             Logger.log('Orientation is good', Logger.REPORT_HINT)
         else: 
-            rotation_z = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(50*self.average_x_pixel/(self.average_width_pixel)))
+            rotation_z = numpy.sign(self.average_x_pixel)*max(self.param_min_rotation,min(self.param_max_rotation,abs(50*self.average_x_pixel/(self.param_image_width))))
         if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
             mouvement_y = 0
             Logger.log('Depth is good', Logger.REPORT_HINT)
