@@ -12,7 +12,7 @@ from sonia_common.msg import VisionTarget, MultiAddPose, AddPose, MissionTimer
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point, Vector3
 
-class get_front_vision_target(EventState):
+class get_front_vision_target_rotation(EventState):
 
     '''
         Get the movement target from vision topic
@@ -53,9 +53,9 @@ class get_front_vision_target(EventState):
         <= failed                                       Error in the calculation and loop
     '''
 
-    def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, long_rotation=False, timeout=10, speed_profile=0):
+    def __init__(self, center_bounding_box_pixel_height, center_bounding_box_pixel_width, bounding_box_pixel_height, bounding_box_pixel_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=1, min_mouvement=0.1, max_rotation=25, min_rotation=5, long_rotation=False, timeout=10, speed_profile=0):
         
-        super(get_front_vision_target, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
+        super(get_front_vision_target_rotation, self).__init__(outcomes = ['success', 'align', 'move', 'failed', 'search'],
                                                 input_keys = ['topic', 'camera_no', 'target', 'input_trajectory'],
                                                 output_keys = ['output_trajectory', 'camera', 'angle'])
 
@@ -69,6 +69,8 @@ class get_front_vision_target(EventState):
         self.param_number_of_average = number_of_average
         self.param_max_mouvement = max_mouvement
         self.param_min_mouvement = min_mouvement
+        self.param_max_rotation = max_rotation
+        self.param_min_rotation = min_rotation
         self.param_long_rotation = long_rotation
         self.param_timeout = timeout
         self.param_speed_profile = speed_profile
@@ -105,9 +107,8 @@ class get_front_vision_target(EventState):
         self.position_z = 0.3
 
         if userdata.camera_no == 2 or userdata.camera_no == 4 :
-            self.cam_bottom = True
-        else :
-            self.cam_bottom = False
+            Logger.log('Wrong camera, this state (get_front_vision_target_rotation) must only be used for a front cam !')
+            return 'failed'
 
         self.get_vision_data = rospy.Subscriber(userdata.topic, VisionTarget, self.vision_cb)
         self.get_position = rospy.Subscriber('/proc_nav/auv_states', Odometry, self.position_cb)
@@ -117,7 +118,7 @@ class get_front_vision_target(EventState):
         Logger.log('Starting attempt ' + str(self.nombre_enter), Logger.REPORT_HINT) 
         
         self.start_time = time()
-        self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 1))
+        self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 1))
 
     def position_cb(self, data):
         self.position_z = data.pose.pose.position.z
@@ -142,11 +143,6 @@ class get_front_vision_target(EventState):
         self.average_angle = sum(self.vision_angle)/len(self.vision_angle)
 
         self.average_area_pixel = self.average_width_pixel*self.average_height_pixel
-
-        if self.cam_bottom:
-            swap = self.average_x_pixel
-            self.average_x_pixel = self.average_y_pixel
-            self.average_y_pixel = swap
         
         Logger.log('Area of target (px): %f' %(self.average_height_pixel*self.average_width_pixel), Logger.REPORT_HINT)
         Logger.log('Area of bounding box (px): %f' %(self.param_bbp_height*self.param_bbp_width), Logger.REPORT_HINT)
@@ -159,10 +155,8 @@ class get_front_vision_target(EventState):
 
         Logger.log('x average: %f' %abs(self.average_x_pixel), Logger.REPORT_HINT)
         Logger.log(self.param_center_bbp_width/2, Logger.REPORT_HINT)
-        Logger.log('width average: %f' %self.average_width_pixel, Logger.REPORT_HINT)
         Logger.log('y average: %f' %abs(self.average_y_pixel), Logger.REPORT_HINT)
         Logger.log(self.param_center_bbp_height/2, Logger.REPORT_HINT)
-        Logger.log('height average: %f' %self.average_height_pixel, Logger.REPORT_HINT)
 
         if abs(self.average_y_pixel) <= self.param_center_bbp_height/2 and abs(self.average_x_pixel) <= self.param_center_bbp_width/2 :
             self.alignement_reached = True
@@ -179,47 +173,25 @@ class get_front_vision_target(EventState):
         new_pose = AddPose()
         
         if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
-            mouvement_x = 0
-            Logger.log('X already aligned', Logger.REPORT_HINT)
+            rotation_z = 0
+            Logger.log('Orientation is good', Logger.REPORT_HINT)
         else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs(self.param_max_mouvement*self.average_x_pixel/(self.param_image_width))))
+            rotation_z = numpy.sign(self.average_x_pixel)*min(self.param_max_mouvement,abs(50*self.average_x_pixel/(self.average_width_pixel)))
         if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
             mouvement_y = 0
-            Logger.log('Y already aligned', Logger.REPORT_HINT)
+            Logger.log('Depth is good', Logger.REPORT_HINT)
         else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs(self.param_max_mouvement*self.average_y_pixel/(self.param_image_height))))
+            mouvement_y = -1*numpy.sign(self.average_y_pixel)*min(self.param_max_mouvement,abs(self.average_y_pixel/(self.average_height_pixel)))
 
-        Logger.log('Déplacement y : %f' %mouvement_x, Logger.REPORT_HINT)
-        Logger.log('Déplacement z : %f' %mouvement_y, Logger.REPORT_HINT)
+        Logger.log('Rotation z : %f' %rotation_z, Logger.REPORT_HINT)
+        Logger.log('Moving z : %f' %mouvement_y, Logger.REPORT_HINT)
 
-        new_pose.position = Point(0., mouvement_x, -mouvement_y)
+        new_pose.position = Point(0., 0., mouvement_y)
+        new_pose.orientation = Vector3(0., 0., rotation_z)
         new_traj.pose.append(self.fill_pose(new_pose))
+
         return (new_traj)
-
-    def align_bottom_with_vision(self):
-        Logger.log('Alignement on target. Creating pose', Logger.REPORT_HINT)
-
-        new_traj = MultiAddPose()
-        new_pose = AddPose()
-        
-        if abs(self.average_x_pixel) <= (self.param_center_bbp_width/2):
-            mouvement_x = 0
-            Logger.log('X already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_x = numpy.sign(self.average_x_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_x_pixel/self.param_image_width)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
-        if abs(self.average_y_pixel) <= (self.param_center_bbp_height/2):
-            mouvement_y = 0
-            Logger.log('Y already aligned', Logger.REPORT_HINT)
-        else: 
-            mouvement_y = numpy.sign(self.average_y_pixel)*max(self.param_min_mouvement,min(self.param_max_mouvement,abs((self.average_y_pixel/self.param_image_height)/((self.average_area_pixel/self.param_bbp_area)*self.position_z))))
-
-        Logger.log('Déplacement x : %f' %mouvement_x, Logger.REPORT_HINT)
-        Logger.log('Déplacement y : %f' %mouvement_y, Logger.REPORT_HINT)
-
-        new_pose.position = Point(mouvement_x, mouvement_y, 0.)
-        new_traj.pose.append(self.fill_pose(new_pose))
-        return (new_traj)
-        
+   
     def position_with_vision(self):
         Logger.log('Getting closer. Creating pose', Logger.REPORT_HINT)
 
@@ -228,46 +200,37 @@ class get_front_vision_target(EventState):
 
         mouvement = max(self.param_min_mouvement,(self.param_max_mouvement)*(1-((self.average_area_pixel)/(self.param_bbp_area))))
 
-        if self.cam_bottom:
-            new_pose.position = Point(0.,0.,mouvement)
-            Logger.log('Déplacement z : %f' %mouvement, Logger.REPORT_HINT)
-        else :
-            Logger.log('Déplacement x : %f' %mouvement, Logger.REPORT_HINT)
-            new_pose.position = Point(mouvement,0.,0.)
+        Logger.log('Déplacement x : %f' %mouvement, Logger.REPORT_HINT)
 
+        new_pose.position = Point(mouvement,0.,0.)
+        new_pose.orientation = Vector3(0.,0.,0.)
         new_traj.pose.append(self.fill_pose(new_pose))
+
         return (new_traj)
 
     def fill_pose(self, pose):
-        return navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, 0., 0., 0., 1, self.param_speed_profile, 0, self.param_long_rotation)
+        return navUtils.addpose(pose.position.x, pose.position.y, pose.position.z, pose.orientation.x, pose.orientation.y, pose.orientation.z, 1, self.param_speed_profile, 0, self.param_long_rotation)
 
     def execute(self, userdata):
         actual = time() - self.start_time
         if self.parse_data == True:
             self.parse_data = False
             if self.position_reached == True and self.alignement_reached == True:
-                if self.cam_bottom == True :
-                    userdata.angle = self.average_angle
-                    userdata.output_trajectory = userdata.input_trajectory
-                    userdata.camera = 1
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 2))
                 return 'success'
             elif self.alignement_reached == False:
-                if self.cam_bottom:
-                    userdata.output_trajectory = self.align_bottom_with_vision()
-                else:
-                    userdata.output_trajectory = self.align_front_with_vision()
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+                userdata.output_trajectory = self.align_front_with_vision()
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 2))
                 return 'align'
             elif self.position_reached == False:
                 userdata.output_trajectory = self.position_with_vision()
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 2))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 2))
                 return 'move'
             else:
-                self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 4))
+                self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 4))
                 return 'failed'
         if actual > self.param_timeout :
-            self.timeout_pub.publish(navUtils.missionTimerFunc("get_simple_vision_target", self.param_timeout, self.start_time, 3))
+            self.timeout_pub.publish(navUtils.missionTimerFunc("get_front_vision_target_rotation", self.param_timeout, self.start_time, 3))
             return 'search'
 
     def on_exit(self, userdata):
