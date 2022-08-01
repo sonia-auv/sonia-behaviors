@@ -63,14 +63,14 @@ class AUV8_SEMIFINAL_2SM(Behavior):
 			# x:48 y:47
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
 										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com',
-											parameters={'submarine': "AUV8", 'dive_depth': 1.5, 'has_com': True}),
+											parameters={'submarine': "AUV8", 'dive_depth': 1.5, 'has_com': True, 'activate_coinflip_gate_trickshot_com': True}),
 										transitions={'finished': 'move', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
 			# x:518 y:48
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 4, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': -20, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'torpedoes', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

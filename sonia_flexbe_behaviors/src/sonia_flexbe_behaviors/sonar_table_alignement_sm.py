@@ -40,7 +40,7 @@ class sonar_table_alignementSM(Behavior):
 		self.name = 'sonar_table_alignement'
 
 		# parameters of this behavior
-		self.add_parameter('tables_depth', 3.25)
+		self.add_parameter('tables_depth', 2.6)
 
 		# references to used behaviors
 

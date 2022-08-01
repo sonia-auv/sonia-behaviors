@@ -16,7 +16,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="tables_depth" default="3.25" label="tables_depth" hint="Sets the tables_depth">
+		<param type="numeric" name="tables_depth" default="2.6" label="tables_depth" hint="Sets the tables_depth">
 			<min value="-5" />
 			<max value="5" />
 		</param>
