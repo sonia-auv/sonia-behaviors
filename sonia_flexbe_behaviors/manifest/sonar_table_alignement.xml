@@ -21,6 +21,11 @@
 			<max value="5" />
 		</param>
 
+		<param type="numeric" name="move_y_for_table" default="3.0" label="move_y_for_table" hint="Sets the move_y_for_table">
+			<min value="-10" />
+			<max value="10" />
+		</param>
+
 	</params>
 
 

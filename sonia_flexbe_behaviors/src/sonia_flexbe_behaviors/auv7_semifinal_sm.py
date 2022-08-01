@@ -61,7 +61,7 @@ class AUV7_SEMIFINALSM(Behavior):
 
 
 	def create(self):
-		# x:1076 y:387, x:1163 y:28
+		# x:1279 y:381, x:1163 y:28
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -78,14 +78,14 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'vision_path', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
-			# x:774 y:607
+			# x:527 y:659
 			OperatableStateMachine.add('drop_AUV7',
 										self.use_behavior(drop_AUV7SM, 'drop_AUV7',
 											parameters={'activate_drop_auv7': True}),
 										transitions={'finished': 'move', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:982 y:608
+			# x:937 y:630
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
 											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0.3, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
@@ -99,7 +99,7 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'vision_bins', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:1089 y:471
+			# x:1010 y:451
 			OperatableStateMachine.add('square',
 										self.use_behavior(squareSM, 'square',
 											parameters={'box_size': 3, 'stroke': 0.3}),
@@ -127,7 +127,7 @@ class AUV7_SEMIFINALSM(Behavior):
 										transitions={'finished': 'drop_AUV7', 'failed': 'failed', 'lost_target': 'vision_droppers_2', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
-			# x:669 y:511
+			# x:642 y:530
 			OperatableStateMachine.add('vision_droppers_2',
 										self.use_behavior(vision_droppersSM, 'vision_droppers_2',
 											parameters={'vision_droppers_target': "Phone", 'bounding_box_height': 90, 'bounding_box_width': 115, 'center_bounding_box_height': 50, 'center_bounding_box_width': 50, 'max_mouvement': 0.5, 'min_mouvement': 0.1, 'activate_vision_droppers': True}),

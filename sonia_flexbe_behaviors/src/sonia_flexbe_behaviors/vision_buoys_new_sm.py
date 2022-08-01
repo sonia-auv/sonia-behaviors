@@ -139,10 +139,10 @@ class vision_buoys_newSM(Behavior):
 										transitions={'finished': 'move_5', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:1354 y:608
+			# x:1218 y:755
 			OperatableStateMachine.add('move_5',
 										self.use_behavior(moveSM, 'move_5',
-											parameters={'positionX': 1}),
+											parameters={'positionX': 1, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
