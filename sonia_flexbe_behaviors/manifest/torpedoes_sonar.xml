@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="torpedoes_sonar">
+
+	<executable package_path="sonia_flexbe_behaviors.torpedoes_sonar_sm" class="torpedoes_sonarSM" />
+	<tagstring>torpedoes auv8 sonar</tagstring>
+	<author>GS</author>
+	<date>Wed Jul 27 2022</date>
+	<description>
+		align with sonar and shoot
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="sonar_end_2_end" />
+	<contains name="move" />
+	<contains name="vision_torpedoes" />
+	<contains name="launch_AUV8" />
+
+	<!-- Available Parameters -->
+
+</behavior>
