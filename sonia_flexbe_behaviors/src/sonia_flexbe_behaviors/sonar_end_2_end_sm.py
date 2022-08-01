@@ -74,7 +74,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:728 y:91
 			OperatableStateMachine.add('down',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=2, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=2, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=2, precision=0, long_rotation=False),
 										transitions={'continue': 'up'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -114,7 +114,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:730 y:12
 			OperatableStateMachine.add('set_initial_depth',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=1, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=4, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=1, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=4, speed=2, precision=0, long_rotation=False),
 										transitions={'continue': 'down'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
@@ -170,7 +170,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:730 y:166
 			OperatableStateMachine.add('up',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=-2.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=-2.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=2, precision=0, long_rotation=False),
 										transitions={'continue': 'send'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
