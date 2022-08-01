@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_behaviors.path2_sm import path2SM
-from sonia_flexbe_behaviors.vision_buoys_sm import vision_buoysSM
+from sonia_flexbe_behaviors.vision_buoys_new_sm import vision_buoys_newSM
 from sonia_flexbe_behaviors.vision_path_sm import vision_pathSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
@@ -35,7 +35,7 @@ class path_buoy_pathSM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(path2SM, 'path2')
-		self.add_behavior(vision_buoysSM, 'vision_buoys')
+		self.add_behavior(vision_buoys_newSM, 'vision_buoys_new')
 		self.add_behavior(vision_pathSM, 'vision_path')
 
 		# Additional initialization code can be added inside the following tags
@@ -64,14 +64,14 @@ class path_buoy_pathSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('vision_path',
 										self.use_behavior(vision_pathSM, 'vision_path'),
-										transitions={'finished': 'vision_buoys', 'failed': 'failed', 'lost_target': 'failed'},
+										transitions={'finished': 'vision_buoys_new', 'failed': 'failed', 'lost_target': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'angle': 'angle', 'camera': 'camera'})
 
-			# x:247 y:31
-			OperatableStateMachine.add('vision_buoys',
-										self.use_behavior(vision_buoysSM, 'vision_buoys'),
-										transitions={'finished': 'path2', 'failed': 'path2', 'lost_target': 'failed'},
+			# x:357 y:68
+			OperatableStateMachine.add('vision_buoys_new',
+										self.use_behavior(vision_buoys_newSM, 'vision_buoys_new'),
+										transitions={'finished': 'path2', 'failed': 'failed', 'lost_target': 'path2'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:609 y:218
