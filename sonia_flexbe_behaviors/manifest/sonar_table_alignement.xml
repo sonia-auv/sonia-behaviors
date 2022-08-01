@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="sonar_table_alignement">
+
+	<executable package_path="sonia_flexbe_behaviors.sonar_table_alignement_sm" class="sonar_table_alignementSM" />
+	<tagstring>sonar</tagstring>
+	<author>Alexandre Desgagné</author>
+	<date>Sun Jul 31 2022</date>
+	<description>
+		Alignement with the tables under the octogon.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="depth" default="0" label="depth" hint="Sets the depth">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>

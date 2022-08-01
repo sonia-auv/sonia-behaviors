@@ -14,6 +14,7 @@
 	<!-- Contained Behaviors -->
 	<contains name="CoinFlip-Gate-Trickshot with com" />
 	<contains name="move" />
+	<contains name="sonar_table_alignement" />
 	<contains name="torpedoes" />
 	<contains name="vision_torpedoes_boards" />
 

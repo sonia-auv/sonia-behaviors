@@ -17,7 +17,7 @@
 	<contains name="move" />
 	<contains name="square" />
 	<contains name="vision_bins" />
-	<contains name="vision_buoys" />
+	<contains name="vision_buoys_new" />
 	<contains name="vision_droppers" />
 	<contains name="vision_path" />
 

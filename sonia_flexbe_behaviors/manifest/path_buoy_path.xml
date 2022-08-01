@@ -13,7 +13,7 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="vision_path" />
-	<contains name="vision_buoys" />
+	<contains name="vision_buoys_new" />
 	<contains name="path2" />
 
 	<!-- Available Parameters -->

@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_mapping_states.sonar_config import sonar_config
 from sonia_mapping_states.start_bundle import start_bundle
 from sonia_mapping_states.start_stop_sonar import start_stop_sonar
 from sonia_mapping_states.stop_sonar_bundle import stop_sonar_bundle
@@ -59,10 +60,10 @@ class sonar_end_2_endSM(Behavior):
 
 
 		with _state_machine:
-			# x:109 y:84
+			# x:74 y:81
 			OperatableStateMachine.add('start sonar',
 										start_stop_sonar(startStop=True),
-										transitions={'continue': 'start bundle'},
+										transitions={'continue': 'set_config'},
 										autonomy={'continue': Autonomy.Off})
 
 			# x:108 y:427
@@ -106,6 +107,12 @@ class sonar_end_2_endSM(Behavior):
 										transitions={'continue': 'tg', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
+
+			# x:184 y:163
+			OperatableStateMachine.add('set_config',
+										sonar_config(gain=35, range=4),
+										transitions={'continue': 'start bundle'},
+										autonomy={'continue': Autonomy.Off})
 
 			# x:694 y:540
 			OperatableStateMachine.add('sned2',
