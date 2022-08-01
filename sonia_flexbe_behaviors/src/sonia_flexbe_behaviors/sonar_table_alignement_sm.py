@@ -41,6 +41,7 @@ class sonar_table_alignementSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('tables_depth', 2.6)
+		self.add_parameter('move_y_for_table', 3.0)
 
 		# references to used behaviors
 
@@ -80,7 +81,7 @@ class sonar_table_alignementSM(Behavior):
 
 			# x:38 y:252
 			OperatableStateMachine.add('go_left',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=-2.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=self.move_y_for_table, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'depth'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory2', 'trajectory': 'trajectory3'})
