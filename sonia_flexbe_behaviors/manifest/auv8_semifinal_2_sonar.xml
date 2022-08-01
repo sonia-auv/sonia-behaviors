@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="AUV8_SEMIFINAL_2_SONAR">
+
+	<executable package_path="sonia_flexbe_behaviors.auv8_semifinal_2_sonar_sm" class="AUV8_SEMIFINAL_2_SONARSM" />
+	<tagstring>compe</tagstring>
+	<author>GS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		Full run for AUV8 semi finale 2
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="move" />
+	<contains name="sonar_table_alignement" />
+	<contains name="torpedoes_sonar" />
+	<contains name="vision_torpedoes_boards" />
+
+	<!-- Available Parameters -->
+
+</behavior>

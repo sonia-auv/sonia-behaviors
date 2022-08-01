@@ -40,8 +40,9 @@ class sonar_end_2_endSM(Behavior):
 
 		# parameters of this behavior
 		self.add_parameter('simulation', False)
-		self.add_parameter('dist_to_torpedoes_board', 1)
+		self.add_parameter('dist_to_torpedoes_board', 1.5)
 		self.add_parameter('y_offset', 0.4)
+		self.add_parameter('sonar_range', 4)
 
 		# references to used behaviors
 
@@ -107,7 +108,7 @@ class sonar_end_2_endSM(Behavior):
 
 			# x:184 y:163
 			OperatableStateMachine.add('set_config',
-										sonar_config(gain=35, range=4),
+										sonar_config(gain=35, range=self.sonar_range),
 										transitions={'continue': 'start bundle'},
 										autonomy={'continue': Autonomy.Off})
 
