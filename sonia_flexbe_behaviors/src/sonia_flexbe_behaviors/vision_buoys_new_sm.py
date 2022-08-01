@@ -55,6 +55,7 @@ class vision_buoys_newSM(Behavior):
 		self.add_behavior(moveSM, 'move_2')
 		self.add_behavior(moveSM, 'move_3')
 		self.add_behavior(moveSM, 'move_4')
+		self.add_behavior(moveSM, 'move_5')
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
@@ -134,7 +135,14 @@ class vision_buoys_newSM(Behavior):
 			# x:1136 y:646
 			OperatableStateMachine.add('move_4',
 										self.use_behavior(moveSM, 'move_4',
-											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': -15, 'frame': 2, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 15, 'frame': 2, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'move_5', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:1354 y:608
+			OperatableStateMachine.add('move_5',
+										self.use_behavior(moveSM, 'move_5',
+											parameters={'positionX': 1}),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
