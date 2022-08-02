@@ -57,6 +57,7 @@ class search_zigzag(EventState):
         self.boxY = boxY
         self.stroke = stroke
         self.radius = 0
+        self.speed = 1
         self.side = side
 
         # Compute trajectory parameters
@@ -78,25 +79,25 @@ class search_zigzag(EventState):
             new_traj.pose = list(traj.pose)
 
         #first mouvement (1/2 stroke)
-        new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY/2), 0, 0, 0, 0, 1, 0, self.radius,False))
+        new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY/2), 0, 0, 0, 0, 1, self.speed, self.radius,False))
 
         # Generate point for 
         for i in range(self.fullStep):
 
             # move sub foward
-            new_traj.pose.append(navUtils.addpose(self.stroke, 0, 0, 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(self.stroke, 0, 0, 0, 0, 0, 1, self.speed, self.radius,False))
 
             # move sub sideway
-            new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY), 0, 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY), 0, 0, 0, 0, 1, self.speed, self.radius,False))
 
         # add resudue point if needed
         if self.residue > 0 :
             
             i+=1
             # move sub foward
-            new_traj.pose.append(navUtils.addpose(self.residue, 0, 0, 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(self.residue, 0, 0, 0, 0, 0, 1, self.speed, self.radius,False))
             # move sub sideway
-            new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY), 0, 0, 0, 0, 1, 0, self.radius,False))
+            new_traj.pose.append(navUtils.addpose(0, self.get_direction()*(self.boxY), 0, 0, 0, 0, 1, self.speed, self.radius,False))
 
         # print debug
         Logger.log('Zigzag search has succesfully generated ' + str(i) + ' waypoints', Logger.REPORT_HINT)

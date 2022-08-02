@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="vision_torpedoes_boards_new">
+
+	<executable package_path="sonia_flexbe_behaviors.vision_torpedoes_boards_new_sm" class="vision_torpedoes_boards_newSM" />
+	<tagstring>pool auv8</tagstring>
+	<author>CS</author>
+	<date>01/08/2022</date>
+	<description>
+		Detect the torpedoes and align with the rotation alignement
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="search_zigzag" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="vision_torpedoes_boards_filterchain" default="deep_compe_front" label="vision_torpedoes_boards_filterchain" hint="Sets the vision_torpedoes_boards_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_align_front" />
+			<option value="simple_buoy" />
+			<option value="simple_sift" />
+			<option value="simulation_gman" />
+			<option value="deep_simulation_front" />
+		</param>
+
+		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+		<param type="enum" name="vision_torpedoes_boards_target" default="G-Man" label="vision_torpedoes_boards_target" hint="Sets the vision_torpedoes_boards_target">
+			<option value="G-Man" />
+			<option value="Bootlegger" />
+		</param>
+
+		<param type="numeric" name="bounding_box_width" default="200" label="bounding_box_width" hint="Sets the bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="bounding_box_height" default="300" label="bounding_box_height" hint="Sets the bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_width" default="100" label="center_bounding_box_width" hint="Sets the center_bounding_box_width">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="center_bounding_box_height" default="100" label="center_bounding_box_height" hint="Sets the center_bounding_box_height">
+			<min value="0" />
+			<max value="600" />
+		</param>
+
+		<param type="numeric" name="max_mouvement" default="1" label="max_mouvement" hint="Sets the max_mouvement">
+			<min value="0" />
+			<max value="2" />
+		</param>
+
+		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+		<param type="boolean" name="activate_vision_buoys" default="True" label="activate_vision_buoys" hint="Sets the activate_vision_buoys" />
+
+	</params>
+
+
+</behavior>
