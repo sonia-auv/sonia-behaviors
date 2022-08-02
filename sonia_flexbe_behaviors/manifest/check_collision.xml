@@ -17,7 +17,7 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="collision_threshold" default="0.05" label="collision_threshold" hint="Sets the collision_threshold">
+		<param type="numeric" name="collision_threshold" default="0.2" label="collision_threshold" hint="Sets the collision_threshold">
 			<min value="0" />
 			<max value="5" />
 		</param>
