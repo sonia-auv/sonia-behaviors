@@ -54,6 +54,7 @@ class vision_pathSM(Behavior):
 
 		# references to used behaviors
 		self.add_behavior(moveSM, 'move')
+		self.add_behavior(moveSM, 'move_2')
 		self.add_behavior(search_squareSM, 'search_square')
 
 		# Additional initialization code can be added inside the following tags
@@ -120,6 +121,13 @@ class vision_pathSM(Behavior):
 			# x:303 y:656
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'move_2', 'failed': 'move_2'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:112 y:716
+			OperatableStateMachine.add('move_2',
+										self.use_behavior(moveSM, 'move_2',
 											parameters={'positionX': self.move_after_path, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'finished', 'failed': 'finished'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
