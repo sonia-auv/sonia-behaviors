@@ -8,6 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_com_states.send_update import send_update
 from sonia_flexbe_behaviors.coinflip_gate_trickshot_with_com_sm import CoinFlipGateTrickshotwithcomSM
 from sonia_flexbe_behaviors.move_with_detection_torpedoes_board_sm import move_with_detection_torpedoes_boardSM
 from sonia_flexbe_behaviors.sonar_table_alignement_sm import sonar_table_alignementSM
@@ -50,7 +51,7 @@ class AUV8_FINALSM(Behavior):
 
 
 	def create(self):
-		# x:1347 y:419, x:624 y:366
+		# x:1174 y:617, x:624 y:366
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -73,17 +74,41 @@ class AUV8_FINALSM(Behavior):
 										transitions={'finished': 'torpedoes', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
+			# x:1136 y:455
+			OperatableStateMachine.add('octogno_sucess',
+										send_update(mission=8, state=2),
+										transitions={'continue': 'finished'},
+										autonomy={'continue': Autonomy.Off})
+
+			# x:844 y:349
+			OperatableStateMachine.add('octogon_failed',
+										send_update(mission=8, state=-1),
+										transitions={'continue': 'failed'},
+										autonomy={'continue': Autonomy.Off})
+
 			# x:1101 y:349
 			OperatableStateMachine.add('sonar_table_alignement',
 										self.use_behavior(sonar_table_alignementSM, 'sonar_table_alignement'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'octogno_sucess', 'failed': 'octogon_failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:1068 y:91
 			OperatableStateMachine.add('torpedoes',
 										self.use_behavior(torpedoesSM, 'torpedoes'),
-										transitions={'finished': 'sonar_table_alignement', 'failed': 'failed'},
+										transitions={'finished': 'torpedos_sucess', 'failed': 'torpedos_failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:828 y:200
+			OperatableStateMachine.add('torpedos_failed',
+										send_update(mission=7, state=-1),
+										transitions={'continue': 'failed'},
+										autonomy={'continue': Autonomy.Off})
+
+			# x:1116 y:216
+			OperatableStateMachine.add('torpedos_sucess',
+										send_update(mission=7, state=2),
+										transitions={'continue': 'sonar_table_alignement'},
+										autonomy={'continue': Autonomy.Off})
 
 
 		return _state_machine
