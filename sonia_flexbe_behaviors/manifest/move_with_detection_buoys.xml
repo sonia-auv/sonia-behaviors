@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_with_detection_buoys">
+
+	<executable package_path="sonia_flexbe_behaviors.move_with_detection_buoys_sm" class="move_with_detection_buoysSM" />
+	<tagstring>final</tagstring>
+	<author>CS</author>
+	<date>Tue Aug 02 2022</date>
+	<description>
+		Move while trying to detect the buoys
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="move_for_buoys" default="15" label="move_for_buoys" hint="Sets the move_for_buoys">
+			<min value="0" />
+			<max value="100" />
+		</param>
+
+		<param type="enum" name="buoys_filterchain" default="deep_compe_front" label="buoys_filterchain" hint="Sets the buoys_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_simulation_front" />
+			<option value="simple_buoy_badge" />
+		</param>
+
+		<param type="enum" name="buoys_target" default="Badge" label="buoys_target" hint="Sets the buoys_target">
+			<option value="Badge" />
+		</param>
+
+		<param type="numeric" name="buoys_camera" default="1" label="buoys_camera" hint="Sets the buoys_camera">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+	</params>
+
+
+</behavior>

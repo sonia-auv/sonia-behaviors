@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="AUV7_FINAL">
+
+	<executable package_path="sonia_flexbe_behaviors.auv7_final_sm" class="AUV7_FINALSM" />
+	<tagstring>compe</tagstring>
+	<author>CS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		AUV7_FINAL
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="drop_AUV7" />
+	<contains name="move" />
+	<contains name="move_with_detection_buoys" />
+	<contains name="square" />
+	<contains name="vision_bins" />
+	<contains name="vision_buoys_collision_detector" />
+	<contains name="vision_droppers" />
+	<contains name="vision_path" />
+
+	<!-- Available Parameters -->
+
+</behavior>

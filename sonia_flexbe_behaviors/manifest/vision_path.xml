@@ -12,7 +12,6 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move" />
 	<contains name="search_square" />
 
 	<!-- Available Parameters -->

@@ -30,7 +30,7 @@ Created on Tue Jul 12 2022
 '''
 class vision_buoys_collision_detectorSM(Behavior):
 	'''
-	Detect the buoy and align with a rcollision detector
+	Detect the buoy and align with a collision detector
 	'''
 
 
