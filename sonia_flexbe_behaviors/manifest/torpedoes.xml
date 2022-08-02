@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="vision_torpedoes_boards" />
+	<contains name="vision_torpedoes_boards_new" />
 	<contains name="move" />
 	<contains name="vision_torpedoes" />
 	<contains name="launch_AUV8" />
