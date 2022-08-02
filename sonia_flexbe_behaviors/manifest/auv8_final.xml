@@ -13,20 +13,10 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="CoinFlip-Gate-Trickshot with com" />
-	<contains name="move" />
+	<contains name="move_with_detection_torpedoes_board" />
 	<contains name="sonar_table_alignement" />
 	<contains name="torpedoes" />
-	<contains name="vision_torpedoes_boards" />
 
 	<!-- Available Parameters -->
-	<params>
-
-		<param type="numeric" name="angle_after_path" default="45" label="angle_after_path" hint="Sets the angle_after_path">
-			<min value="-180" />
-			<max value="180" />
-		</param>
-
-	</params>
-
 
 </behavior>
