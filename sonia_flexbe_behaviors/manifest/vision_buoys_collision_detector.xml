@@ -69,11 +69,6 @@
 
 		<param type="boolean" name="activate_vision_buoys" default="True" label="activate_vision_buoys" hint="Sets the activate_vision_buoys" />
 
-		<param type="numeric" name="vision_buoys_distance_forward" default="2.5" label="vision_buoys_distance_forward" hint="Sets the vision_buoys_distance_forward">
-			<min value="0" />
-			<max value="5" />
-		</param>
-
 	</params>
 
 

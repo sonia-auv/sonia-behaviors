@@ -33,7 +33,7 @@ class touch_buoySM(Behavior):
 		self.name = 'touch_buoy'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_buoy', 2)
+		self.add_parameter('distance_to_buoy', 2.0)
 
 		# references to used behaviors
 

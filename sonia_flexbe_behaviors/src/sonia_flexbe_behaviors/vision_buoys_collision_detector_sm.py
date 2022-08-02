@@ -49,7 +49,6 @@ class vision_buoys_collision_detectorSM(Behavior):
 		self.add_parameter('max_mouvement', 1.0)
 		self.add_parameter('min_mouvement', 0.25)
 		self.add_parameter('activate_vision_buoys', True)
-		self.add_parameter('vision_buoys_distance_forward', 2.5)
 
 		# references to used behaviors
 		self.add_behavior(check_collisionSM, 'check_collision')
