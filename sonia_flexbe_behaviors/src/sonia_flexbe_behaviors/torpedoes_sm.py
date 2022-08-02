@@ -62,21 +62,22 @@ class torpedoesSM(Behavior):
 		with _state_machine:
 			# x:30 y:40
 			OperatableStateMachine.add('vision_torpedoes_boards_new',
-										self.use_behavior(vision_torpedoes_boards_newSM, 'vision_torpedoes_boards_new'),
+										self.use_behavior(vision_torpedoes_boards_newSM, 'vision_torpedoes_boards_new',
+											parameters={'vision_torpedoes_boards_target': "G-Man", 'bounding_box_width': 200, 'bounding_box_height': 300, 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
 										transitions={'finished': 'move', 'failed': 'vision_torpedoes', 'lost_target': 'move'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:112 y:163
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'move',
-											parameters={'positionX': 1, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+											parameters={'positionX': 1, 'positionY': 0, 'positionZ': 0.2, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
 										transitions={'finished': 'vision_torpedoes', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:507 y:109
 			OperatableStateMachine.add('vision_torpedoes',
 										self.use_behavior(vision_torpedoesSM, 'vision_torpedoes',
-											parameters={'torpedoes_target': "torpedoes", 'torpedoes_bounding_box_width': 300, 'torpedoes_bounding_box_height': 300, 'torpedoes_center_bounding_box_height': 100, 'torpedoes_center_bounding_box_width': 100, 'torpedoes_max_mouv': 0.5, 'torpedoes_min_mouv': 0.1}),
+											parameters={'torpedoes_target': "torpedoes", 'torpedoes_bounding_box_width': 300, 'torpedoes_bounding_box_height': 300, 'torpedoes_center_bounding_box_height': 100, 'torpedoes_center_bounding_box_width': 100, 'torpedoes_max_mouv': 0.5, 'torpedoes_min_mouv': 0.05}),
 										transitions={'finished': 'launch_AUV8', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 
