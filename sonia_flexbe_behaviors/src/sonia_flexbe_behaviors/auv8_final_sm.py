@@ -10,9 +10,13 @@
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_com_states.send_update import send_update
 from sonia_flexbe_behaviors.coinflip_gate_trickshot_with_com_sm import CoinFlipGateTrickshotwithcomSM
+from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.move_with_detection_torpedoes_board_sm import move_with_detection_torpedoes_boardSM
+from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_behaviors.sonar_table_alignement_sm import sonar_table_alignementSM
 from sonia_flexbe_behaviors.torpedoes_sm import torpedoesSM
+from sonia_vision_states.start_filter_chain import start_filter_chain
+from sonia_vision_states.stop_filter_chain import stop_filter_chain
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,10 +38,15 @@ class AUV8_FINALSM(Behavior):
 		self.name = 'AUV8_FINAL'
 
 		# parameters of this behavior
+		self.add_parameter('camera', 1)
+		self.add_parameter('backup_filterchain', 'deep_compe_front')
 
 		# references to used behaviors
 		self.add_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com')
+		self.add_behavior(moveSM, 'move')
+		self.add_behavior(moveSM, 'move_2')
 		self.add_behavior(move_with_detection_torpedoes_boardSM, 'move_with_detection_torpedoes_board')
+		self.add_behavior(search_zigzagSM, 'search_zigzag')
 		self.add_behavior(sonar_table_alignementSM, 'sonar_table_alignement')
 		self.add_behavior(torpedoesSM, 'torpedoes')
 
@@ -51,7 +60,7 @@ class AUV8_FINALSM(Behavior):
 
 
 	def create(self):
-		# x:1174 y:617, x:624 y:366
+		# x:1174 y:617, x:594 y:331
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -64,15 +73,30 @@ class AUV8_FINALSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('CoinFlip-Gate-Trickshot with com',
 										self.use_behavior(CoinFlipGateTrickshotwithcomSM, 'CoinFlip-Gate-Trickshot with com',
-											parameters={'submarine': "AUV8", 'dive_depth': 1.5, 'has_com': True}),
+											parameters={'submarine': "AUV8", 'distance_to_gate': 7, 'dive_depth': 1.5, 'has_com': True}),
 										transitions={'finished': 'move_with_detection_torpedoes_board', 'failed': 'failed', 'failed_start_control': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'failed_start_control': Autonomy.Inherit})
 
-			# x:417 y:33
-			OperatableStateMachine.add('move_with_detection_torpedoes_board',
-										self.use_behavior(move_with_detection_torpedoes_boardSM, 'move_with_detection_torpedoes_board'),
-										transitions={'finished': 'torpedoes', 'failed': 'failed'},
+			# x:35 y:478
+			OperatableStateMachine.add('move',
+										self.use_behavior(moveSM, 'move',
+											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 2, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'move_2', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:52 y:251
+			OperatableStateMachine.add('move_2',
+										self.use_behavior(moveSM, 'move_2',
+											parameters={'positionX': -2, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
+										transitions={'finished': 'move_with_detection_torpedoes_board', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:420 y:44
+			OperatableStateMachine.add('move_with_detection_torpedoes_board',
+										self.use_behavior(move_with_detection_torpedoes_boardSM, 'move_with_detection_torpedoes_board',
+											parameters={'move_for_tb': 9, 'turn_for_tb': -10}),
+										transitions={'finished': 'torpedoes', 'failed': 'failed', 'lost_target': 'start_filter_backup'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
 			# x:1136 y:455
 			OperatableStateMachine.add('octogno_sucess',
@@ -86,11 +110,32 @@ class AUV8_FINALSM(Behavior):
 										transitions={'continue': 'failed'},
 										autonomy={'continue': Autonomy.Off})
 
+			# x:546 y:655
+			OperatableStateMachine.add('search_zigzag',
+										self.use_behavior(search_zigzagSM, 'search_zigzag'),
+										transitions={'finished': 'stop_filter_backup', 'failed': 'failed', 'lost_target': 'move', 'controller_error': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
+										remapping={'target': 'target', 'topic': 'topic'})
+
 			# x:1101 y:349
 			OperatableStateMachine.add('sonar_table_alignement',
 										self.use_behavior(sonar_table_alignementSM, 'sonar_table_alignement'),
 										transitions={'finished': 'octogno_sucess', 'failed': 'octogon_failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:441 y:495
+			OperatableStateMachine.add('start_filter_backup',
+										start_filter_chain(filterchain=self.backup_filterchain, target="G-Man", camera_no=self.camera),
+										transitions={'continue': 'search_zigzag', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+
+			# x:872 y:567
+			OperatableStateMachine.add('stop_filter_backup',
+										stop_filter_chain(),
+										transitions={'continue': 'torpedoes', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
 			# x:1068 y:91
 			OperatableStateMachine.add('torpedoes',

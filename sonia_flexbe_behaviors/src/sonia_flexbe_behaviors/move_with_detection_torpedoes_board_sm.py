@@ -54,17 +54,18 @@ class move_with_detection_torpedoes_boardSM(Behavior):
 
 
 	def create(self):
-		# x:968 y:87, x:460 y:393
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		# x:968 y:87, x:460 y:393, x:112 y:374
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:471 y:93, x:465 y:277, x:230 y:458, x:330 y:458
-		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['topic', 'target'], conditions=[
-										('finished', [('move', 'finished'), ('find_torpedoes_board', 'continue')]),
+		# x:453 y:289, x:460 y:122, x:230 y:458, x:330 y:458, x:469 y:52, x:530 y:365
+		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['topic', 'target'], conditions=[
+										('lost_target', [('move', 'finished')]),
+										('finished', [('find_torpedoes_board', 'continue')]),
 										('failed', [('move', 'failed')])
 										])
 
@@ -73,7 +74,7 @@ class move_with_detection_torpedoes_boardSM(Behavior):
 			OperatableStateMachine.add('move',
 										self.use_behavior(moveSM, 'Container/move',
 											parameters={'positionX': self.move_for_tb, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': self.turn_for_tb, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:63 y:259
@@ -119,11 +120,18 @@ class move_with_detection_torpedoes_boardSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
+			# x:197 y:428
+			OperatableStateMachine.add('stop_filter3',
+										stop_filter_chain(),
+										transitions={'continue': 'lost_target', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
+
 			# x:442 y:81
 			OperatableStateMachine.add('Container',
 										_sm_container_0,
-										transitions={'finished': 'stop', 'failed': 'stop_filter2'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
+										transitions={'finished': 'stop', 'failed': 'stop_filter2', 'lost_target': 'stop_filter3'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit},
 										remapping={'topic': 'topic', 'target': 'target'})
 
 
