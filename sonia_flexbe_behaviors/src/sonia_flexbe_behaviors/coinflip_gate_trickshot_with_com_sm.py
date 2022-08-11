@@ -124,7 +124,7 @@ class CoinFlipGateTrickshotwithcomSM(Behavior):
 
 			# x:204 y:421
 			OperatableStateMachine.add('waiting_for_friend',
-										synchro_receive(has_com=self.has_com, timeout=45),
+										synchro_receive(has_com=self.has_com, timeout=80),
 										transitions={'continue': 'Gate with com', 'timeout': 'Gate with com'},
 										autonomy={'continue': Autonomy.Off, 'timeout': Autonomy.Off})
 

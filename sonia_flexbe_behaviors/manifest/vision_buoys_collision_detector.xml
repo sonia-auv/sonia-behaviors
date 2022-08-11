@@ -12,7 +12,6 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="check_collision" />
 	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->

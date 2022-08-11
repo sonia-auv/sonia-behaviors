@@ -12,14 +12,15 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="vision_path" />
+	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="avoid_buoys_after_collision" />
 	<contains name="drop_AUV7" />
 	<contains name="move" />
 	<contains name="move_with_detection_buoys" />
 	<contains name="vision_bins" />
 	<contains name="vision_buoys_collision_detector" />
 	<contains name="vision_droppers" />
-	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="vision_path" />
 
 	<!-- Available Parameters -->
 

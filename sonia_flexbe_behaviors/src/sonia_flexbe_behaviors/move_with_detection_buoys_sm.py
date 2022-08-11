@@ -61,9 +61,10 @@ class move_with_detection_buoysSM(Behavior):
 		
 		# [/MANUAL_CREATE]
 
-		# x:606 y:181, x:625 y:39, x:230 y:458, x:330 y:458
+		# x:606 y:181, x:625 y:39, x:230 y:458, x:330 y:458, x:430 y:365
 		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed'], input_keys=['topic', 'target'], conditions=[
-										('finished', [('move', 'finished'), ('find_buoys', 'continue')]),
+										('finished', [('move', 'finished')]),
+										('finished', [('find_buoys', 'continue')]),
 										('failed', [('move', 'failed')])
 										])
 

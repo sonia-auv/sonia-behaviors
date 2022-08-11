@@ -49,7 +49,6 @@ class vision_pathSM(Behavior):
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('activate_vision_path', True)
-		self.add_parameter('move_after_path', 2.0)
 
 		# references to used behaviors
 		self.add_behavior(search_squareSM, 'search_square')
