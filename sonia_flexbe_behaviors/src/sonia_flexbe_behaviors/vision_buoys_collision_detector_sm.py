@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.check_collision_sm import check_collisionSM
 from sonia_flexbe_behaviors.search_zigzag_sm import search_zigzagSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
@@ -30,7 +29,7 @@ Created on Tue Jul 12 2022
 '''
 class vision_buoys_collision_detectorSM(Behavior):
 	'''
-	Detect the buoy and align with a rcollision detector
+	Detect the buoy and align with a collision detector
 	'''
 
 
@@ -49,10 +48,8 @@ class vision_buoys_collision_detectorSM(Behavior):
 		self.add_parameter('max_mouvement', 1.0)
 		self.add_parameter('min_mouvement', 0.25)
 		self.add_parameter('activate_vision_buoys', True)
-		self.add_parameter('vision_buoys_distance_forward', 2.5)
 
 		# references to used behaviors
-		self.add_behavior(check_collisionSM, 'check_collision')
 		self.add_behavior(search_zigzagSM, 'search_zigzag')
 
 		# Additional initialization code can be added inside the following tags
@@ -80,12 +77,6 @@ class vision_buoys_collision_detectorSM(Behavior):
 										activate_behavior(activate=True),
 										transitions={'activate': 'filter_chain', 'desactivate': 'finished'},
 										autonomy={'activate': Autonomy.Off, 'desactivate': Autonomy.Off})
-
-			# x:1111 y:463
-			OperatableStateMachine.add('check_collision',
-										self.use_behavior(check_collisionSM, 'check_collision'),
-										transitions={'failed': 'failed', 'target_reached': 'finished'},
-										autonomy={'failed': Autonomy.Inherit, 'target_reached': Autonomy.Inherit})
 
 			# x:801 y:583
 			OperatableStateMachine.add('check_moving',
@@ -142,10 +133,10 @@ class vision_buoys_collision_detectorSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 
-			# x:1157 y:149
+			# x:1261 y:250
 			OperatableStateMachine.add('stop_filter_success',
 										stop_filter_chain(),
-										transitions={'continue': 'check_collision', 'failed': 'failed'},
+										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'front'})
 

@@ -8,7 +8,6 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_flexbe_behaviors.search_square_sm import search_squareSM
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.init_trajectory import init_trajectory
@@ -50,11 +49,8 @@ class vision_pathSM(Behavior):
 		self.add_parameter('center_bounding_box_height', 50)
 		self.add_parameter('center_bounding_box_width', 50)
 		self.add_parameter('activate_vision_path', True)
-		self.add_parameter('move_after_path', 2.0)
 
 		# references to used behaviors
-		self.add_behavior(moveSM, 'move')
-		self.add_behavior(moveSM, 'move_2')
 		self.add_behavior(search_squareSM, 'search_square')
 
 		# Additional initialization code can be added inside the following tags
@@ -118,20 +114,6 @@ class vision_pathSM(Behavior):
 										transitions={'stopped': 'stop_filter_success', 'moving': 'wait_rotate', 'error': 'stop_filter_fail'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:303 y:656
-			OperatableStateMachine.add('move',
-										self.use_behavior(moveSM, 'move',
-											parameters={'positionX': 0, 'positionY': 0, 'positionZ': 1, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 4, 'speed': 0, 'precision': 0, 'rotation': True}),
-										transitions={'finished': 'move_2', 'failed': 'move_2'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:112 y:716
-			OperatableStateMachine.add('move_2',
-										self.use_behavior(moveSM, 'move_2',
-											parameters={'positionX': self.move_after_path, 'positionY': 0, 'positionZ': 0, 'orientationX': 0, 'orientationY': 0, 'orientationZ': 0, 'frame': 1, 'speed': 0, 'precision': 0, 'rotation': True}),
-										transitions={'finished': 'finished', 'failed': 'finished'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
 			# x:1426 y:40
 			OperatableStateMachine.add('rotate',
 										yaw_orbit_from_given_point_and_angle(pointX=0, pointY=0),
@@ -177,7 +159,7 @@ class vision_pathSM(Behavior):
 			# x:537 y:707
 			OperatableStateMachine.add('stop_filter_success',
 										stop_filter_chain(),
-										transitions={'continue': 'move', 'failed': 'move'},
+										transitions={'continue': 'finished', 'failed': 'finished'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 

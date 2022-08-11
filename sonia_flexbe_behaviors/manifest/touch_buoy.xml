@@ -16,9 +16,9 @@
 	<!-- Available Parameters -->
 	<params>
 
-		<param type="numeric" name="distance_to_buoy" default="2" label="distance_to_buoy" hint="Sets the distance_to_buoy">
+		<param type="numeric" name="distance_to_buoy" default="2.0" label="distance_to_buoy" hint="Sets the distance_to_buoy">
 			<min value="0" />
-			<max value="5" />
+			<max value="10" />
 		</param>
 
 	</params>
