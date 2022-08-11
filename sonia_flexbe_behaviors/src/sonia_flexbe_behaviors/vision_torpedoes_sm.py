@@ -13,7 +13,7 @@ from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_vision_states.get_front_vision_target import get_front_vision_target
+from sonia_vision_states.get_front_vision_target_rotation import get_front_vision_target_rotation
 from sonia_vision_states.start_filter_chain import start_filter_chain
 from sonia_vision_states.stop_filter_chain import stop_filter_chain
 # Additional imports can be added inside the following tags
@@ -40,12 +40,6 @@ class vision_torpedoesSM(Behavior):
 		self.add_parameter('torpedoes_filterchain', 'simple_torpedoes_star')
 		self.add_parameter('torpedoes_target', 'torpedoes')
 		self.add_parameter('camera_no', 1)
-		self.add_parameter('torpedoes_bounding_box_width', 300)
-		self.add_parameter('torpedoes_bounding_box_height', 300)
-		self.add_parameter('torpedoes_center_bounding_box_height', 100)
-		self.add_parameter('torpedoes_center_bounding_box_width', 100)
-		self.add_parameter('torpedoes_max_mouv', 0.5)
-		self.add_parameter('torpedoes_min_mouv', 0.1)
 
 		# references to used behaviors
 		self.add_behavior(search_torpedoesSM, 'search_torpedoes')
@@ -77,9 +71,9 @@ class vision_torpedoesSM(Behavior):
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
-			# x:495 y:46
-			OperatableStateMachine.add('get_target',
-										get_front_vision_target(center_bounding_box_pixel_height=self.torpedoes_center_bounding_box_height, center_bounding_box_pixel_width=self.torpedoes_center_bounding_box_width, bounding_box_pixel_height=self.torpedoes_bounding_box_height, bounding_box_pixel_width=self.torpedoes_bounding_box_width, image_height=400, image_width=600, number_of_average=10, max_mouvement=self.torpedoes_max_mouv, min_mouvement=self.torpedoes_min_mouv, long_rotation=False, timeout=10, speed_profile=0),
+			# x:473 y:48
+			OperatableStateMachine.add('get_target_rotate',
+										get_front_vision_target_rotation(center_bounding_box_pixel_height=100, center_bounding_box_pixel_width=100, bounding_box_pixel_height=300, bounding_box_pixel_width=300, image_height=400, image_width=600, number_of_average=10, max_mouvement=0.4, min_mouvement=0.01, max_rotation=25, min_rotation=5, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_failed', 'search': 'search_torpedoes'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
@@ -87,11 +81,11 @@ class vision_torpedoesSM(Behavior):
 			# x:239 y:56
 			OperatableStateMachine.add('init_traj',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'get_target'},
+										transitions={'continue': 'get_target_rotate'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:316 y:267
+			# x:307 y:240
 			OperatableStateMachine.add('move',
 										send_to_planner(),
 										transitions={'continue': 'wait_reach', 'failed': 'failed'},
@@ -101,7 +95,7 @@ class vision_torpedoesSM(Behavior):
 			# x:806 y:90
 			OperatableStateMachine.add('search_torpedoes',
 										self.use_behavior(search_torpedoesSM, 'search_torpedoes'),
-										transitions={'finished': 'get_target', 'failed': 'failed', 'lost_target': 'stop_filter_lost', 'controller_error': 'controller_error'},
+										transitions={'finished': 'get_target_rotate', 'failed': 'failed', 'lost_target': 'stop_filter_lost', 'controller_error': 'controller_error'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit},
 										remapping={'target': 'target', 'topic': 'topic'})
 
@@ -129,13 +123,13 @@ class vision_torpedoesSM(Behavior):
 			# x:576 y:324
 			OperatableStateMachine.add('wait_reach',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'get_target', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
+										transitions={'target_reached': 'get_target_rotate', 'target_not_reached': 'check_moving', 'error': 'controller_error'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:618 y:171
 			OperatableStateMachine.add('check_moving',
 										is_moving(timeout=15, tolerance=0.1),
-										transitions={'stopped': 'get_target', 'moving': 'wait_reach', 'error': 'controller_error'},
+										transitions={'stopped': 'get_target_rotate', 'moving': 'wait_reach', 'error': 'controller_error'},
 										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
 
 

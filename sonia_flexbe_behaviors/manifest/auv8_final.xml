@@ -13,10 +13,26 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="CoinFlip-Gate-Trickshot with com" />
+	<contains name="move" />
 	<contains name="move_with_detection_torpedoes_board" />
+	<contains name="search_zigzag" />
 	<contains name="sonar_table_alignement" />
 	<contains name="torpedoes" />
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="camera" default="1" label="camera" hint="Sets the camera">
+			<min value="0" />
+			<max value="4" />
+		</param>
+
+		<param type="enum" name="backup_filterchain" default="deep_compe_front" label="backup_filterchain" hint="Sets the backup_filterchain">
+			<option value="deep_compe_front" />
+			<option value="deep_simulation_front" />
+		</param>
+
+	</params>
+
 
 </behavior>
