@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Loop square">
+
+	<executable package_path="sonia_flexbe_behaviors.loop_square_sm" class="LoopsquareSM" />
+	<tagstring>search</tagstring>
+	<author>Alexandre Desgagné</author>
+	<date>Sat Nov 05 2022</date>
+	<description>
+		Mission pour portes ouvertes.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="width" default="0" label="width" hint="Sets the width">
+			<min value="0" />
+			<max value="1" />
+		</param>
+
+	</params>
+
+
+</behavior>
