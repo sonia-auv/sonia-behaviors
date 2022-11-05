@@ -13,10 +13,11 @@
 
 	<!-- Contained Behaviors -->
 	<contains name="move" />
-	<contains name="square" />
+	<contains name="torpedoes" />
 	<contains name="vision_bins" />
-	<contains name="vision_buoys_AUV8" />
+	<contains name="vision_buoys_new" />
 	<contains name="vision_path" />
+	<contains name="vision_tables" />
 	<contains name="drop_AUV8" />
 
 	<!-- Available Parameters -->
