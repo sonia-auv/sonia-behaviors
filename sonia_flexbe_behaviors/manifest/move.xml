@@ -46,7 +46,7 @@
 			<max value="100" />
 		</param>
 
-		<param type="numeric" name="frame" default="1" label="frame" hint="0 : Absolute position and absolute angle  1 : Relative position and relative angle 2 : Relative position and absolute angle 3 : Absolute position and relative angle">
+		<param type="numeric" name="frame" default="1" label="frame" hint="0 : Absolute position and absolute angle  1 : Relative position and relative angle 2 : Relative position and absolute angle 3 : Absolute position and relative angle 4 : Absolute depth and everything else relative">
 			<min value="0" />
 			<max value="3" />
 		</param>
