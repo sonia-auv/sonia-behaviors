@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_hardware_states.activate_io import activate_io
-from sonia_hardware_states.wait_mission import wait_mission
+from sonia_hardware_states.motor_test import motor_test
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,18 +16,18 @@ from sonia_hardware_states.wait_mission import wait_mission
 
 
 '''
-Created on Wed Jul 27 2022
-@author: sonia
+Created on Sat Nov 19 2022
+@author: Ewan
 '''
-class dry_testSM(Behavior):
+class DryTestSM(Behavior):
 	'''
-	dry test the mission/kill switch by dropping droppers
+	Une mission pour remplacer le dry test du rqt
 	'''
 
 
 	def __init__(self):
-		super(dry_testSM, self).__init__()
-		self.name = 'dry_test'
+		super(DryTestSM, self).__init__()
+		self.name = 'Dry Test'
 
 		# parameters of this behavior
 
@@ -54,15 +53,9 @@ class dry_testSM(Behavior):
 
 
 		with _state_machine:
-			# x:79 y:102
-			OperatableStateMachine.add('test',
-										wait_mission(),
-										transitions={'continue': 'io'},
-										autonomy={'continue': Autonomy.Off})
-
-			# x:358 y:91
-			OperatableStateMachine.add('io',
-										activate_io(element=1, side=0, action=1, timeout=8),
+			# x:120 y:122
+			OperatableStateMachine.add('motor_test',
+										motor_test(timeout=20),
 										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
