@@ -55,9 +55,9 @@ class DryTestSM(Behavior):
 		with _state_machine:
 			# x:120 y:122
 			OperatableStateMachine.add('motor_test',
-										motor_test(timeout=20),
-										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
+										motor_test(),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
