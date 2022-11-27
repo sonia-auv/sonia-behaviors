@@ -63,7 +63,7 @@ class torpedoesSM(Behavior):
 			# x:30 y:40
 			OperatableStateMachine.add('vision_torpedoes_boards_new',
 										self.use_behavior(vision_torpedoes_boards_newSM, 'vision_torpedoes_boards_new',
-											parameters={'vision_torpedoes_boards_target': "G-Man", 'bounding_box_width': 200, 'bounding_box_height': 300, 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
+											parameters={'vision_torpedoes_boards_filterchain': "deep_compe_front", 'camera_no': 1, 'vision_torpedoes_boards_target': "G-Man", 'bounding_box_width': 200, 'bounding_box_height': 300, 'center_bounding_box_width': 100, 'center_bounding_box_height': 100, 'max_mouvement': 2, 'min_mouvement': 0.25, 'activate_vision_buoys': True}),
 										transitions={'finished': 'move', 'failed': 'vision_torpedoes', 'lost_target': 'move'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit})
 
@@ -77,7 +77,7 @@ class torpedoesSM(Behavior):
 			# x:507 y:109
 			OperatableStateMachine.add('vision_torpedoes',
 										self.use_behavior(vision_torpedoesSM, 'vision_torpedoes',
-											parameters={'torpedoes_target': "torpedoes", 'torpedoes_bounding_box_width': 300, 'torpedoes_bounding_box_height': 300, 'torpedoes_center_bounding_box_height': 100, 'torpedoes_center_bounding_box_width': 100, 'torpedoes_max_mouv': 0.5, 'torpedoes_min_mouv': 0.05}),
+											parameters={'torpedoes_filterchain': "simple_torpedoes_star", 'torpedoes_target': "torpedoes"}),
 										transitions={'finished': 'launch_AUV8', 'failed': 'failed', 'lost_target': 'failed', 'controller_error': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit, 'lost_target': Autonomy.Inherit, 'controller_error': Autonomy.Inherit})
 

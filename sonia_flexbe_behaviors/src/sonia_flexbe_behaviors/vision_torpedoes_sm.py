@@ -73,7 +73,7 @@ class vision_torpedoesSM(Behavior):
 
 			# x:473 y:48
 			OperatableStateMachine.add('get_target_rotate',
-										get_front_vision_target_rotation(center_bounding_box_pixel_height=100, center_bounding_box_pixel_width=100, bounding_box_pixel_height=300, bounding_box_pixel_width=300, image_height=400, image_width=600, number_of_average=10, max_mouvement=0.4, min_mouvement=0.01, max_rotation=25, min_rotation=5, long_rotation=False, timeout=10, speed_profile=0),
+										get_front_vision_target_rotation(center_bounding_box_pixel_height=100, center_bounding_box_pixel_width=100, bounding_box_pixel_height=300, bounding_box_pixel_width=300, image_height=400, image_width=600, number_of_average=10, max_mouvement=0.1, min_mouvement=0.01, max_rotation=25, min_rotation=2, long_rotation=False, timeout=10, speed_profile=0),
 										transitions={'success': 'stop_filter_success', 'align': 'move', 'move': 'move', 'failed': 'stop_filter_failed', 'search': 'search_torpedoes'},
 										autonomy={'success': Autonomy.Off, 'align': Autonomy.Off, 'move': Autonomy.Off, 'failed': Autonomy.Off, 'search': Autonomy.Off},
 										remapping={'topic': 'topic', 'camera_no': 'camera_no', 'target': 'target', 'input_trajectory': 'trajectory', 'output_trajectory': 'trajectory', 'camera': 'camera', 'angle': 'angle'})
