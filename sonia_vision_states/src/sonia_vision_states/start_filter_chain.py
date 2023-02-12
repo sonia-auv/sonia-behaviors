@@ -49,6 +49,8 @@ class start_filter_chain(EventState):
                 self.param_media_name = '/proc_simulation/front'
             elif self.camera_no == 4:
                 self.param_media_name = '/proc_simulation/bottom'
+            elif self.camera_no == 5:
+                self.param_media_name = '/camera/color/image_raw/compressed'
             else:
                 rospy.loginfo('Bad camera no, range is 1-4')
                 self.result = 'failed'

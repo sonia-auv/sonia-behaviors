@@ -93,7 +93,7 @@ class Exercice1SM(Behavior):
 
 			# x:408 y:135
 			OperatableStateMachine.add('tour1',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90, frame=2, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'av1'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory2', 'trajectory': 'trajectory3'})

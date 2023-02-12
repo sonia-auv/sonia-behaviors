@@ -29,7 +29,7 @@
 
 		<param type="numeric" name="camera_no" default="1" label="camera_no" hint="Sets the camera_no">
 			<min value="1" />
-			<max value="4" />
+			<max value="5" />
 		</param>
 
 		<param type="enum" name="vision_buoys_target" default="Badge" label="vision_buoys_target" hint="Sets the vision_buoys_target">
