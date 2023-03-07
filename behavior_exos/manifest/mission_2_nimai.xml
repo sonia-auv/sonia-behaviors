@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Mission_2_Nimai">
+
+	<executable package_path="behavior_exos.mission_2_nimai_sm" class="Mission_2_NimaiSM" />
+	<tagstring>Exercices</tagstring>
+	<author>Nimai Jariwala</author>
+	<date>Tue Mar 07 2023</date>
+	<description>
+		Exercise Mission 2
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
