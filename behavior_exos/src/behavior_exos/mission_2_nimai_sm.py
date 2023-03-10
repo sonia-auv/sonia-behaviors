@@ -8,17 +8,17 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from navigation_states.init_trajectory import InitTrajectory
 from sonia_flexbe_states.activate_behavior import activate_behavior
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
+from sonia_navigation_states.init_trajectory import init_trajectory
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
 # [/MANUAL_IMPORT]
 
-
+InitTrajectory
 '''
 Created on Tue Mar 07 2023
 @author: Nimai Jariwala
@@ -119,7 +119,7 @@ class Mission_2_NimaiSM(Behavior):
 
 			# x:376 y:51
 			OperatableStateMachine.add('Init Trajectory List',
-										InitTrajectory(interpolation_method=0),
+										init_trajectory(interpolation_method=0),
 										transitions={'continue': 'Adding Poses'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
