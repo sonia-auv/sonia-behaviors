@@ -9,16 +9,16 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_states.activate_behavior import activate_behavior
+from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
-from sonia_navigation_states.init_trajectory import init_trajectory
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
 # [/MANUAL_IMPORT]
 
-InitTrajectory
+
 '''
 Created on Tue Mar 07 2023
 @author: Nimai Jariwala
@@ -96,14 +96,14 @@ class Mission_2_NimaiSM(Behavior):
 
 			# x:335 y:38
 			OperatableStateMachine.add('turn 90 deg right',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=90.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90.0, frame=2, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'Forward 2m'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 
 			# x:1110 y:165
 			OperatableStateMachine.add('180 deg turn',
-										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=180.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=180.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'Move right 3m (backwards)'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
