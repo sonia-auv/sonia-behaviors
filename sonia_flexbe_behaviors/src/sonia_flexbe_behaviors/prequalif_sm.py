@@ -26,7 +26,7 @@ Created on Tue Feb 15 2022
 '''
 class PrequalifSM(Behavior):
 	'''
-	Prequalification for Robosub 2022
+	Prequalification for Robosub 2022 and Robosub 2023
 	'''
 
 
