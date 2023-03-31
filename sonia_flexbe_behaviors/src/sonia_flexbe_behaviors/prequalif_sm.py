@@ -69,7 +69,7 @@ class PrequalifSM(Behavior):
 
 			# x:553 y:54
 			OperatableStateMachine.add('pose 1',
-										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=0.7, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'pose 2'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'empty_traj', 'trajectory': 'traj1'})
@@ -83,7 +83,7 @@ class PrequalifSM(Behavior):
 
 			# x:284 y:306
 			OperatableStateMachine.add('pose 12',
-										manual_add_pose_to_trajectory(positionX=8.072, positionY=-1, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=1, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=7.0, positionY=-1, positionZ=0, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=1, precision=0, long_rotation=False),
 										transitions={'continue': 'send to planner'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'traj10', 'trajectory': 'traj12'})
