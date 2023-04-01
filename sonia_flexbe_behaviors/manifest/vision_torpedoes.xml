@@ -35,36 +35,6 @@
 			<max value="4" />
 		</param>
 
-		<param type="numeric" name="torpedoes_bounding_box_width" default="300" label="torpedoes_bounding_box_width" hint="Sets the torpedoes_bounding_box_width">
-			<min value="0" />
-			<max value="600" />
-		</param>
-
-		<param type="numeric" name="torpedoes_bounding_box_height" default="300" label="torpedoes_bounding_box_height" hint="Sets the torpedoes_bounding_box_height">
-			<min value="0" />
-			<max value="600" />
-		</param>
-
-		<param type="numeric" name="torpedoes_center_bounding_box_height" default="100" label="torpedoes_center_bounding_box_height" hint="Sets the torpedoes_center_bounding_box_height">
-			<min value="0" />
-			<max value="600" />
-		</param>
-
-		<param type="numeric" name="torpedoes_center_bounding_box_width" default="100" label="torpedoes_center_bounding_box_width" hint="Sets the torpedoes_center_bounding_box_width">
-			<min value="0" />
-			<max value="600" />
-		</param>
-
-		<param type="numeric" name="torpedoes_max_mouv" default="0.5" label="torpedoes_max_mouv" hint="Sets the torpedoes_max_mouv">
-			<min value="0" />
-			<max value="2" />
-		</param>
-
-		<param type="numeric" name="torpedoes_min_mouv" default="0.1" label="torpedoes_min_mouv" hint="Sets the torpedoes_min_mouv">
-			<min value="0" />
-			<max value="1" />
-		</param>
-
 	</params>
 
 

@@ -9,6 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_navigation_states.init_trajectory import init_trajectory
+from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
@@ -19,21 +20,20 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 
 
 '''
-Created on Fri Jul 15 2022
+Created on Sat Jul 30 2022
 @author: GS
 '''
-class touch_buoySM(Behavior):
+class move_tiltdown_turn_tiltupSM(Behavior):
 	'''
-	Go forward and detect collision
+	move_tiltdown_turn_tiltup
 	'''
 
 
 	def __init__(self):
-		super(touch_buoySM, self).__init__()
-		self.name = 'touch_buoy'
+		super(move_tiltdown_turn_tiltupSM, self).__init__()
+		self.name = 'move_tiltdown_turn_tiltup'
 
 		# parameters of this behavior
-		self.add_parameter('distance_to_buoy', 2.0)
 
 		# references to used behaviors
 
@@ -47,7 +47,7 @@ class touch_buoySM(Behavior):
 
 
 	def create(self):
-		# x:1088 y:85, x:645 y:389
+		# x:626 y:209, x:382 y:211
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,30 +57,50 @@ class touch_buoySM(Behavior):
 
 
 		with _state_machine:
-			# x:156 y:72
-			OperatableStateMachine.add('init_traj',
+			# x:30 y:40
+			OperatableStateMachine.add('init',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'add_pose'},
+										transitions={'continue': 'down'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'trajectory': 'trajectory'})
 
-			# x:590 y:64
-			OperatableStateMachine.add('send_to_planner',
+			# x:514 y:420
+			OperatableStateMachine.add('is_moving',
+										is_moving(timeout=30, tolerance=0.1),
+										transitions={'stopped': 'finished', 'moving': 'wait', 'error': 'failed'},
+										autonomy={'stopped': Autonomy.Off, 'moving': Autonomy.Off, 'error': Autonomy.Off})
+
+			# x:62 y:198
+			OperatableStateMachine.add('planner',
 										send_to_planner(),
-										transitions={'continue': 'wait_target', 'failed': 'failed'},
+										transitions={'continue': 'wait', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'input_traj': 'trajectory'})
 
-			# x:826 y:58
-			OperatableStateMachine.add('wait_target',
+			# x:453 y:36
+			OperatableStateMachine.add('turn',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'up'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+
+			# x:669 y:42
+			OperatableStateMachine.add('up',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=20, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'planner'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
+
+			# x:325 y:316
+			OperatableStateMachine.add('wait',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'finished', 'target_not_reached': 'is_moving', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
-			# x:341 y:75
-			OperatableStateMachine.add('add_pose',
-										manual_add_pose_to_trajectory(positionX=self.distance_to_buoy, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'send_to_planner'},
+			# x:227 y:53
+			OperatableStateMachine.add('down',
+										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=-20, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
+										transitions={'continue': 'turn'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'trajectory', 'trajectory': 'trajectory'})
 

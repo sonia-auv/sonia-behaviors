@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_tilt">
+
+	<executable package_path="sonia_flexbe_behaviors.search_tilt_sm" class="search_tiltSM" />
+	<tagstring>search</tagstring>
+	<author>GS</author>
+	<date>30/08/2022</date>
+	<description>
+		Search mouvement in a tilt patern.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="full_turn_tilted" />
+
+	<!-- Available Parameters -->
+
+</behavior>

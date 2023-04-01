@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_with_path_detection">
+
+	<executable package_path="sonia_flexbe_behaviors.move_with_path_detection_sm" class="move_with_path_detectionSM" />
+	<tagstring>final</tagstring>
+	<author>CS</author>
+	<date>Tue Aug 02 2022</date>
+	<description>
+		Move until we detect the path
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="path_filterchain" default="simple_path_straight" label="path_filterchain" hint="Sets the path_filterchain">
+			<option value="simple_path_straight" />
+		</param>
+
+		<param type="enum" name="path_target" default="pipe straight" label="path_target" hint="Sets the path_target">
+			<option value="pipe straight" />
+		</param>
+
+		<param type="numeric" name="path_camera" default="2" label="path_camera" hint="Sets the path_camera">
+			<min value="1" />
+			<max value="4" />
+		</param>
+
+	</params>
+
+
+</behavior>

@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="vision_buoys_new">
+<behavior name="vision_buoys_collision_detector">
 
-	<executable package_path="sonia_flexbe_behaviors.vision_buoys_new_sm" class="vision_buoys_newSM" />
+	<executable package_path="sonia_flexbe_behaviors.vision_buoys_collision_detector_sm" class="vision_buoys_collision_detectorSM" />
 	<tagstring>pool</tagstring>
 	<author>CS</author>
 	<date>Tue Jul 12 2022</date>
 	<description>
-		Detect the buoy and align with a rotation
+		Detect the buoy and align with a collision detector
 	</description>
 
 
 	<!-- Contained Behaviors -->
-	<contains name="move" />
 	<contains name="search_zigzag" />
 
 	<!-- Available Parameters -->
@@ -59,7 +58,7 @@
 
 		<param type="numeric" name="max_mouvement" default="1.0" label="max_mouvement" hint="Sets the max_mouvement">
 			<min value="0" />
-			<max value="10" />
+			<max value="2" />
 		</param>
 
 		<param type="numeric" name="min_mouvement" default="0.25" label="min_mouvement" hint="Sets the min_mouvement">
@@ -68,11 +67,6 @@
 		</param>
 
 		<param type="boolean" name="activate_vision_buoys" default="True" label="activate_vision_buoys" hint="Sets the activate_vision_buoys" />
-
-		<param type="numeric" name="vision_buoys_distance_forward" default="2.5" label="vision_buoys_distance_forward" hint="Sets the vision_buoys_distance_forward">
-			<min value="0" />
-			<max value="5" />
-		</param>
 
 	</params>
 
