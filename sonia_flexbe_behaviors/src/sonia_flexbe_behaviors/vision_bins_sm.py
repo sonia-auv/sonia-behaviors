@@ -62,7 +62,7 @@ class vision_binsSM(Behavior):
 
 
 	def create(self):
-		# x:193 y:141, x:140 y:454, x:590 y:631, x:809 y:319
+		# x:193 y:141, x:140 y:454, x:590 y:631, x:912 y:429
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed', 'lost_target', 'controller_error'])
 
 		# Additional creation code can be added inside the following tags
