@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="full_turn_tilted">
+
+	<executable package_path="sonia_flexbe_behaviors.full_turn_tilted_sm" class="full_turn_tiltedSM" />
+	<tagstring>mouvement</tagstring>
+	<author>GS</author>
+	<date>Wed Feb 02 2022</date>
+	<description>
+		Behavior to move the submarine with 360 4 stops
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+	<contains name="move_tiltdown_turn_tiltup" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="wait_time" default="2" label="wait_time" hint="Sets the wait_time">
+			<min value="0" />
+			<max value="10" />
+		</param>
+
+	</params>
+
+
+</behavior>

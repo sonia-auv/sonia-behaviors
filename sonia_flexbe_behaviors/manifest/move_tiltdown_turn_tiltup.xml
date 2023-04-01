@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="move_tiltdown_turn_tiltup">
+
+	<executable package_path="sonia_flexbe_behaviors.move_tiltdown_turn_tiltup_sm" class="move_tiltdown_turn_tiltupSM" />
+	<tagstring>move</tagstring>
+	<author>GS</author>
+	<date>Sat Jul 30 2022</date>
+	<description>
+		move_tiltdown_turn_tiltup
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
