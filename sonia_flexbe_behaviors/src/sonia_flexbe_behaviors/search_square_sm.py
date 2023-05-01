@@ -24,7 +24,7 @@ Created on July 12 2022
 '''
 class search_squareSM(Behavior):
 	'''
-	Search mouvement in a circle patern in a square.
+	This state uses a circular search pattern in the form of an expanding square.
 	'''
 
 
