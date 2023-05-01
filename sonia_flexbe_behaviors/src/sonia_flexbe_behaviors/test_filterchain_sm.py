@@ -63,20 +63,20 @@ class test_filterchainSM(Behavior):
 										start_filter_chain(filterchain=self.filterchain, target=self.target, camera_no=self.cam_numero),
 										transitions={'continue': 'wait_', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'node': 'node', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
+										remapping={'topic': 'topic', 'filterchain': 'filterchain', 'camera_no': 'camera_no', 'target': 'target'})
 
 			# x:372 y:95
 			OperatableStateMachine.add('wait_',
-										activate_io(element=1, side=1, timeout=5),
-										transitions={'continue': 'stop_deep', 'failed': 'stop_deep'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										activate_io(element=1, side=1, action=1, timeout=5),
+										transitions={'continue': 'stop_deep', 'failed': 'stop_deep', 'timeout': 'stop_deep'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
 			# x:356 y:271
 			OperatableStateMachine.add('stop_deep',
 										stop_filter_chain(),
 										transitions={'continue': 'finished', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'node': 'filterchain', 'filterchain': 'filterchain', 'camera_no': 'camera_no'})
+										remapping={'filterchain': 'filterchain', 'camera_no': 'camera_no'})
 
 
 		return _state_machine
