@@ -67,9 +67,9 @@ class dropSM(Behavior):
 
 			# x:761 y:390
 			OperatableStateMachine.add('drop',
-										activate_io(element=2, side=1, timeout=10),
-										transitions={'continue': 'finished', 'failed': 'failed'},
-										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
+										activate_io(element=1, side=1, action=1, timeout=10),
+										transitions={'continue': 'finished', 'failed': 'failed', 'timeout': 'finished'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off, 'timeout': Autonomy.Off})
 
 			# x:352 y:118
 			OperatableStateMachine.add('move',
