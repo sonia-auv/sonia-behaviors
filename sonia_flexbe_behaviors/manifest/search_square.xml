@@ -7,7 +7,7 @@
 	<author>CS</author>
 	<date>July 12 2022</date>
 	<description>
-		This state uses a circular search pattern in the form of an expanding square.
+		This state uses a spiral search pattern in the form of an expanding square.
 	</description>
 
 

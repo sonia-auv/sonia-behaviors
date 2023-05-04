@@ -24,7 +24,7 @@ Created on July 12 2022
 '''
 class search_squareSM(Behavior):
 	'''
-	This state uses a circular search pattern in the form of an expanding square.
+	This state uses a spiral search pattern in the form of an expanding square.
 	'''
 
 
