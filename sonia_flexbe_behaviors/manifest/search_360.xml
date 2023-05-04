@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="search_360">
+
+	<executable package_path="sonia_flexbe_behaviors.search_360_sm" class="search_360SM" />
+	<tagstring>search</tagstring>
+	<author>GS</author>
+	<date>2022</date>
+	<description>
+		Search mouvement in a zigzag patern.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

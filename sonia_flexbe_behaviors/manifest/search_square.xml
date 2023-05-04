@@ -7,7 +7,7 @@
 	<author>CS</author>
 	<date>July 12 2022</date>
 	<description>
-		Search mouvement in a zigzag patern in a square.
+		This state uses a spiral search pattern in the form of an expanding square.
 	</description>
 
 

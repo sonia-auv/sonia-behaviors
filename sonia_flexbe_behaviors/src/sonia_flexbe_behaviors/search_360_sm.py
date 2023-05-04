@@ -8,7 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_flexbe_behaviors.square_sm import squareSM
+from sonia_flexbe_behaviors.move_sm import moveSM
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.stop_move import stop_move
 from sonia_vision_states.find_vision_target import find_vision_target
@@ -19,23 +19,23 @@ from sonia_vision_states.find_vision_target import find_vision_target
 
 
 '''
-Created on July 12 2022
-@author: CS
+Created on 2022
+@author: GS
 '''
-class search_squareSM(Behavior):
+class search_360SM(Behavior):
 	'''
-	This state uses a spiral search pattern in the form of an expanding square.
+	Search mouvement in a zigzag patern.
 	'''
 
 
 	def __init__(self):
-		super(search_squareSM, self).__init__()
-		self.name = 'search_square'
+		super(search_360SM, self).__init__()
+		self.name = 'search_360'
 
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(squareSM, 'Container/square')
+		self.add_behavior(moveSM, 'Container/move')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -60,14 +60,15 @@ class search_squareSM(Behavior):
 		# x:598 y:216, x:607 y:51, x:622 y:144, x:596 y:288, x:753 y:94, x:715 y:266
 		_sm_container_0 = ConcurrencyContainer(outcomes=['finished', 'failed', 'lost_target'], input_keys=['target', 'topic'], conditions=[
 										('finished', [('find_target', 'continue')]),
-										('lost_target', [('square', 'finished')]),
-										('failed', [('square', 'failed')])
+										('lost_target', [('move', 'finished')]),
+										('failed', [('move', 'failed')])
 										])
 
 		with _sm_container_0:
-			# x:187 y:65
-			OperatableStateMachine.add('square',
-										self.use_behavior(squareSM, 'Container/square'),
+			# x:30 y:40
+			OperatableStateMachine.add('move',
+										self.use_behavior(moveSM, 'Container/move',
+											parameters={'orientationZ': 360}),
 										transitions={'finished': 'lost_target', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
