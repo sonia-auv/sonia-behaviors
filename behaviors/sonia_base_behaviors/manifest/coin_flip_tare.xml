@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="coin_flip_tare">
+
+	<executable package_path="sonia_base_behaviors.coin_flip_tare_sm" class="coin_flip_tareSM" />
+	<tagstring>pool</tagstring>
+	<author>William Brouillard, Nimai Jariwala</author>
+	<date>28 May 2023</date>
+	<description>
+		Orient to gate for coin flip task.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="orientation_to_gate" default="0" label="orientation_to_gate" hint="Sets the orientation_to_gate">
+			<min value="0" />
+			<max value="360" />
+		</param>
+
+		<param type="numeric" name="dive_depth" default="1" label="dive_depth" hint="Sets the dive_depth">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="boolean" name="activate_coin_flip" default="True" label="activate_coin_flip" hint="Sets the activate_coin_flip" />
+
+	</params>
+
+
+</behavior>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trick_shot_pitch_roll">
+
+	<executable package_path="sonia_base_behaviors.trick_shot_pitch_roll_sm" class="trick_shot_pitch_rollSM" />
+	<tagstring>base</tagstring>
+	<author>Nimai Jariwala</author>
+	<date>Sun May 28 2023</date>
+	<description>
+		Do the candle, spin, finish the backflip.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
