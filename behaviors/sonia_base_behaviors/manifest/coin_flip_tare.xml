@@ -3,7 +3,7 @@
 <behavior name="coin_flip_tare">
 
 	<executable package_path="sonia_base_behaviors.coin_flip_tare_sm" class="coin_flip_tareSM" />
-	<tagstring>pool</tagstring>
+	<tagstring>2023</tagstring>
 	<author>William Brouillard, Nimai Jariwala</author>
 	<date>28 May 2023</date>
 	<description>
