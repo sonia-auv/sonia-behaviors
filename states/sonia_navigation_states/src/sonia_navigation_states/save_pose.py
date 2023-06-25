@@ -3,6 +3,7 @@
 
 # standars includes
 from time import time, sleep
+from typing import Optional
 import rospy
 from dataclasses import dataclass
 import math
@@ -48,6 +49,7 @@ class save_pose(EventState):
             sleep(0.1)
             timeout_counter += 1
             if timeout_counter > 50:
+                Logger.log('5 seconds, fail', Logger.REPORT_HINT)
                 return 'fail'
         traj = userdata.input_traj
         new_traj = MultiAddPose()

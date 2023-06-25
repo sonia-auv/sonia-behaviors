@@ -8,9 +8,9 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_base_behaviors.save_pose_sm import SavePoseSM
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
+from sonia_navigation_states.save_pose import save_pose
 from sonia_navigation_states.send_to_planner import send_to_planner
 from sonia_navigation_states.wait_target_reached import wait_target_reached
 # Additional imports can be added inside the following tags
@@ -36,7 +36,6 @@ class TestSavePoseSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(SavePoseSM, 'Save Pose')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -59,18 +58,25 @@ class TestSavePoseSM(Behavior):
 
 		with _state_machine:
 			# x:30 y:40
-			OperatableStateMachine.add('Save Pose',
-										self.use_behavior(SavePoseSM, 'Save Pose'),
-										transitions={'finished': 'Init Move', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
-										remapping={'save_traj': 'save_traj'})
+			OperatableStateMachine.add('init save',
+										init_trajectory(interpolation_method=0),
+										transitions={'continue': 'Save pose'},
+										autonomy={'continue': Autonomy.Off},
+										remapping={'trajectory': 'save_traj'})
 
 			# x:441 y:35
 			OperatableStateMachine.add('Move and turn',
-										manual_add_pose_to_trajectory(positionX=1.5, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=1.5, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=90, frame=1, speed=2, precision=0, long_rotation=False),
 										transitions={'continue': 'Send Move'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'move_traj', 'trajectory': 'move_traj'})
+
+			# x:24 y:152
+			OperatableStateMachine.add('Save pose',
+										save_pose(),
+										transitions={'success': 'Init Move', 'fail': 'failed'},
+										autonomy={'success': Autonomy.Off, 'fail': Autonomy.Off},
+										remapping={'input_traj': 'save_traj', 'trajectory': 'save_pose'})
 
 			# x:707 y:67
 			OperatableStateMachine.add('Send Move',
@@ -84,7 +90,7 @@ class TestSavePoseSM(Behavior):
 										send_to_planner(),
 										transitions={'continue': 'Wait Save Move', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'save_traj'})
+										remapping={'input_traj': 'save_pose'})
 
 			# x:787 y:253
 			OperatableStateMachine.add('Wait Move',
