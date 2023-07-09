@@ -7,7 +7,7 @@ from sonia_common.msg import FilterchainTarget, AddPose, MpcInfo
 
 class vision_alignemnt_check(EventState):
 
-    def __init__(self, filterchain_topic: str, size_for_success, nb_imgs: int=10, timeout_sec: int=5, max_adjusts:int = 10, tolerance: int = 0.5):
+    def __init__(self, filterchain_topic, nb_imgs = 10, timeout_sec = 5, max_adjusts = 10, tolerance = 0.05):
         super(find_vision_target, self).__init__(outcomes = ['timeout', 'found', 'failed'])
         self.__topic = filterchain_topic
         self.__max_adjusts = max_adjusts
@@ -57,6 +57,8 @@ class vision_alignemnt_check(EventState):
             
     def on_exit(self, userdata):
         self.__filterchain_sub.unregister()
+        self.__get_controller_info_sub.unregister()
+        self.__move_pub.unregister()
 
     def __filterchain_cb(self, data: FilterchainTarget):
         self.__img_buffer.appendleft(data)
@@ -86,14 +88,13 @@ class vision_alignemnt_check(EventState):
     def __adjust_sub_move(self, delta_x, delta_y):
         # dif in x is move in y
         # dif in y is move in z
-        tol_x = self.__img_buffer[0].bounding_box.size_x / 2
-        tol_y = self.__img_buffer[0].bounding_box.size_y / 2
-        if abs(delta_x) <= tol_x and delta_y <= tol_y:
+        tol = self.__img_buffer[0].ctr_box_width / 2
+        if abs(delta_x) <= tol and abs(delta_y) <= tol:
             return False
         pose = AddPose()
-        if delta_x > tol_x:
+        if delta_x > tol:
             pose.position.y = delta_x
-        if delta_y > tol_y:
+        if delta_y > tol:
             pose.position.z = delta_y
         self.__move_pub.publish(pose)
         return True
@@ -103,7 +104,8 @@ class vision_alignemnt_check(EventState):
         self.__trajectory_done = data.is_trajectory_done
 
     def __adjust_sub_zoom(self, delta_zoom):
-        if delta_zoom <= self.__tolerence_thresh:
+        tol = (self.__img_buffer[0].bounding_box.size_x * self.__img_buffer[0].bounding_box.size_y) * self.__tolerence_thresh
+        if abs(delta_zoom) <= tol:
             return False
         pose = AddPose()
         pose.position.x = delta_zoom
