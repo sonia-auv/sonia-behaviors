@@ -11,7 +11,8 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_base_behaviors.single_pose_move_sm import SinglePoseMoveSM
 from sonia_vision_states.calc_pixel_meter_ratio import calc_pixel_meter_ratio
 from sonia_vision_states.get_blob_size import get_blob_size
-from sonia_vision_states.init_blob_calc_block import init_blob_calc_block
+from sonia_vision_states.init_func import init_blob_calc_block as sonia_vision_states__init_blob_calc_block
+from sonia_vision_states.init_func import init_func
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -50,8 +51,8 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 
 	def create(self):
 		# x:157 y:251, x:397 y:228
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['pixel_meter_func'])
-		_state_machine.userdata.pixel_meter_func = {}
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['func_block'])
+		_state_machine.userdata.func_block = func_block
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -62,7 +63,7 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 		with _state_machine:
 			# x:79 y:30
 			OperatableStateMachine.add('init the calculaiton block',
-										init_blob_calc_block(),
+										sonia_vision_states__init_blob_calc_block(),
 										transitions={'success': 'origin'},
 										autonomy={'success': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
@@ -88,7 +89,7 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
-			# x:402 y:457
+			# x:487 y:322
 			OperatableStateMachine.add('return to origin',
 										self.use_behavior(SinglePoseMoveSM, 'return to origin',
 											parameters={'positionX': 0.1}),
@@ -100,7 +101,7 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 										calc_pixel_meter_ratio(),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'calc_block': 'calc_block', 'pixel_meter_function': 'pixel_meter_func'})
+										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})
 
 
 		return _state_machine

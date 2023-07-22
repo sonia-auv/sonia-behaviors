@@ -100,7 +100,7 @@ class CalculatepixelmeterfunctioninyzSM(Behavior):
 										calc_pixel_meter_ratio(),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'calc_block': 'calc_block', 'pixel_meter_function': 'pixel_meter_func'})
+										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})
 
 
 		return _state_machine

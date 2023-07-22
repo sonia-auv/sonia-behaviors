@@ -31,6 +31,7 @@ class SavePoseSM(Behavior):
 		self.name = 'Save Pose'
 
 		# parameters of this behavior
+		self.add_parameter('test', 'a')
 
 		# references to used behaviors
 

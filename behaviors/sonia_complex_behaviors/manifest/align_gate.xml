@@ -12,8 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="Calculate pixel meter function in x" />
-	<contains name="Calculate pixel meter function in yz" />
+	<contains name="Single Pose Move" />
 
 	<!-- Available Parameters -->
 

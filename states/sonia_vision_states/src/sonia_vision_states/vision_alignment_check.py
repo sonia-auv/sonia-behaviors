@@ -3,7 +3,7 @@ import rospy
 from typing import List, Tuple
 from collections import deque
 from flexbe_core import EventState, Logger
-from sonia_common.msg import FilterchainTarget, AddPose, MpcInfo, CenterShapeBoundingBox, BoundingBox2D
+from sonia_common.msg import FilterchainTarget, AddPose, MpcInfo, CenterShapeBoundingBox, BoundingBox2D, MultiAddPose
 
 class vision_alignemnt_check(EventState):
     """
@@ -52,7 +52,7 @@ class vision_alignemnt_check(EventState):
         self.__filterchain_obj_sub = rospy.Subscriber(self.__obj_topic, FilterchainTarget, self.__filterchain_obj_cb)
         self.__filterchain_box_sub = rospy.Subscriber(self.__box_topic, BoundingBox2D, self.__filterchain_box_cb)
         self.__get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.__get_controller_info_cb)
-        self.__move_pub = rospy.Publisher("/proc_control/add_pose", AddPose, queue_size=10)
+        self.__move_pub = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
         self.__img_buffer.clear()
 
         self.__ax = userdata.x_func[0]
@@ -67,24 +67,28 @@ class vision_alignemnt_check(EventState):
             return 'failed'
         if self.__wait_for_target:
             if self.__target_reached and self.__trajectory_done:
+                Logger.loghint("Target Reached")
                 self.__wait_for_target = False
         else:
             self.__adjusts += 1
             if not self.__wait_topic():
                 return 'timeout'
-        
-            avg_x, avg_y = self.__calc_avg_center()
-            delta_x = avg_x - self.__bounding_box.center.x
-            delta_y =  avg_y - self.__bounding_box.center.y
+            Logger.loghint(f"Adjust number {self.__adjusts}")
 
-            if self.__adjust_sub_move(delta_x, delta_y):
-                self.__wait_for_target = True
-                return
+            # avg_x, avg_y = self.__calc_avg_center()
+            # delta_x = avg_x - self.__bounding_box.center.x
+            # delta_y =  avg_y - self.__bounding_box.center.y
+
+            # if self.__adjust_sub_move(delta_x, delta_y):
+            #     self.__wait_for_target = True
+            #     return
             
             avg_zoom = self.__calc_avg_size()
             delta_zoom = self.__blob_size - avg_zoom
-            if self.__adjust_sub_zoom():
+            if self.__adjust_sub_zoom(delta_zoom):
                 self.__wait_for_target = True
+                self.__target_reached = False
+                self.__trajectory_done = False
                 return
 
             return 'success'
@@ -129,12 +133,18 @@ class vision_alignemnt_check(EventState):
         tol = self.__bounding_box.size_x / 2
         if abs(delta_x) <= tol and abs(delta_y) <= tol:
             return False
+        Logger.loghint(f"Moving sub in y and z with tol at {tol}")
         pose = AddPose()
-        if delta_x > tol:
+        if abs(delta_x) > tol:
             pose.position.y = self.__yz_function(delta_x)
-        if delta_y > tol:
+            Logger.loghint(f"{delta_x}px is {pose.position.y} in m for y")
+        if abs(delta_y) > tol:
             pose.position.z = self.__yz_function(delta_y)
-        self.__move_pub.publish(pose)
+            Logger.loghint(f"{delta_y}px is {pose.position.z} in m for z")
+        poses = MultiAddPose()
+        poses.pose.append(pose)
+        Logger.loghint(f"Pose is {pose.position.x}, {pose.position.y}, {pose.position.z}")
+        self.__move_pub.publish(poses)
         return True
 
     def __get_controller_info_cb(self, data):
@@ -145,9 +155,15 @@ class vision_alignemnt_check(EventState):
         tol = self.__blob_size * self.__tolerence_thresh
         if abs(delta_zoom) <= tol:
             return False
+        Logger.loghint("Moving sub in x")
         pose = AddPose()
+        pose.frame = 1
         pose.position.x = self.__x_function(delta_zoom)
-        self.__move_pub.publish(pose)
+        Logger.loghint(f"{delta_zoom}px is {pose.position.x} in m for x")
+        poses = MultiAddPose()
+        poses.pose.append(pose)
+        self.__move_pub.publish(poses)
+        sleep(1)
         return True
 
     def __calc_avg_size(self):

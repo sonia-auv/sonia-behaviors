@@ -14,5 +14,14 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="test" default="a" label="test" hint="Sets the test">
+			<option value="a" />
+			<option value="b" />
+		</param>
+
+	</params>
+
 
 </behavior>
