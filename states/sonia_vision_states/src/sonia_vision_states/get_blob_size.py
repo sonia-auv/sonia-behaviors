@@ -9,6 +9,7 @@ class get_blob_size(EventState):
         -- filterchain_obj_topic    str     The topic from the filterchain to subscribe to get the object.
         -- dist_from_origin         int     Move distance in meters. Defaults to 0.1.
         -- nb_img                   int     Number of images needed calculate average. Defualts to 10.
+        -- direction                int     0=x, 1=yz
 
         ># calc_block               dict    block of all calculations done
         
@@ -17,7 +18,7 @@ class get_blob_size(EventState):
         <= success                          If able to collect blob size
         <= failed                           If failed to collect blob size
     """
-    def __init__(self, filterchain_obj_topic, dist_from_origin=0.1, nb_img=10):
+    def __init__(self, filterchain_obj_topic, dist_from_origin=0.1, nb_img=10, direction=0):
         super(get_blob_size, self).__init__(outcomes = ['success', 'failed'],
                                             input_keys = ['calc_block'],
                                             output_keys = ['calc_block'])
@@ -27,6 +28,7 @@ class get_blob_size(EventState):
         self.__max_img_nb = nb_img
         self.__nb_attempts = 0
         self.__dist_from_origin = dist_from_origin
+        self.__direction = direction
 
     def on_enter(self, userdata):
         Logger.log("Enter get blob size", Logger.REPORT_HINT)
@@ -50,9 +52,13 @@ class get_blob_size(EventState):
         size_avg = sum(self.__queue) / len(self.__queue)
         userdata.calc_block.append((size_avg, self.__dist_from_origin))
         Logger.log(f"blob size aquired {size_avg}", Logger.REPORT_HINT)
+            
         return 'success'
 
 
     def __filterchain_obj_sub_cb(self, msg: FilterchainTarget):
         if len(self.__queue) < self.__max_img_nb:
-            self.__queue.append(msg.obj_size)
+            if self.__direction == 0:
+                self.__queue.append(msg.obj_size)
+            elif self.__direction == 1:
+                self.__queue.append(msg.obj_ctr.x)

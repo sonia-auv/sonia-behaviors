@@ -75,13 +75,13 @@ class vision_alignemnt_check(EventState):
                 return 'timeout'
             Logger.loghint(f"Adjust number {self.__adjusts}")
 
-            # avg_x, avg_y = self.__calc_avg_center()
-            # delta_x = avg_x - self.__bounding_box.center.x
-            # delta_y =  avg_y - self.__bounding_box.center.y
+            avg_x, avg_y = self.__calc_avg_center()
+            delta_x = avg_x - self.__bounding_box.center.x
+            delta_y =  avg_y - self.__bounding_box.center.y
 
-            # if self.__adjust_sub_move(delta_x, delta_y):
-            #     self.__wait_for_target = True
-            #     return
+            if self.__adjust_sub_move(delta_x, delta_y):
+                self.__wait_for_target = True
+                return
             
             avg_zoom = self.__calc_avg_size()
             delta_zoom = self.__blob_size - avg_zoom
@@ -135,6 +135,7 @@ class vision_alignemnt_check(EventState):
             return False
         Logger.loghint(f"Moving sub in y and z with tol at {tol}")
         pose = AddPose()
+        pose.frame = 1
         if abs(delta_x) > tol:
             pose.position.y = self.__yz_function(delta_x)
             Logger.loghint(f"{delta_x}px is {pose.position.y} in m for y")
