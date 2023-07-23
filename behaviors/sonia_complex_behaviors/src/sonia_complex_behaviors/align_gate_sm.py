@@ -36,10 +36,10 @@ class AlignGateSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(SinglePoseMoveSM, 'Move Forward')
+		self.add_behavior(SinglePoseMoveSM, 'Move Backwards')
+		self.add_behavior(SinglePoseMoveSM, 'Move Forwards')
+		self.add_behavior(SinglePoseMoveSM, 'Move Left')
 		self.add_behavior(SinglePoseMoveSM, 'Move Right')
-		self.add_behavior(SinglePoseMoveSM, 'Return to origin')
-		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -84,16 +84,30 @@ class AlignGateSM(Behavior):
 
 			# x:472 y:548
 			OperatableStateMachine.add('Get origin yz',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0, nb_img=10),
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0, nb_img=10, direction=1),
 										transitions={'success': 'Move Right', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block_yz'})
 
 			# x:25 y:242
-			OperatableStateMachine.add('Move Forward',
-										self.use_behavior(SinglePoseMoveSM, 'Move Forward',
+			OperatableStateMachine.add('Move Backwards',
+										self.use_behavior(SinglePoseMoveSM, 'Move Backwards',
 											parameters={'positionX': -0.3}),
 										transitions={'finished': 'get diff x', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:20 y:466
+			OperatableStateMachine.add('Move Forwards',
+										self.use_behavior(SinglePoseMoveSM, 'Move Forwards',
+											parameters={'positionX': 0.3}),
+										transitions={'finished': 'Calc x', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:809 y:330
+			OperatableStateMachine.add('Move Left',
+										self.use_behavior(SinglePoseMoveSM, 'Move Left',
+											parameters={'positionY': -0.3}),
+										transitions={'finished': 'Calc yz', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:641 y:538
@@ -103,38 +117,24 @@ class AlignGateSM(Behavior):
 										transitions={'finished': 'get yz diff', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:20 y:466
-			OperatableStateMachine.add('Return to origin',
-										self.use_behavior(SinglePoseMoveSM, 'Return to origin',
-											parameters={'positionX': 0.3}),
-										transitions={'finished': 'Calc x', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:809 y:330
-			OperatableStateMachine.add('Single Pose Move',
-										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move',
-											parameters={'positionY': -0.3}),
-										transitions={'finished': 'Calc yz', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
 			# x:32 y:347
 			OperatableStateMachine.add('get diff x',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0.1, nb_img=10),
-										transitions={'success': 'Return to origin', 'failed': 'failed'},
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0.1, nb_img=10, direction=0),
+										transitions={'success': 'Move Forwards', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block_x'})
 
 			# x:32 y:149
 			OperatableStateMachine.add('get origin X',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0, nb_img=10),
-										transitions={'success': 'Move Forward', 'failed': 'failed'},
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=0, nb_img=10, direction=0),
+										transitions={'success': 'Move Backwards', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block_x'})
 
 			# x:843 y:461
 			OperatableStateMachine.add('get yz diff',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=-0.1, nb_img=10),
-										transitions={'success': 'Single Pose Move', 'failed': 'failed'},
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_left_target", dist_from_origin=-0.1, nb_img=10, direction=1),
+										transitions={'success': 'Move Left', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block_yz'})
 
@@ -147,7 +147,7 @@ class AlignGateSM(Behavior):
 
 			# x:587 y:57
 			OperatableStateMachine.add('Align to gate',
-										vision_alignemnt_check(filterchain_obj_topic="/proc_image_processing/gate_left_target", filterchain_box_topic="/proc_image_processing/gate_box", blob_size=130, nb_imgs=10, timeout_sec=5, max_adjusts=10, tolerance=0.05),
+										vision_alignemnt_check(filterchain_obj_topic="/proc_image_processing/gate_left_target", filterchain_box_topic="/proc_image_processing/gate_box", blob_size=130, nb_imgs=10, timeout_sec=5, max_adjusts=10, tolerance=0.10),
 										transitions={'timeout': 'failed', 'success': 'finished', 'failed': 'failed'},
 										autonomy={'timeout': Autonomy.Off, 'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'x_func': 'func_block_x', 'yz_function': 'func_block_yz'})

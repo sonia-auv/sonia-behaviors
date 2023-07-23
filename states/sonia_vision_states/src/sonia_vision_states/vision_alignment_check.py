@@ -54,13 +54,16 @@ class vision_alignemnt_check(EventState):
         self.__get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.__get_controller_info_cb)
         self.__move_pub = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
         self.__img_buffer.clear()
-
-        self.__ax = userdata.x_func[0]
-        self.__bx = userdata.x_func[1]
-        self.__cx = userdata.x_func[2]
-        self.__ayz = userdata.yz_function[0]
-        self.__byz = userdata.yz_function[1]
-        self.__cyz = userdata.yz_function[2]
+        try:
+            self.__ax = userdata.x_func[0]
+            self.__bx = userdata.x_func[1]
+            self.__cx = userdata.x_func[2]
+            self.__ayz = userdata.yz_function[0]
+            self.__byz = userdata.yz_function[1]
+            self.__cyz = userdata.yz_function[2]
+        except:
+            Logger.logerr("Failed comming in")
+            return 'failed'
     
     def execute(self, userdata):
         if self.__adjusts > self.__max_adjusts:
@@ -75,13 +78,13 @@ class vision_alignemnt_check(EventState):
                 return 'timeout'
             Logger.loghint(f"Adjust number {self.__adjusts}")
 
-            avg_x, avg_y = self.__calc_avg_center()
-            delta_x = avg_x - self.__bounding_box.center.x
-            delta_y =  avg_y - self.__bounding_box.center.y
+            # avg_x, avg_y = self.__calc_avg_center()
+            # delta_x = avg_x - self.__bounding_box.center.x
+            # delta_y =  avg_y - self.__bounding_box.center.y
 
-            if self.__adjust_sub_move(delta_x, delta_y):
-                self.__wait_for_target = True
-                return
+            # if self.__adjust_sub_move(delta_x, delta_y):
+            #     self.__wait_for_target = True
+            #     return
             
             avg_zoom = self.__calc_avg_size()
             delta_zoom = self.__blob_size - avg_zoom
