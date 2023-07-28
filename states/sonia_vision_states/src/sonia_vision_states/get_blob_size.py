@@ -50,7 +50,11 @@ class get_blob_size(EventState):
         
         # Calculate average
         size_avg = sum(self.__queue) / len(self.__queue)
-        userdata.calc_block.append((size_avg, self.__dist_from_origin))
+        if len(userdata.calc_block > 0) and self.__dist_from_origin == 0:
+            userdata.calc_block[0][1] += size_avg
+            userdata.calc_block[0][1] /= 2
+        else:
+            userdata.calc_block.append((size_avg, self.__dist_from_origin))
         Logger.log(f"blob size aquired {size_avg}", Logger.REPORT_HINT)
             
         return 'success'

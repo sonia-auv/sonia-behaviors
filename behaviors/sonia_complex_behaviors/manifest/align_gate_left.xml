@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Align Gate">
+<behavior name="Align Gate Left">
 
-	<executable package_path="sonia_complex_behaviors.align_gate_sm" class="AlignGateSM" />
+	<executable package_path="sonia_complex_behaviors.align_gate_left_sm" class="AlignGateLeftSM" />
 	<tagstring></tagstring>
 	<author>Nimai</author>
 	<date>Fri Jul 21 2023</date>
 	<description>
-		align to gate
+		align to gate left post
 	</description>
 
 

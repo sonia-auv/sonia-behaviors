@@ -25,7 +25,7 @@ class vision_alignemnt_check(EventState):
 
     def __init__(self, filterchain_obj_topic, filterchain_box_topic, blob_size, nb_imgs = 10, timeout_sec = 5, max_adjusts = 10, tolerance = 0.05):
         super(vision_alignemnt_check, self).__init__(outcomes = ['timeout', 'success', 'failed'],
-                                                     input_keys = ['x_func', 'yz_function'])
+                                                     input_keys = ['x_func', 'yz_func'])
         self.__obj_topic = filterchain_obj_topic
         self.__box_topic = filterchain_box_topic
         self.__max_adjusts = max_adjusts
@@ -54,44 +54,42 @@ class vision_alignemnt_check(EventState):
         self.__get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.__get_controller_info_cb)
         self.__move_pub = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
         self.__img_buffer.clear()
-        try:
-            self.__ax = userdata.x_func[0]
-            self.__bx = userdata.x_func[1]
-            self.__cx = userdata.x_func[2]
-            self.__ayz = userdata.yz_function[0]
-            self.__byz = userdata.yz_function[1]
-            self.__cyz = userdata.yz_function[2]
-        except:
-            Logger.logerr("Failed comming in")
-            return 'failed'
+        self.__ax = userdata.x_func['a']
+        self.__bx = userdata.x_func['b']
+        self.__cx = userdata.x_func['c']
+        self.__ayz = userdata.yz_func['a']
+        self.__byz = userdata.yz_func['b']
+        self.__cyz = userdata.yz_func['c']
     
     def execute(self, userdata):
         if self.__adjusts > self.__max_adjusts:
             return 'failed'
-        if self.__wait_for_target:
-            if self.__target_reached and self.__trajectory_done:
-                Logger.loghint("Target Reached")
-                self.__wait_for_target = False
+        
+        if self.__wait_for_target and not self.__target_received:
+            if not self.__target_reached and not self.__trajectory_done:
+                self.__target_received = True
+        elif self.__wait_for_target:
+            Logger.loghint("Target Reached")
+            self.__wait_for_target = False
         else:
+            self.__get_controller_info_sub.unregister()
             self.__adjusts += 1
             if not self.__wait_topic():
                 return 'timeout'
             Logger.loghint(f"Adjust number {self.__adjusts}")
 
-            # avg_x, avg_y = self.__calc_avg_center()
-            # delta_x = avg_x - self.__bounding_box.center.x
-            # delta_y =  avg_y - self.__bounding_box.center.y
+            avg_x, avg_y = self.__calc_avg_center()
+            delta_x = avg_x - self.__bounding_box.center.x
+            delta_y =  avg_y - self.__bounding_box.center.y
 
-            # if self.__adjust_sub_move(delta_x, delta_y):
-            #     self.__wait_for_target = True
-            #     return
+            if self.__adjust_sub_move(delta_x, delta_y):
+                self.__wait_for_target = True
+                return
             
             avg_zoom = self.__calc_avg_size()
             delta_zoom = self.__blob_size - avg_zoom
             if self.__adjust_sub_zoom(delta_zoom):
                 self.__wait_for_target = True
-                self.__target_reached = False
-                self.__trajectory_done = False
                 return
 
             return 'success'
@@ -149,6 +147,7 @@ class vision_alignemnt_check(EventState):
         poses.pose.append(pose)
         Logger.loghint(f"Pose is {pose.position.x}, {pose.position.y}, {pose.position.z}")
         self.__move_pub.publish(poses)
+        # sleep(1.5)
         return True
 
     def __get_controller_info_cb(self, data):
@@ -167,7 +166,7 @@ class vision_alignemnt_check(EventState):
         poses = MultiAddPose()
         poses.pose.append(pose)
         self.__move_pub.publish(poses)
-        sleep(1)
+        # sleep(1.5)
         return True
 
     def __calc_avg_size(self):

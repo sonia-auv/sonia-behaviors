@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Start filterchain and align gate right">
+
+	<executable package_path="sonia_complex_behaviors.start_filterchain_and_align_gate_right_sm" class="StartfilterchainandaligngaterightSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Thu Jul 27 2023</date>
+	<description>
+		Start the filterchain then align the gate to the right
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Align Gate Right" />
+
+	<!-- Available Parameters -->
+
+</behavior>

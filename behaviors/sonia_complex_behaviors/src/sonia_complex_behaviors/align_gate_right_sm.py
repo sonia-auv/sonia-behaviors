@@ -21,15 +21,15 @@ from sonia_vision_states.vision_alignment_check import vision_alignemnt_check
 Created on Fri Jul 21 2023
 @author: Nimai
 '''
-class AlignGateSM(Behavior):
+class AlignGateRightSM(Behavior):
 	'''
-	align to gate
+	align to gate right post
 	'''
 
 
 	def __init__(self):
-		super(AlignGateSM, self).__init__()
-		self.name = 'Align Gate'
+		super(AlignGateRightSM, self).__init__()
+		self.name = 'Align Gate Right'
 
 		# parameters of this behavior
 
@@ -62,7 +62,7 @@ class AlignGateSM(Behavior):
 			# x:169 y:38
 			OperatableStateMachine.add('Calculate pixel meter function in x',
 										self.use_behavior(CalculatepixelmeterfunctioninxSM, 'Calculate pixel meter function in x',
-											parameters={'gate_obj_topic': "/proc_image_processing/gate_left_target"}),
+											parameters={'gate_obj_topic': "/proc_image_processing/gate_right_target"}),
 										transitions={'finished': 'Calculate pixel meter function in yz', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'func_block': 'func_block_x'})
@@ -70,14 +70,14 @@ class AlignGateSM(Behavior):
 			# x:499 y:18
 			OperatableStateMachine.add('Calculate pixel meter function in yz',
 										self.use_behavior(CalculatepixelmeterfunctioninyzSM, 'Calculate pixel meter function in yz',
-											parameters={'gate_obj_topic': "/proc_image_processing/gate_left_target"}),
+											parameters={'gate_obj_topic': "/proc_image_processing/gate_right_target"}),
 										transitions={'finished': 'Align to gate', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'func_block': 'func_block_yz'})
 
 			# x:703 y:250
 			OperatableStateMachine.add('Align to gate',
-										vision_alignemnt_check(filterchain_obj_topic="/proc_image_processing/gate_left_target", filterchain_box_topic="/proc_image_processing/gate_box", blob_size=130, nb_imgs=10, timeout_sec=5, max_adjusts=10, tolerance=0.10),
+										vision_alignemnt_check(filterchain_obj_topic="/proc_image_processing/gate_right_target", filterchain_box_topic="/proc_image_processing/gate_box", blob_size=130, nb_imgs=10, timeout_sec=5, max_adjusts=10, tolerance=0.10),
 										transitions={'timeout': 'failed', 'success': 'finished', 'failed': 'failed'},
 										autonomy={'timeout': Autonomy.Off, 'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'x_func': 'func_block_x', 'yz_function': 'func_block_yz'})

@@ -9,7 +9,7 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_base_behaviors.single_pose_move_sm import SinglePoseMoveSM
-from sonia_vision_states.calc_pixel_meter_ratio import calc_pixel_meter_ratio
+from sonia_vision_states.calculate_function_constants import calculate_function_constants
 from sonia_vision_states.get_blob_size import get_blob_size
 from sonia_vision_states.init_blob_calc_block import init_blob_calc_block
 # Additional imports can be added inside the following tags
@@ -36,8 +36,10 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 		self.add_parameter('gate_obj_topic', '')
 
 		# references to used behaviors
-		self.add_behavior(SinglePoseMoveSM, 'calc_group/Move Backwards')
-		self.add_behavior(SinglePoseMoveSM, 'calc_group/return to origin')
+		self.add_behavior(SinglePoseMoveSM, 'Move Backwards')
+		self.add_behavior(SinglePoseMoveSM, 'Move forward')
+		self.add_behavior(SinglePoseMoveSM, 'Move to origin (1)')
+		self.add_behavior(SinglePoseMoveSM, 'return to origin')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -49,67 +51,84 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 
 
 	def create(self):
-		# x:557 y:382, x:449 y:174
+		# x:144 y:806, x:164 y:641
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['func_block'])
-		_state_machine.userdata.func_block = func_block
+		_state_machine.userdata.func_block = []
+		_state_machine.userdata.calc_block = calc_block
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
 		
 		# [/MANUAL_CREATE]
 
-		# x:30 y:365, x:130 y:365
-		_sm_calc_group_0 = OperatableStateMachine(outcomes=['failed', 'finished'], output_keys=['calc_block'])
 
-		with _sm_calc_group_0:
-			# x:30 y:40
+		with _state_machine:
+			# x:70 y:54
 			OperatableStateMachine.add('init the calculaiton block',
 										init_blob_calc_block(),
 										transitions={'success': 'origin'},
 										autonomy={'success': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
-			# x:286 y:248
-			OperatableStateMachine.add('move1',
+			# x:519 y:367
+			OperatableStateMachine.add('Get blob size origin (2)',
+										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=0.0, nb_img=10, direction=0),
+										transitions={'success': 'Move forward', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'calc_block': 'calc_block'})
+
+			# x:287 y:239
+			OperatableStateMachine.add('Get blob size pt 1',
 										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=0.1, nb_img=10, direction=0),
+										transitions={'success': 'Move to origin (1)', 'failed': 'failed'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'calc_block': 'calc_block'})
+
+			# x:740 y:515
+			OperatableStateMachine.add('Get blob size pt 2',
+										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=-0.1, nb_img=10, direction=0),
 										transitions={'success': 'return to origin', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
-			# x:311 y:43
+			# x:258 y:118
+			OperatableStateMachine.add('Move Backwards',
+										self.use_behavior(SinglePoseMoveSM, 'Move Backwards',
+											parameters={'positionX': -0.3, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 0.0}),
+										transitions={'finished': 'Get blob size pt 1', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:763 y:360
+			OperatableStateMachine.add('Move forward',
+										self.use_behavior(SinglePoseMoveSM, 'Move forward',
+											parameters={'positionX': 0.3, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 0.0}),
+										transitions={'finished': 'Get blob size pt 2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:512 y:248
+			OperatableStateMachine.add('Move to origin (1)',
+										self.use_behavior(SinglePoseMoveSM, 'Move to origin (1)',
+											parameters={'positionX': 0.3, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 0.0}),
+										transitions={'finished': 'Get blob size origin (2)', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:72 y:122
 			OperatableStateMachine.add('origin',
 										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=0.0, nb_img=10, direction=0),
 										transitions={'success': 'Move Backwards', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
-			# x:291 y:372
+			# x:679 y:697
 			OperatableStateMachine.add('return to origin',
-										self.use_behavior(SinglePoseMoveSM, 'calc_group/return to origin',
+										self.use_behavior(SinglePoseMoveSM, 'return to origin',
 											parameters={'positionX': 0.3}),
-										transitions={'finished': 'finished', 'failed': 'failed'},
+										transitions={'finished': 'Calculate 2nd order', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:422 y:134
-			OperatableStateMachine.add('Move Backwards',
-										self.use_behavior(SinglePoseMoveSM, 'calc_group/Move Backwards',
-											parameters={'positionX': -0.3}),
-										transitions={'finished': 'move1', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-
-
-		with _state_machine:
-			# x:71 y:45
-			OperatableStateMachine.add('calc_group',
-										_sm_calc_group_0,
-										transitions={'failed': 'Calculate', 'finished': 'Calculate'},
-										autonomy={'failed': Autonomy.Inherit, 'finished': Autonomy.Inherit},
-										remapping={'calc_block': 'calc_block'})
-
-			# x:289 y:409
-			OperatableStateMachine.add('Calculate',
-										calc_pixel_meter_ratio(),
+			# x:269 y:763
+			OperatableStateMachine.add('Calculate 2nd order',
+										calculate_function_constants(order=2, precision=3),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})
