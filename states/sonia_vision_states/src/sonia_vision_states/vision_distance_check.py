@@ -81,7 +81,6 @@ class vision_distance_check(EventState):
             return 'success'
             
     def on_exit(self, userdata):
-        self.__filterchain_obj_sub.unregister()
         self.__get_controller_info_sub.unregister()
         self.__move_pub.unregister()
 

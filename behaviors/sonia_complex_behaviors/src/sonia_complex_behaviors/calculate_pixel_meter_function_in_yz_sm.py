@@ -52,7 +52,6 @@ class CalculatepixelmeterfunctioninyzSM(Behavior):
 		# x:22 y:566, x:56 y:349
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['func_block'])
 		_state_machine.userdata.func_block = []
-		_state_machine.userdata.calc_block = calc_block
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]

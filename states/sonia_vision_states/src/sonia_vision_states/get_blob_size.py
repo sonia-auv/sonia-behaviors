@@ -11,9 +11,9 @@ class get_blob_size(EventState):
         -- nb_img                   int     Number of images needed calculate average. Defualts to 10.
         -- direction                int     0=x, 1=yz
 
-        ># calc_block               dict    block of all calculations done
+        ># calc_block               list     block of all calculations done
         
-        #> calc_block               dict    block of all calculations done includeing this step
+        #> calc_block               list     block of all calculations done includeing this step
 
         <= success                          If able to collect blob size
         <= failed                           If failed to collect blob size
@@ -50,9 +50,10 @@ class get_blob_size(EventState):
         
         # Calculate average
         size_avg = sum(self.__queue) / len(self.__queue)
-        if len(userdata.calc_block > 0) and self.__dist_from_origin == 0:
-            userdata.calc_block[0][1] += size_avg
-            userdata.calc_block[0][1] /= 2
+        if len(userdata.calc_block) > 0 and self.__dist_from_origin == 0:
+            tmp = userdata.calc_block[0]
+            new_avg = (userdata.calc_block[0][1] + size_avg) / 2
+            userdata.calc_block[0] = (new_avg, tmp[1])
         else:
             userdata.calc_block.append((size_avg, self.__dist_from_origin))
         Logger.log(f"blob size aquired {size_avg}", Logger.REPORT_HINT)

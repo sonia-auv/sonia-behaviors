@@ -40,6 +40,7 @@ class vision_alignemnt_check(EventState):
         self.__wait_for_target = False
         self.__target_reached = False
         self.__trajectory_done = False
+        self.__target_received = False
         self.__bounding_box = None
         self.__ax = 0
         self.__bx = 0
@@ -69,10 +70,11 @@ class vision_alignemnt_check(EventState):
             if not self.__target_reached and not self.__trajectory_done:
                 self.__target_received = True
         elif self.__wait_for_target:
-            Logger.loghint("Target Reached")
-            self.__wait_for_target = False
+            if self.__target_reached and  self.__trajectory_done:
+                Logger.loghint("Target Reached")
+                self.__wait_for_target = False
+                self.__target_received = False
         else:
-            self.__get_controller_info_sub.unregister()
             self.__adjusts += 1
             if not self.__wait_topic():
                 return 'timeout'
