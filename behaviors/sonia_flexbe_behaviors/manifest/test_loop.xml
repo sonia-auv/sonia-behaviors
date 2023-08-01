@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_loop">
+
+	<executable package_path="sonia_flexbe_behaviors.test_loop_sm" class="test_loopSM" />
+	<tagstring>mouvement</tagstring>
+	<author>Ewan F</author>
+	<date>Mon Jul 31 2023</date>
+	<description>
+		test la limite de loop
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

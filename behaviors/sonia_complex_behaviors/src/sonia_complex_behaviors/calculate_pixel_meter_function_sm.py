@@ -75,14 +75,14 @@ class CalculatepixelmeterfunctionSM(Behavior):
 
 			# x:561 y:152
 			OperatableStateMachine.add('move1',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_right_target", dist_from_origin=0.1, nb_img=10),
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_right_target", dist_from_origin=0.1, nb_img=10, direction=0),
 										transitions={'success': 'return to origin', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
 			# x:303 y:27
 			OperatableStateMachine.add('origin',
-										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_right_target", dist_from_origin=0.0, nb_img=10),
+										get_blob_size(filterchain_obj_topic="/proc_image_processing/gate_right_target", dist_from_origin=0.0, nb_img=10, direction=0),
 										transitions={'success': 'Move Backwards', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
@@ -99,7 +99,7 @@ class CalculatepixelmeterfunctionSM(Behavior):
 										calc_pixel_meter_ratio(),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'calc_block': 'calc_block', 'pixel_meter_function': 'pixel_meter_func'})
+										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})
 
 
 		return _state_machine

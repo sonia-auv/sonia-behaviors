@@ -50,7 +50,7 @@ class get_target_angle(EventState):
         # Calculate average
         angle_avg= sum(self.__queue) / len(self.__queue)
         userdata.calc_block.append(math.acos(angle_avg/self.__obj_ratio))
-        Logger.log(f"blob size aquired {angle_avg}", Logger.REPORT_HINT)
+        Logger.log(f"Target angle aquired {math.acos(angle_avg/self.__obj_ratio)}", Logger.REPORT_HINT)
             
         return 'success'
 
