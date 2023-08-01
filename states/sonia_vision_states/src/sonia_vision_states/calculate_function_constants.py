@@ -49,15 +49,10 @@ class calculate_function_constants(EventState):
             y3 = round(userdata.calc_block[2][1], self.__precision)
             Logger.loghint(f"x3: {x3}, y3: {y3}")
 
-
-        if x2 == 0:
-            x2 = 1
-            Logger.logwarn("x2 was zero, setting to 1")
-        if x3 == 0:
-            x3 = 1
-            Logger.logwarn("x3 was zero, setting to 1")
-
-        a = round((x1 * (y3 - y2) + x2 * (y1 - y3) + x3 * (y2 - y1)) / ((x1 - x2) * (x1 - x3) * (x2 - x3)), self.__precision)
+        try:
+            a = round((x1 * (y3 - y2) + x2 * (y1 - y3) + x3 * (y2 - y1)) / ((x1 - x2) * (x1 - x3) * (x2 - x3)), self.__precision)
+        except ZeroDivisionError:
+            a = 0
         b = round(((y2 - y1) / (x2 - x1)) - a * (x1 + x2), self.__precision)
         c = round(y1 - a * (x1 * x1) - b * x1, self.__precision)
 
