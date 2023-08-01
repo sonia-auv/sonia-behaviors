@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Test align">
+
+	<executable package_path="sonia_base_behaviors.test_align_sm" class="TestalignSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sun Jul 09 2023</date>
+	<description>
+		test
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

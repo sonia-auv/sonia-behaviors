@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Align Gate Angle">
+
+	<executable package_path="sonia_complex_behaviors.align_gate_angle_sm" class="AlignGateAngleSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Fri Jul 28 2023</date>
+	<description>
+		Align the gate perpendiculary
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Rotate Angle Align" />
+
+	<!-- Available Parameters -->
+
+</behavior>

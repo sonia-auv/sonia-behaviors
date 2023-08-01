@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Calculate pixel meter function in yz">
+
+	<executable package_path="sonia_complex_behaviors.calculate_pixel_meter_function_in_yz_sm" class="CalculatepixelmeterfunctioninyzSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Fri Jul 21 2023</date>
+	<description>
+		Calculate the function that represents a curve matching the scaling of pixels to missions
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="text" name="gate_obj_topic" default="" label="gate_obj_topic" hint="Sets the gate_obj_topic" />
+
+	</params>
+
+
+</behavior>

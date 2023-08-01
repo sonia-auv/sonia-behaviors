@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Save Pose">
+
+	<executable package_path="sonia_base_behaviors.save_pose_sm" class="SavePoseSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sat Jun 24 2023</date>
+	<description>
+		Save Pose
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="test" default="a" label="test" hint="Sets the test">
+			<option value="a" />
+			<option value="b" />
+		</param>
+
+	</params>
+
+
+</behavior>

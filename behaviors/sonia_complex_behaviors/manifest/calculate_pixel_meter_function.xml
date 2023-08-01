@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Calculate pixel meter function">
+
+	<executable package_path="sonia_complex_behaviors.calculate_pixel_meter_function_sm" class="CalculatepixelmeterfunctionSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Fri Jul 21 2023</date>
+	<description>
+		Calculate the function that represents a curve matching the scaling of pixels to missions
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

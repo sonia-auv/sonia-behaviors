@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Rotate Angle Align">
+
+	<executable package_path="sonia_base_behaviors.rotate_angle_align_sm" class="RotateAngleAlignSM" />
+	<tagstring></tagstring>
+	<author>Ewan F</author>
+	<date>Mon Jul 31 2023</date>
+	<description>
+		Rotate around target to align perpendicular.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="numeric" name="distance" default="2.5" label="distance" hint="Sets the distance">
+			<min value="0" />
+			<max value="5" />
+		</param>
+
+		<param type="numeric" name="calc_angle" default="25" label="calc_angle" hint="Sets the calc_angle">
+			<min value="0" />
+			<max value="45" />
+		</param>
+
+		<param type="numeric" name="target_ratio" default="0.5" label="target_ratio" hint="Sets the target_ratio">
+			<min value="0" />
+			<max value="500" />
+		</param>
+
+	</params>
+
+
+</behavior>

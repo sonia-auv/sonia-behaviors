@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_com">
+
+	<executable package_path="sonia_flexbe_behaviors.test_com_sm" class="test_comSM" />
+	<tagstring>task</tagstring>
+	<author>Ewan F</author>
+	<date>Sun Jun 25 2023</date>
+	<description>
+		test de communication intersub
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

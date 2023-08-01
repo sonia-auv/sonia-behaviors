@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Gate Angle Align">
+
+	<executable package_path="sonia_base_behaviors.gate_angle_align_sm" class="GateAngleAlignSM" />
+	<tagstring></tagstring>
+	<author>Ewan F</author>
+	<date>Mon Jul 31 2023</date>
+	<description>
+		Test pour l'orientation du sub
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
