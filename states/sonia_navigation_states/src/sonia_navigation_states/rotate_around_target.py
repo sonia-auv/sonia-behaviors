@@ -25,7 +25,7 @@ class rotate_around_target(EventState):
 
     def __init__(self, angle, distance=1):
         
-        super(rotate_around_target, self).__init__(outcomes=['continue', 'failed'], input_keys=["calc_block"])
+        super(rotate_around_target, self).__init__(outcomes=['continue', 'failed'],  input_keys=["calc_block"])
 
         self.valid = False
         self.time_launch = 0.0
@@ -45,8 +45,8 @@ class rotate_around_target(EventState):
             angle = userdata.calc_block[abs(self.angle)]
         
         radians = math.radians(angle)
-        positionX = self.distance * math.sin(radians)
-        positionY = self.distance - (self.distance * math.cos(radians))
+        positionY = self.distance * math.sin(radians)
+        positionX = self.distance - (self.distance * math.cos(radians))
 
         trajectory = MultiAddPose()
         trajectory.pose.append(navUtils.addpose(positionX, positionY, 0, 0, 0, -angle, 1, 0, 0, False))

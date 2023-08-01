@@ -6,7 +6,8 @@ class decision_angle(EventState):
 
     def __init__(self):
         super(decision_angle, self).__init__(outcomes=['success'],
-                         input_keys = ['calc_block'])
+                         input_keys = ['calc_block'],
+                         output_keys = ['calc_block'])
 
     def execute(self, userdata):
         if userdata.calc_block[0] > userdata.calc_block[1] :

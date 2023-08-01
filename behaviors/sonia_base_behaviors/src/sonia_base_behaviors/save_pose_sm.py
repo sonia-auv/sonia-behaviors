@@ -47,7 +47,7 @@ class SavePoseSM(Behavior):
 	def create(self):
 		# x:30 y:365, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['save_traj'])
-		_state_machine.userdata.save_traj = save_traj
+		_state_machine.userdata.save_traj = []
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]

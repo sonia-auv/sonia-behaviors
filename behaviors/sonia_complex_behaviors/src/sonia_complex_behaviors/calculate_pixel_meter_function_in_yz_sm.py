@@ -76,7 +76,7 @@ class CalculatepixelmeterfunctioninyzSM(Behavior):
 
 			# x:288 y:299
 			OperatableStateMachine.add('move1',
-										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=0.2, nb_img=10, direction=1),
+										get_blob_size(filterchain_obj_topic=self.gate_obj_topic, dist_from_origin=0.3, nb_img=10, direction=1),
 										transitions={'success': 'return to origin', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})

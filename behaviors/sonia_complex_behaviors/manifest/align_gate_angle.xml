@@ -12,7 +12,7 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="Single Pose Move" />
+	<contains name="Rotate Angle Align" />
 
 	<!-- Available Parameters -->
 

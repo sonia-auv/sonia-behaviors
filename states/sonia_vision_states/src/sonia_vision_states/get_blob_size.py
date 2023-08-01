@@ -52,7 +52,7 @@ class get_blob_size(EventState):
         size_avg = sum(self.__queue) / len(self.__queue)
         if len(userdata.calc_block) > 0 and self.__dist_from_origin == 0:
             tmp = userdata.calc_block[0]
-            new_avg = (userdata.calc_block[0][1] + size_avg) / 2
+            new_avg = (userdata.calc_block[0][0] + size_avg) / 2
             userdata.calc_block[0] = (new_avg, tmp[1])
         else:
             userdata.calc_block.append((size_avg, self.__dist_from_origin))

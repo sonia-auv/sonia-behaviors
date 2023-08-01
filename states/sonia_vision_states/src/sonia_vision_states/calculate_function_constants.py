@@ -41,8 +41,8 @@ class calculate_function_constants(EventState):
         Logger.loghint(f"x2: {x2}, y2: {y2}")
 
         if self.__order == 1:
-            x3 = round(userdata.calc_block[1][0] - x_t, self.__precision)
-            y3 = round(userdata.calc_block[1][1] * -1, self.__precision)
+            x3 = x2*-1
+            y3 = y2*-1
             Logger.loghint(f"x3: {x3}, y3: {y3}")
         elif self.__order == 2:
             x3 = round(x_t - userdata.calc_block[2][0], self.__precision)

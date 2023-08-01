@@ -32,7 +32,6 @@ class vision_distance_check(EventState):
         self.__tolerence_thresh = tolerance
         self.__adjusts = 0
         self.__timeout = timeout_sec
-        self.__filterchain_obj_sub = None
         self.__move_pub = None
         self.__get_controller_info_sub = None
         self.__img_buffer = deque(maxlen=nb_imgs)
@@ -42,8 +41,6 @@ class vision_distance_check(EventState):
 
 
     def on_enter(self, userdata):
-        self.__filterchain_obj_sub = rospy.Subscriber(self.__obj_topic, FilterchainTarget, self.__filterchain_obj_cb)
-        self.__filterchain_box_sub = rospy.Subscriber(self.__box_topic, BoundingBox2D, self.__filterchain_box_cb)
         self.__get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.__get_controller_info_cb)
         self.__move_pub = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
         self.__img_buffer.clear()

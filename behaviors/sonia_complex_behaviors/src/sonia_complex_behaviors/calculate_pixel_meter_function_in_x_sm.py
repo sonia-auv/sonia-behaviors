@@ -121,13 +121,13 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 			# x:679 y:697
 			OperatableStateMachine.add('return to origin',
 										self.use_behavior(SinglePoseMoveSM, 'return to origin',
-											parameters={'positionX': 0.3}),
+											parameters={'positionX': -0.3}),
 										transitions={'finished': 'Calculate 2nd order', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:269 y:763
 			OperatableStateMachine.add('Calculate 2nd order',
-										calculate_function_constants(order=1, precision=3),
+										calculate_function_constants(order=2, precision=3),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})

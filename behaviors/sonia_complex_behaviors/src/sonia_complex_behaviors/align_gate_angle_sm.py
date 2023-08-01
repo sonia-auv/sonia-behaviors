@@ -8,9 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_base_behaviors.single_pose_move_sm import SinglePoseMoveSM
-from sonia_vision_states.get_target_angle import get_target_angle
-from sonia_vision_states.init_blob_calc_block import init_blob_calc_block
+from sonia_base_behaviors.rotate_angle_align_sm import RotateAngleAlignSM
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -34,8 +32,7 @@ class AlignGateAngleSM(Behavior):
 		# parameters of this behavior
 
 		# references to used behaviors
-		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move')
-		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_2')
+		self.add_behavior(RotateAngleAlignSM, 'Rotate Angle Align')
 
 		# Additional initialization code can be added inside the following tags
 		# [MANUAL_INIT]
@@ -47,7 +44,7 @@ class AlignGateAngleSM(Behavior):
 
 
 	def create(self):
-		# x:702 y:399, x:160 y:502
+		# x:414 y:217, x:60 y:206
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,40 +54,11 @@ class AlignGateAngleSM(Behavior):
 
 
 		with _state_machine:
-			# x:30 y:40
-			OperatableStateMachine.add('Init calc block',
-										init_blob_calc_block(),
-										transitions={'success': 'Get target angle'},
-										autonomy={'success': Autonomy.Off},
-										remapping={'calc_block': 'calc_block'})
-
-			# x:338 y:235
-			OperatableStateMachine.add('Get target angle_2',
-										get_target_angle(filterchain_obj_topic="proc_image_processing/gate_angle", obj_ratio=10, nb_img=10),
-										transitions={'success': 'Single Pose Move_2', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'calc_block': 'calc_block'})
-
-			# x:317 y:116
-			OperatableStateMachine.add('Single Pose Move',
-										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move',
-											parameters={'positionX': 0.0, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 10}),
-										transitions={'finished': 'Get target angle_2', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:621 y:227
-			OperatableStateMachine.add('Single Pose Move_2',
-										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2',
-											parameters={'positionX': 0.0, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': -10}),
+			# x:151 y:72
+			OperatableStateMachine.add('Rotate Angle Align',
+										self.use_behavior(RotateAngleAlignSM, 'Rotate Angle Align'),
 										transitions={'finished': 'finished', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:119 y:169
-			OperatableStateMachine.add('Get target angle',
-										get_target_angle(filterchain_obj_topic="proc_image_processing/gate_angle", obj_ratio=10, nb_img=10),
-										transitions={'success': 'Single Pose Move', 'failed': 'failed'},
-										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'calc_block': 'calc_block'})
 
 
 		return _state_machine

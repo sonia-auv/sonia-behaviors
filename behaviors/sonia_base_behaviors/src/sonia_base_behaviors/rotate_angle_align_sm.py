@@ -23,17 +23,20 @@ from sonia_vision_states.init_blob_calc_block import init_blob_calc_block
 Created on Mon Jul 31 2023
 @author: Ewan F
 '''
-class test_angleSM(Behavior):
+class RotateAngleAlignSM(Behavior):
 	'''
-	Test pour l'orientation du sub
+	Rotate around target to align perpendicular.
 	'''
 
 
 	def __init__(self):
-		super(test_angleSM, self).__init__()
-		self.name = 'test_angle'
+		super(RotateAngleAlignSM, self).__init__()
+		self.name = 'Rotate Angle Align'
 
 		# parameters of this behavior
+		self.add_parameter('distance', 2.5)
+		self.add_parameter('calc_angle', 25)
+		self.add_parameter('target_ratio', 0.5)
 
 		# references to used behaviors
 
@@ -66,28 +69,28 @@ class test_angleSM(Behavior):
 
 			# x:233 y:95
 			OperatableStateMachine.add('get_angle',
-										get_target_angle(filterchain_obj_topic="/proc_image_processing/gate_angle", obj_ratio=0.5, nb_img=10),
+										get_target_angle(filterchain_obj_topic="/proc_image_processing/gate_angle", obj_ratio=self.target_ratio, nb_img=10),
 										transitions={'success': 'rotate1', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
 			# x:856 y:70
 			OperatableStateMachine.add('get_angle(2)',
-										get_target_angle(filterchain_obj_topic="/proc_image_processing/gate_angle", obj_ratio=0.5, nb_img=10),
+										get_target_angle(filterchain_obj_topic="/proc_image_processing/gate_angle", obj_ratio=self.target_ratio, nb_img=10),
 										transitions={'success': 'decision', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
 			# x:371 y:45
 			OperatableStateMachine.add('rotate1',
-										rotate_around_target(angle=25, distance=2.5),
+										rotate_around_target(angle=self.calc_angle, distance=self.distance),
 										transitions={'continue': 'wait_target1', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})
 
 			# x:713 y:365
 			OperatableStateMachine.add('rotate2',
-										rotate_around_target(angle=-2, distance=2.5),
+										rotate_around_target(angle=-2, distance=self.distance),
 										transitions={'continue': 'wait2', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block'})

@@ -23,15 +23,15 @@ from sonia_vision_states.init_blob_calc_block import init_blob_calc_block
 Created on Mon Jul 31 2023
 @author: Ewan F
 '''
-class test_angleSM(Behavior):
+class GateAngleAlignSM(Behavior):
 	'''
 	Test pour l'orientation du sub
 	'''
 
 
 	def __init__(self):
-		super(test_angleSM, self).__init__()
-		self.name = 'test_angle'
+		super(GateAngleAlignSM, self).__init__()
+		self.name = 'Gate Angle Align'
 
 		# parameters of this behavior
 
