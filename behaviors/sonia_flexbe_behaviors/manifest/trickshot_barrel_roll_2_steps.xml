@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="trickshot barrel roll 2 steps">
+
+	<executable package_path="sonia_flexbe_behaviors.trickshot_barrel_roll_2_steps_sm" class="trickshotbarrelroll2stepsSM" />
+	<tagstring>base</tagstring>
+	<author>Nimai Jariwala</author>
+	<date>Sun May 14 2023</date>
+	<description>
+		Do a barrel roll by moving, stoping, rolling, moving.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>
