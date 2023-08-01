@@ -80,7 +80,7 @@ class AlignGateRightSM(Behavior):
 										vision_alignemnt_check(filterchain_obj_topic="/proc_image_processing/gate_right_target", filterchain_box_topic="/proc_image_processing/gate_box", blob_size=130, nb_imgs=10, timeout_sec=5, max_adjusts=10, tolerance=0.10),
 										transitions={'timeout': 'failed', 'success': 'finished', 'failed': 'failed'},
 										autonomy={'timeout': Autonomy.Off, 'success': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'x_func': 'func_block_x', 'yz_function': 'func_block_yz'})
+										remapping={'x_func': 'func_block_x', 'yz_func': 'func_block_yz'})
 
 
 		return _state_machine

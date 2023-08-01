@@ -1,11 +1,12 @@
 from time import time, sleep
+import math
 import rospy
 from typing import List, Tuple
 from collections import deque
 from flexbe_core import EventState, Logger
 from sonia_common.msg import FilterchainTarget, AddPose, MpcInfo, CenterShapeBoundingBox, BoundingBox2D, MultiAddPose
 
-class vision_alignemnt_check(EventState):
+class vision_distance_check(EventState):
     """
     Get info from filterchains.
         -- filterchain_obj_topic    str     The topic from the filterchain to subscribe to get the object.
@@ -23,13 +24,11 @@ class vision_alignemnt_check(EventState):
     """
 
 
-    def __init__(self, filterchain_obj_topic, filterchain_box_topic, blob_size, nb_imgs = 10, timeout_sec = 5, max_adjusts = 10, tolerance = 0.05):
-        super(vision_alignemnt_check, self).__init__(outcomes = ['timeout', 'success', 'failed'],
-                                                     input_keys = ['x_func', 'yz_func'])
-        self.__obj_topic = filterchain_obj_topic
-        self.__box_topic = filterchain_box_topic
+    def __init__(self, dist_to_target, nb_imgs = 10, timeout_sec = 5, max_adjusts = 10, tolerance = 5):
+        super(vision_distance_check, self).__init__(outcomes = ['timeout', 'success', 'failed'],
+                                                     input_keys = ['calc_block'])
         self.__max_adjusts = max_adjusts
-        self.__blob_size = blob_size
+        self.__dist_to_target = dist_to_target
         self.__tolerence_thresh = tolerance
         self.__adjusts = 0
         self.__timeout = timeout_sec
@@ -40,14 +39,7 @@ class vision_alignemnt_check(EventState):
         self.__wait_for_target = False
         self.__target_reached = False
         self.__trajectory_done = False
-        self.__target_received = False
-        self.__bounding_box = None
-        self.__ax = 0
-        self.__bx = 0
-        self.__cx = 0
-        self.__ayz = 0
-        self.__byz = 0
-        self.__cyz = 0
+
 
     def on_enter(self, userdata):
         self.__filterchain_obj_sub = rospy.Subscriber(self.__obj_topic, FilterchainTarget, self.__filterchain_obj_cb)
@@ -55,13 +47,7 @@ class vision_alignemnt_check(EventState):
         self.__get_controller_info_sub = rospy.Subscriber('/proc_control/controller_info', MpcInfo, self.__get_controller_info_cb)
         self.__move_pub = rospy.Publisher('/proc_planner/send_multi_addpose', MultiAddPose, queue_size=1)
         self.__img_buffer.clear()
-        self.__ax = userdata.x_func['a']
-        self.__bx = userdata.x_func['b']
-        self.__cx = userdata.x_func['c']
-        self.__ayz = userdata.yz_func['a']
-        self.__byz = userdata.yz_func['b']
-        self.__cyz = userdata.yz_func['c']
-    
+
     def execute(self, userdata):
         if self.__adjusts > self.__max_adjusts:
             return 'failed'
@@ -70,34 +56,31 @@ class vision_alignemnt_check(EventState):
             if not self.__target_reached and not self.__trajectory_done:
                 self.__target_received = True
         elif self.__wait_for_target:
-            if self.__target_reached and  self.__trajectory_done:
-                Logger.loghint("Target Reached")
-                self.__wait_for_target = False
-                self.__target_received = False
+            Logger.loghint("Target Reached")
+            self.__wait_for_target = False
         else:
+            self.__get_controller_info_sub.unregister()
             self.__adjusts += 1
             if not self.__wait_topic():
                 return 'timeout'
             Logger.loghint(f"Adjust number {self.__adjusts}")
 
-            avg_x, avg_y = self.__calc_avg_center()
-            delta_x = avg_x - self.__bounding_box.center.x
-            delta_y =  avg_y - self.__bounding_box.center.y
-
-            if self.__adjust_sub_move(delta_x, delta_y):
-                self.__wait_for_target = True
-                return
+            target_angle = userdata.calc_block[0]
+            ref_angle = userdata.calc_block[1]
+            distance = 1
+            z_rotation = target_angle 
+            if target_angle < ref_angle:
+                z_rotation *= -1
+            y = distance * math.sin(target_angle)
+            x = distance - (distance * math.cos(target_angle))
             
-            avg_zoom = self.__calc_avg_size()
-            delta_zoom = self.__blob_size - avg_zoom
-            if self.__adjust_sub_zoom(delta_zoom):
+            if self.__adjust_sub_rotate(z_rotation, x, y):
                 self.__wait_for_target = True
                 return
 
             return 'success'
             
     def on_exit(self, userdata):
-        self.__filterchain_obj_sub.unregister()
         self.__get_controller_info_sub.unregister()
         self.__move_pub.unregister()
 
@@ -130,24 +113,17 @@ class vision_alignemnt_check(EventState):
 
         return (avg_x, avg_y)
 
-    def __adjust_sub_move(self, delta_x, delta_y):
+    def __adjust_sub_rotate(self, z, x, y):
         # dif in x is move in y
         # dif in y is move in z
-        tol = self.__bounding_box.size_x / 2
-        if abs(delta_x) <= tol and abs(delta_y) <= tol:
-            return False
-        Logger.loghint(f"Moving sub in y and z with tol at {tol}")
         pose = AddPose()
         pose.frame = 1
-        if abs(delta_x) > tol:
-            pose.position.y = self.__yz_function(delta_x)
-            Logger.loghint(f"{delta_x}px is {pose.position.y} in m for y")
-        if abs(delta_y) > tol:
-            pose.position.z = self.__yz_function(delta_y)
-            Logger.loghint(f"{delta_y}px is {pose.position.z} in m for z")
+        pose.orientation.z = z
+        pose.position.x = x
+        pose.position.y = y
         poses = MultiAddPose()
         poses.pose.append(pose)
-        Logger.loghint(f"Pose is {pose.position.x}, {pose.position.y}, {pose.position.z}")
+        Logger.loghint("Pose is { rotation_z: {}, position_x: {}, position_y: {} }".format(pose.orientation.z, pose.position.x, pose.position.y))
         self.__move_pub.publish(poses)
         # sleep(1.5)
         return True

@@ -54,7 +54,6 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 		# x:144 y:806, x:164 y:641
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['func_block'])
 		_state_machine.userdata.func_block = []
-		_state_machine.userdata.calc_block = calc_block
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -128,7 +127,7 @@ class CalculatepixelmeterfunctioninxSM(Behavior):
 
 			# x:269 y:763
 			OperatableStateMachine.add('Calculate 2nd order',
-										calculate_function_constants(order=2, precision=3),
+										calculate_function_constants(order=1, precision=3),
 										transitions={'success': 'finished', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'calc_block': 'calc_block', 'func_block': 'func_block'})
