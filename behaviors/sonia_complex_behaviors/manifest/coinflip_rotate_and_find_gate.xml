@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Coinflip rotate and find gate">
+
+	<executable package_path="sonia_complex_behaviors.coinflip_rotate_and_find_gate_sm" class="CoinfliprotateandfindgateSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Tue Aug 01 2023</date>
+	<description>
+		Rotate in steps of 30 and see if we can find the gate.
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

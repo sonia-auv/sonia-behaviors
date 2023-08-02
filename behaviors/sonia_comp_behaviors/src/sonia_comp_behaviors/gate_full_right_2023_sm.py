@@ -24,15 +24,15 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 Created on Tue Aug 01 2023
 @author: Nimai and Ewan
 '''
-class GateFull2023SM(Behavior):
+class GateFullRight2023SM(Behavior):
 	'''
 	Full gate track including translation align and rotation align
 	'''
 
 
 	def __init__(self):
-		super(GateFull2023SM, self).__init__()
-		self.name = 'Gate Full 2023'
+		super(GateFullRight2023SM, self).__init__()
+		self.name = 'Gate Full Right 2023'
 
 		# parameters of this behavior
 

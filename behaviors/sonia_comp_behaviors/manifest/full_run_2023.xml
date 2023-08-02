@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Full Run 2023">
+
+	<executable package_path="sonia_comp_behaviors.full_run_2023_sm" class="FullRun2023SM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Tue Aug 01 2023</date>
+	<description>
+		Full Path Run 2023
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+	<contains name="trick_shot_pitch_roll" />
+	<contains name="Coinflip rotate and find gate" />
+	<contains name="Gate Full Left 2023" />
+	<contains name="Gate Full Right 2023" />
+
+	<!-- Available Parameters -->
+
+</behavior>

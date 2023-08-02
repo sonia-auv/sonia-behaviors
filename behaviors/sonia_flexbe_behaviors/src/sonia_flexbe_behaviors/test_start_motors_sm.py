@@ -8,8 +8,7 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
-from sonia_navigation_states.init_trajectory import init_trajectory
-from sonia_navigation_states.save_pose import save_pose
+from sonia_navigation_states.set_control_mode import set_control_mode
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -17,18 +16,18 @@ from sonia_navigation_states.save_pose import save_pose
 
 
 '''
-Created on Sat Jun 24 2023
+Created on Tue Aug 01 2023
 @author: Nimai
 '''
-class SavePoseSM(Behavior):
+class test_start_motorsSM(Behavior):
 	'''
-	Save Pose
+	test
 	'''
 
 
 	def __init__(self):
-		super(SavePoseSM, self).__init__()
-		self.name = 'Save Pose'
+		super(test_start_motorsSM, self).__init__()
+		self.name = 'test_start_motors'
 
 		# parameters of this behavior
 
@@ -45,8 +44,7 @@ class SavePoseSM(Behavior):
 
 	def create(self):
 		# x:30 y:365, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['save_traj'])
-		_state_machine.userdata.save_traj = []
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -55,19 +53,11 @@ class SavePoseSM(Behavior):
 
 
 		with _state_machine:
-			# x:158 y:57
-			OperatableStateMachine.add('Init save traj',
-										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'Save Pose'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'save_traj'})
-
-			# x:186 y:176
-			OperatableStateMachine.add('Save Pose',
-										save_pose(),
-										transitions={'success': 'finished', 'fail': 'failed'},
-										autonomy={'success': Autonomy.Off, 'fail': Autonomy.Off},
-										remapping={'input_traj': 'save_traj', 'trajectory': 'save_traj'})
+			# x:30 y:40
+			OperatableStateMachine.add('Set Control',
+										set_control_mode(mode=10, timeout=5),
+										transitions={'continue': 'finished', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off})
 
 
 		return _state_machine
