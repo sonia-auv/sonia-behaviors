@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<behavior name="Save Pose">
+<behavior name="test_start_motors">
 
-	<executable package_path="sonia_base_behaviors.save_pose_sm" class="SavePoseSM" />
+	<executable package_path="sonia_flexbe_behaviors.test_start_motors_sm" class="test_start_motorsSM" />
 	<tagstring></tagstring>
 	<author>Nimai</author>
-	<date>Sat Jun 24 2023</date>
+	<date>Tue Aug 01 2023</date>
 	<description>
-		Save Pose
+		test
 	</description>
 
 

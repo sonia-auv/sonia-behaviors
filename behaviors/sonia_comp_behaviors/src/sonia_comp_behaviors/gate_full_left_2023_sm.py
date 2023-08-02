@@ -24,15 +24,15 @@ from sonia_navigation_states.wait_target_reached import wait_target_reached
 Created on Tue Aug 01 2023
 @author: Nimai and Ewan
 '''
-class GateFull2023SM(Behavior):
+class GateFullLeft2023SM(Behavior):
 	'''
 	Full gate track including translation align and rotation align
 	'''
 
 
 	def __init__(self):
-		super(GateFull2023SM, self).__init__()
-		self.name = 'Gate Full 2023'
+		super(GateFullLeft2023SM, self).__init__()
+		self.name = 'Gate Full Left 2023'
 
 		# parameters of this behavior
 
@@ -66,20 +66,20 @@ class GateFull2023SM(Behavior):
 			# x:66 y:80
 			OperatableStateMachine.add('Save Pose',
 										self.use_behavior(SavePoseSM, 'Save Pose'),
-										transitions={'finished': 'Align Gate Right', 'failed': 'failed'},
+										transitions={'finished': 'Align Gate Left', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit},
 										remapping={'save_traj': 'save_traj'})
 
-			# x:382 y:394
+			# x:268 y:59
 			OperatableStateMachine.add('Align Gate Left',
 										self.use_behavior(AlignGateLeftSM, 'Align Gate Left'),
-										transitions={'finished': 'Align Gate Angle', 'failed': 'failed'},
+										transitions={'finished': 'Align Gate Angle', 'failed': 'Reset pos'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:291 y:53
+			# x:401 y:367
 			OperatableStateMachine.add('Align Gate Right',
 										self.use_behavior(AlignGateRightSM, 'Align Gate Right'),
-										transitions={'finished': 'Align Gate Angle', 'failed': 'Reset pos'},
+										transitions={'finished': 'Align Gate Angle', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:283 y:170
@@ -92,7 +92,7 @@ class GateFull2023SM(Behavior):
 			# x:286 y:278
 			OperatableStateMachine.add('wait reset',
 										wait_target_reached(timeout=5),
-										transitions={'target_reached': 'Align Gate Left', 'target_not_reached': 'failed', 'error': 'failed'},
+										transitions={'target_reached': 'Align Gate Right', 'target_not_reached': 'failed', 'error': 'failed'},
 										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
 
 			# x:747 y:386

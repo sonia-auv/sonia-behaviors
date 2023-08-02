@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Gate Full Left 2023">
+
+	<executable package_path="sonia_comp_behaviors.gate_full_left_2023_sm" class="GateFullLeft2023SM" />
+	<tagstring></tagstring>
+	<author>Nimai and Ewan</author>
+	<date>Tue Aug 01 2023</date>
+	<description>
+		Full gate track including translation align and rotation align
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Save Pose" />
+	<contains name="Align Gate Left" />
+	<contains name="Align Gate Right" />
+	<contains name="Align Gate Angle" />
+
+	<!-- Available Parameters -->
+
+</behavior>
