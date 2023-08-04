@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Redneck AI 2023">
+
+	<executable package_path="sonia_comp_behaviors.redneck_ai_2023_sm" class="RedneckAI2023SM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Fri Aug 04 2023</date>
+	<description>
+		Redneck stuff but with AI
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="coin_flip_tare" />
+	<contains name="Single Pose Move" />
+	<contains name="trick_shot_pitch_roll" />
+	<contains name="Align Gate Angle" />
+
+	<!-- Available Parameters -->
+
+</behavior>
