@@ -12,8 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="coin_flip_tare" />
 	<contains name="Single Pose Move" />
+	<contains name="coin_flip_tare" />
 	<contains name="trick_shot_pitch_roll" />
 	<contains name="Align Gate Angle" />
 
