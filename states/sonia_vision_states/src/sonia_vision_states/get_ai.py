@@ -47,22 +47,28 @@ class get_ai(EventState):
         somme = somme/len(self.__queue)
         userdata.ai_pos[0] = somme
 
+        somme = 0
+
         for i in self.__queue :
             somme += i.left
         somme = somme/len(self.__queue)
         userdata.ai_pos[1] = somme
+
+        somme = 0
 
         for i in self.__queue :
             somme += i.bottom
         somme = somme/len(self.__queue)
         userdata.ai_pos[2] = somme
 
+        somme = 0
+
         for i in self.__queue :
             somme += i.right
         somme = somme/len(self.__queue)
         userdata.ai_pos[3] = somme        
         
-        Logger.log(f"AI target aquired {size_avg}", Logger.REPORT_HINT)
+        Logger.loghint(f"AI target aquired {userdata.ai_pos!r}")
             
         return 'success'
 
