@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Path Align Rotation">
+
+	<executable package_path="sonia_complex_behaviors.path_align_rotation_sm" class="PathAlignRotationSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Thu Aug 03 2023</date>
+	<description>
+		Path Align Rotation
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

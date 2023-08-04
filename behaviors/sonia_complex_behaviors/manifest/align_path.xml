@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Align path">
+
+	<executable package_path="sonia_complex_behaviors.align_path_sm" class="AlignpathSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Fri Aug 04 2023</date>
+	<description>
+		Align to path
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Calculate pixel meter function in xy" />
+	<contains name="Calculate pixel meter function in z" />
+
+	<!-- Available Parameters -->
+
+</behavior>

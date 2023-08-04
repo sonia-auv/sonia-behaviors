@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Redneck 2023">
+
+	<executable package_path="sonia_comp_behaviors.redneck_2023_sm" class="Redneck2023SM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Thu Aug 03 2023</date>
+	<description>
+		oh god I hope this works
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="coin_flip_tare" />
+	<contains name="Single Pose Move" />
+	<contains name="trick_shot_pitch_roll" />
+	<contains name="Align Gate Angle" />
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="boolean" name="real_run" default="False" label="real_run" hint="Sets the real_run" />
+
+	</params>
+
+
+</behavior>
