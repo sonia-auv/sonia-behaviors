@@ -59,28 +59,14 @@ class trick_shot_pitch_rollSM(Behavior):
 			# x:48 y:44
 			OperatableStateMachine.add('Init Traj',
 										init_trajectory(interpolation_method=0),
-										transitions={'continue': 'Move 2m X'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'trajectory': 'trajectory'})
-
-			# x:350 y:60
-			OperatableStateMachine.add('Move 2m X',
-										manual_add_pose_to_trajectory(positionX=2, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'Pitch 90 y'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'trajectory', 'trajectory': 'move1'})
-
-			# x:351 y:448
-			OperatableStateMachine.add('Move 2m gate',
-										manual_add_pose_to_trajectory(positionX=2, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=0.0, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'Send Moves'},
-										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'pitch3', 'trajectory': 'move2'})
+										remapping={'trajectory': 'trajectory'})
 
 			# x:42 y:387
 			OperatableStateMachine.add('Pitch 180 ',
 										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=180, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
-										transitions={'continue': 'Move 2m gate'},
+										transitions={'continue': 'Send Moves'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'pitch2', 'trajectory': 'pitch3'})
 
@@ -96,7 +82,7 @@ class trick_shot_pitch_rollSM(Behavior):
 										manual_add_pose_to_trajectory(positionX=0.0, positionY=0.0, positionZ=0.0, orientationX=0.0, orientationY=90, orientationZ=0.0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'Roll 180 x'},
 										autonomy={'continue': Autonomy.Off},
-										remapping={'input_traj': 'move1', 'trajectory': 'pitch1'})
+										remapping={'input_traj': 'trajectory', 'trajectory': 'pitch1'})
 
 			# x:357 y:192
 			OperatableStateMachine.add('Roll 180 x',
@@ -117,7 +103,7 @@ class trick_shot_pitch_rollSM(Behavior):
 										send_to_planner(),
 										transitions={'continue': 'Wait for finish', 'failed': 'failed'},
 										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
-										remapping={'input_traj': 'move2'})
+										remapping={'input_traj': 'pitch3'})
 
 			# x:406 y:554
 			OperatableStateMachine.add('Wait for finish',
