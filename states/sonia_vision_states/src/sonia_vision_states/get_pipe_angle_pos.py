@@ -25,7 +25,7 @@ class get_pipe_angle_pos(EventState):
                 Logger.logerr("Too many attempts to get images")
                 return 'failed'
             sleep(1)
-            if len(self.__queue) >= self.__max_img_nb:
+            if len(self.__queue) >= self.__num_imgs:
                 break
             self.__nb_attempts += 1
 
