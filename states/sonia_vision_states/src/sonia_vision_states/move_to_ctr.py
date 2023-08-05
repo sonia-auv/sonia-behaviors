@@ -14,13 +14,9 @@ class move_to_ctr(EventState):
         pose = AddPose()
         pose.frame = 1
         if abs(300-userdata.obj_ctr[0]) > 25:
-            pose.position.y = (300-userdata.obj_ctr[0])*0.007
+            pose.position.y = (300-userdata.obj_ctr[0])*0.004
             Logger.loghint(f"Move in y: {pose.position.y}")
         
-        if abs(300-userdata.obj_ctr[1]) > 25:
-            pose.position.z = (200-userdata.obj_ctr[1])*0.007
-            Logger.loghint(f"Move in z: {pose.position.z}")
-
 
         userdata.init_traj = MultiAddPose()
         userdata.init_traj.pose.append(pose)

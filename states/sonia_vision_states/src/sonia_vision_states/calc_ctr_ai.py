@@ -16,7 +16,6 @@ class calculate_ctr_ai(EventState):
         area = (right-left)*(bottom-top)
 
 
-
         avg_x = (left + right) / 2
         avg_y = (top + bottom) / 2
         userdata.obj_ctr = (avg_x, avg_y)

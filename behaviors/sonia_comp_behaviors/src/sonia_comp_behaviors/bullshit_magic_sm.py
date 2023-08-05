@@ -11,7 +11,7 @@ from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyC
 from sonia_base_behaviors.coin_flip_tare_sm import coin_flip_tareSM
 from sonia_base_behaviors.single_pose_move_sm import SinglePoseMoveSM
 from sonia_base_behaviors.trick_shot_pitch_roll_sm import trick_shot_pitch_rollSM
-from sonia_flexbe_behaviors.bullshit_sm import bullshitSM
+from sonia_hardware_states.wait_mission import wait_mission
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -37,7 +37,10 @@ class BullshitMagicSM(Behavior):
 		# references to used behaviors
 		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move')
 		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_2')
-		self.add_behavior(bullshitSM, 'bullshit Gate')
+		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_2_2')
+		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_3')
+		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_4')
+		self.add_behavior(SinglePoseMoveSM, 'Single Pose Move_4_2')
 		self.add_behavior(coin_flip_tareSM, 'coin_flip_tare')
 		self.add_behavior(trick_shot_pitch_rollSM, 'trick_shot_pitch_roll')
 
@@ -61,6 +64,54 @@ class BullshitMagicSM(Behavior):
 
 
 		with _state_machine:
+			# x:163 y:133
+			OperatableStateMachine.add('Mission',
+										wait_mission(),
+										transitions={'continue': 'coin_flip_tare'},
+										autonomy={'continue': Autonomy.Off})
+
+			# x:298 y:427
+			OperatableStateMachine.add('Single Pose Move',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move',
+											parameters={'positionX': 0.0, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 10}),
+										transitions={'finished': 'Single Pose Move_3', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:450 y:38
+			OperatableStateMachine.add('Single Pose Move_2',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2',
+											parameters={'positionX': 3}),
+										transitions={'finished': 'Single Pose Move_2_2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:674 y:111
+			OperatableStateMachine.add('Single Pose Move_2_2',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2_2',
+											parameters={'positionX': 5}),
+										transitions={'finished': 'trick_shot_pitch_roll', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:298 y:495
+			OperatableStateMachine.add('Single Pose Move_3',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_3',
+											parameters={'positionX': 0.0, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 20}),
+										transitions={'finished': 'Single Pose Move_4', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:298 y:593
+			OperatableStateMachine.add('Single Pose Move_4',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_4',
+											parameters={'positionX': 0.0, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': -10}),
+										transitions={'finished': 'Single Pose Move_4_2', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:643 y:584
+			OperatableStateMachine.add('Single Pose Move_4_2',
+										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_4_2',
+											parameters={'positionX': 6, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 0.0}),
+										transitions={'finished': 'finished', 'failed': 'failed'},
+										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
 			# x:143 y:49
 			OperatableStateMachine.add('coin_flip_tare',
 										self.use_behavior(coin_flip_tareSM, 'coin_flip_tare',
@@ -68,31 +119,10 @@ class BullshitMagicSM(Behavior):
 										transitions={'finished': 'Single Pose Move_2', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
-			# x:450 y:38
-			OperatableStateMachine.add('Single Pose Move_2',
-										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2',
-											parameters={'positionX': 3}),
-										transitions={'finished': 'bullshit Gate', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:689 y:112
-			OperatableStateMachine.add('bullshit Gate',
-										self.use_behavior(bullshitSM, 'bullshit Gate',
-											parameters={'target': "Gate"}),
-										transitions={'finished': 'Single Pose Move', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
 			# x:475 y:332
 			OperatableStateMachine.add('trick_shot_pitch_roll',
 										self.use_behavior(trick_shot_pitch_rollSM, 'trick_shot_pitch_roll'),
-										transitions={'finished': 'finished', 'failed': 'failed'},
-										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
-
-			# x:492 y:233
-			OperatableStateMachine.add('Single Pose Move',
-										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move',
-											parameters={'positionX': 3, 'positionY': 0.0, 'positionZ': 0.0, 'orientationZ': 0.0}),
-										transitions={'finished': 'trick_shot_pitch_roll', 'failed': 'failed'},
+										transitions={'finished': 'Single Pose Move', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 

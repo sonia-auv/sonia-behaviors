@@ -12,9 +12,8 @@
 
 
 	<!-- Contained Behaviors -->
-	<contains name="coin_flip_tare" />
 	<contains name="Single Pose Move" />
-	<contains name="bullshit" />
+	<contains name="coin_flip_tare" />
 	<contains name="trick_shot_pitch_roll" />
 
 	<!-- Available Parameters -->
