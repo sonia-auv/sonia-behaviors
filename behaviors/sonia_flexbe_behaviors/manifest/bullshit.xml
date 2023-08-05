@@ -22,6 +22,8 @@
 			<option value="Glyph_Abydos_1" />
 			<option value="Glyph_Abydos_2" />
 			<option value="Gate" />
+			<option value="Gate_Earth" />
+			<option value="Gate_Abydos" />
 		</param>
 
 	</params>
