@@ -9,7 +9,6 @@
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
 from sonia_flexbe_states.activate_behavior import activate_behavior
-from sonia_hardware_states.wait_mission import wait_mission
 from sonia_navigation_states.init_trajectory import init_trajectory
 from sonia_navigation_states.is_moving import is_moving
 from sonia_navigation_states.manual_add_pose_to_trajectory import manual_add_pose_to_trajectory
@@ -62,12 +61,6 @@ class coin_flip_tareSM(Behavior):
 
 
 		with _state_machine:
-			# x:38 y:117
-			OperatableStateMachine.add('Mission',
-										wait_mission(),
-										transitions={'continue': 'activate_coin_flip'},
-										autonomy={'continue': Autonomy.Off})
-
 			# x:236 y:38
 			OperatableStateMachine.add('activate_coin_flip',
 										activate_behavior(activate=self.activate_coin_flip),

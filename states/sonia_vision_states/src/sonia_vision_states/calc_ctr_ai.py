@@ -15,6 +15,5 @@ class calculate_ctr_ai(EventState):
 
         avg_x = (left + right) / 2
         avg_y = (top + bottom) / 2
-        userdata.obj_ctr.x = avg_x
-        userdata.obj_ctr.y = avg_y
+        userdata.obj_ctr = (avg_x, avg_y)
         return "success"

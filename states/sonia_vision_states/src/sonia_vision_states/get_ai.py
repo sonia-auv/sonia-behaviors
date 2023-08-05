@@ -16,7 +16,7 @@ class get_ai(EventState):
     """
     def __init__(self, class_name, nb_img=10):
         super(get_ai, self).__init__(outcomes = ['success', 'failed'],
-                                            output_keys = ['ai_pos'])
+                                     output_keys = ['ai_pos'])
         self.__class_name = class_name
         self.__nb_img = nb_img
         self.__queue = []
@@ -42,32 +42,33 @@ class get_ai(EventState):
         
         # Calculate average
         somme = 0
+        userdata.ai_pos = []
         
         for i in self.__queue :
             somme += i.top
         somme = somme/len(self.__queue)
-        userdata.ai_pos[0] = somme
+        userdata.ai_pos.append(somme)
 
         somme = 0
 
         for i in self.__queue :
             somme += i.left
         somme = somme/len(self.__queue)
-        userdata.ai_pos[1] = somme
+        userdata.ai_pos.append(somme)
 
         somme = 0
 
         for i in self.__queue :
             somme += i.bottom
         somme = somme/len(self.__queue)
-        userdata.ai_pos[2] = somme
+        userdata.ai_pos.append(somme)
 
         somme = 0
 
         for i in self.__queue :
             somme += i.right
         somme = somme/len(self.__queue)
-        userdata.ai_pos[3] = somme        
+        userdata.ai_pos.append(somme)        
         
         Logger.loghint(f"AI target aquired {userdata.ai_pos!r}")
             
@@ -76,7 +77,7 @@ class get_ai(EventState):
 
     def __filterchain_obj_sub_cb(self, msg: DetectionArray):
         if len(self.__queue) < self.__nb_img:
-            for i in msg :
+            for i in msg.detected_object :
                 Logger.loghint(f"{i.class_name}")
                 if i.class_name == self.__class_name :
                     self.__queue.append(i)
