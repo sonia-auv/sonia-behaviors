@@ -14,5 +14,17 @@
 	<!-- Contained Behaviors -->
 
 	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="target" default="Glyph_Earth_1" label="target" hint="Sets the target">
+			<option value="Glyph_Earth_1" />
+			<option value="Glyph_Earth_2" />
+			<option value="Glyph_Abydos_1" />
+			<option value="Glyph_Abydos_2" />
+			<option value="Gate" />
+		</param>
+
+	</params>
+
 
 </behavior>

@@ -8,6 +8,8 @@
 ###########################################################
 
 from flexbe_core import Behavior, Autonomy, OperatableStateMachine, ConcurrencyContainer, PriorityContainer, Logger
+from sonia_navigation_states.send_to_planner import send_to_planner
+from sonia_navigation_states.wait_target_reached import wait_target_reached
 from sonia_vision_states.calc_ctr_ai import calculate_ctr_ai
 from sonia_vision_states.get_ai import get_ai
 from sonia_vision_states.move_to_ctr import move_to_ctr
@@ -32,6 +34,7 @@ class bullshitSM(Behavior):
 		self.name = 'bullshit'
 
 		# parameters of this behavior
+		self.add_parameter('target', 'Glyph_Earth_1')
 
 		# references to used behaviors
 
@@ -45,7 +48,7 @@ class bullshitSM(Behavior):
 
 
 	def create(self):
-		# x:529 y:373, x:130 y:365
+		# x:473 y:511, x:130 y:365
 		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
 
 		# Additional creation code can be added inside the following tags
@@ -57,17 +60,30 @@ class bullshitSM(Behavior):
 		with _state_machine:
 			# x:30 y:40
 			OperatableStateMachine.add('qwerty',
-										get_ai(class_name="Glyph_Earth_2", nb_img=2),
+										get_ai(class_name=self.target, nb_img=5),
 										transitions={'success': 'ngbfvdcsx', 'failed': 'failed'},
 										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
 										remapping={'ai_pos': 'ai_pos'})
 
+			# x:459 y:264
+			OperatableStateMachine.add('send',
+										send_to_planner(),
+										transitions={'continue': 'wait', 'failed': 'failed'},
+										autonomy={'continue': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'input_traj': 'init_traj'})
+
+			# x:484 y:376
+			OperatableStateMachine.add('wait',
+										wait_target_reached(timeout=5),
+										transitions={'target_reached': 'finished', 'target_not_reached': 'failed', 'error': 'failed'},
+										autonomy={'target_reached': Autonomy.Off, 'target_not_reached': Autonomy.Off, 'error': Autonomy.Off})
+
 			# x:479 y:186
 			OperatableStateMachine.add('xdcfvgbhjn',
 										move_to_ctr(),
-										transitions={'success': 'finished'},
+										transitions={'success': 'send'},
 										autonomy={'success': Autonomy.Off},
-										remapping={'obj_ctr': 'obj_ctr'})
+										remapping={'obj_ctr': 'obj_ctr', 'init_traj': 'init_traj'})
 
 			# x:192 y:105
 			OperatableStateMachine.add('ngbfvdcsx',

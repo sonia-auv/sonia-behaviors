@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Bullshit Magic">
+
+	<executable package_path="sonia_comp_behaviors.bullshit_magic_sm" class="BullshitMagicSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sat Aug 05 2023</date>
+	<description>
+		hehe
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+	<contains name="bullshit" />
+	<contains name="coin_flip_tare" />
+
+	<!-- Available Parameters -->
+
+</behavior>
