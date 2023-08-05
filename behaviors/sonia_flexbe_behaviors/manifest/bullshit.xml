@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="bullshit">
+
+	<executable package_path="sonia_flexbe_behaviors.bullshit_sm" class="bullshitSM" />
+	<tagstring></tagstring>
+	<author>ewan</author>
+	<date>Sat Aug 05 2023</date>
+	<description>
+		test ai control
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+
+</behavior>

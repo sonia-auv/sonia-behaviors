@@ -20,6 +20,7 @@ class get_ai(EventState):
         self.__class_name = class_name
         self.__nb_img = nb_img
         self.__queue = []
+        self.__nb_attempts = 0
 
     def on_enter(self, userdata):
         Logger.log("Enter get ai position", Logger.REPORT_HINT)
@@ -35,7 +36,7 @@ class get_ai(EventState):
                 Logger.logerr("Too many attempts to get images")
                 return 'failed'
             sleep(1)
-            if len(self.__queue) >= self.__max_img_nb:
+            if len(self.__queue) >= self.__nb_img:
                 break
             self.__nb_attempts += 1
         
@@ -76,5 +77,6 @@ class get_ai(EventState):
     def __filterchain_obj_sub_cb(self, msg: DetectionArray):
         if len(self.__queue) < self.__nb_img:
             for i in msg :
+                Logger.loghint(f"{i.class_name}")
                 if i.class_name == self.__class_name :
                     self.__queue.append(i)
