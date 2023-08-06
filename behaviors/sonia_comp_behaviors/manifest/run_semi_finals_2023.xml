@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Run semi-finals 2023">
+
+	<executable package_path="sonia_comp_behaviors.run_semi_finals_2023_sm" class="Runsemifinals2023SM" />
+	<tagstring></tagstring>
+	<author>Niami Victor Ewa</author>
+	<date>Sun Aug 06 2023</date>
+	<description>
+		At this point, fuck it, we ball
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Snores poke" />
+	<contains name="Bullshit Magic gate" />
+
+	<!-- Available Parameters -->
+
+</behavior>

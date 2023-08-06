@@ -12,6 +12,7 @@ from sonia_base_behaviors.coin_flip_tare_sm import coin_flip_tareSM
 from sonia_base_behaviors.single_pose_move_sm import SinglePoseMoveSM
 from sonia_base_behaviors.trick_shot_pitch_roll_sm import trick_shot_pitch_rollSM
 from sonia_hardware_states.wait_mission import wait_mission
+from sonia_vision_states.check_side_gate import check_gate_side
 # Additional imports can be added inside the following tags
 # [MANUAL_IMPORT]
 
@@ -54,7 +55,8 @@ class BullshitMagicSM(Behavior):
 
 	def create(self):
 		# x:545 y:496, x:130 y:365
-		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'])
+		_state_machine = OperatableStateMachine(outcomes=['finished', 'failed'], output_keys=['gate_side'])
+		_state_machine.userdata.gate_side = "Earth"
 
 		# Additional creation code can be added inside the following tags
 		# [MANUAL_CREATE]
@@ -80,7 +82,7 @@ class BullshitMagicSM(Behavior):
 			OperatableStateMachine.add('Single Pose Move_2',
 										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2',
 											parameters={'positionX': 3}),
-										transitions={'finished': 'Single Pose Move_2_2', 'failed': 'failed'},
+										transitions={'finished': 'gate side', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 
 			# x:667 y:208
@@ -110,6 +112,13 @@ class BullshitMagicSM(Behavior):
 											parameters={'orientation_to_gate': 0, 'dive_depth': 1, 'activate_coin_flip': True}),
 										transitions={'finished': 'Single Pose Move_2', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
+
+			# x:712 y:62
+			OperatableStateMachine.add('gate side',
+										check_gate_side(nb_img=10),
+										transitions={'success': 'Single Pose Move_2_2', 'failed': 'Single Pose Move_2_2'},
+										autonomy={'success': Autonomy.Off, 'failed': Autonomy.Off},
+										remapping={'gate_side': 'gate_side'})
 
 			# x:475 y:332
 			OperatableStateMachine.add('trick_shot_pitch_roll',

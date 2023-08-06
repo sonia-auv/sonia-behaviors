@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Bullshit Magic gate">
+
+	<executable package_path="sonia_comp_behaviors.bullshit_magic_gate_sm" class="BullshitMagicgateSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sat Aug 05 2023</date>
+	<description>
+		hehe
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+	<contains name="coin_flip_tare" />
+	<contains name="trick_shot_pitch_roll" />
+
+	<!-- Available Parameters -->
+
+</behavior>
