@@ -87,7 +87,7 @@ class BullshitMagicSM(Behavior):
 			# x:674 y:111
 			OperatableStateMachine.add('Single Pose Move_2_2',
 										self.use_behavior(SinglePoseMoveSM, 'Single Pose Move_2_2',
-											parameters={'positionX': 5}),
+											parameters={'positionX': 7}),
 										transitions={'finished': 'trick_shot_pitch_roll', 'failed': 'failed'},
 										autonomy={'finished': Autonomy.Inherit, 'failed': Autonomy.Inherit})
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="test_control">
+
+	<executable package_path="sonia_flexbe_behaviors.test_control_sm" class="test_controlSM" />
+	<tagstring>mouvement</tagstring>
+	<author>Ewan F</author>
+	<date>Sat Aug 05 2023</date>
+	<description>
+		test des changements de control
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="move" />
+
+	<!-- Available Parameters -->
+
+</behavior>

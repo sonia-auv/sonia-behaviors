@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="bullshit_v2">
+
+	<executable package_path="sonia_base_behaviors.bullshit_v2_sm" class="bullshit_v2SM" />
+	<tagstring></tagstring>
+	<author>ewan</author>
+	<date>Sat Aug 05 2023</date>
+	<description>
+		test ai control
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="target" default="Glyph_Earth_1" label="target" hint="Sets the target">
+			<option value="Glyph_Earth_1" />
+			<option value="Glyph_Earth_2" />
+			<option value="Glyph_Abydos_1" />
+			<option value="Glyph_Abydos_2" />
+			<option value="Gate" />
+			<option value="Gate_Earth" />
+			<option value="Gate_Abydos" />
+		</param>
+
+	</params>
+
+
+</behavior>

@@ -75,7 +75,7 @@ class coin_flip_tareSM(Behavior):
 
 			# x:444 y:152
 			OperatableStateMachine.add('dive',
-										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=0.3, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
+										manual_add_pose_to_trajectory(positionX=0, positionY=0, positionZ=1, orientationX=0, orientationY=0, orientationZ=0, frame=1, speed=0, precision=0, long_rotation=False),
 										transitions={'continue': 'turn'},
 										autonomy={'continue': Autonomy.Off},
 										remapping={'input_traj': 'input_traj', 'trajectory': 'trajectory'})
