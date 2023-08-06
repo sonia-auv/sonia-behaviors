@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Snores">
+
+	<executable package_path="sonia_comp_behaviors.snores_sm" class="SnoresSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sun Aug 06 2023</date>
+	<description>
+		ZZZzzzZzZ
+	</description>
+
+
+	<!-- Contained Behaviors -->
+
+	<!-- Available Parameters -->
+	<params>
+
+		<param type="enum" name="target" default="Glyph_Earth_1" label="target" hint="Sets the target">
+			<option value="Glyph_Earth_1" />
+			<option value="Glyph_Earth_2" />
+			<option value="Glyph_Abydos_1" />
+			<option value="Glyph_Abydos_2" />
+		</param>
+
+	</params>
+
+
+</behavior>

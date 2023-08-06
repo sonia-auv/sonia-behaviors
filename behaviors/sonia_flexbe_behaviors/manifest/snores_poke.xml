@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<behavior name="Snores Poke">
+
+	<executable package_path="sonia_flexbe_behaviors.snores_poke_sm" class="SnoresPokeSM" />
+	<tagstring></tagstring>
+	<author>Nimai</author>
+	<date>Sun Aug 06 2023</date>
+	<description>
+		ZzzzZzz poke ... Hehe
+	</description>
+
+
+	<!-- Contained Behaviors -->
+	<contains name="Single Pose Move" />
+
+	<!-- Available Parameters -->
+
+</behavior>
